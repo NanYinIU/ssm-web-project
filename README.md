@@ -26,9 +26,9 @@ JQuery Toastr|前端消息通知插件|[http://thevectorlab.net/flatlab/toastr.h
 zTree | 树插件  | [http://www.treejs.cn/v3/](http://www.treejs.cn/v3/)
 
 ###开发环境
--系统：ubuntu17
--IDE：intellJ IDEA
--数据库：Mysql
--应用服务器：tomcat
--数据库客户端：DBeaver
--jdk：jdk8
+-系统:ubuntu17
+-IDE:intellJ IDEA
+-数据库:Mysql
+-应用服务器:tomcat
+-数据库客户端:DBeaver
+-jdk版本:jdk8
