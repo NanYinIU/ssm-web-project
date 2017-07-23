@@ -25,10 +25,23 @@ bootstrapValidator | 前端验证框架 | [https://github.com/1000hz/bootstrap-v
 JQuery Toastr|前端消息通知插件|[http://thevectorlab.net/flatlab/toastr.html]
 zTree | 树插件  | [http://www.treejs.cn/v3/](http://www.treejs.cn/v3/)
 
-###开发环境
+### 开发环境
 -系统:ubuntu17
 -IDE:intellJ IDEA
 -数据库:Mysql
 -应用服务器:tomcat
 -数据库客户端:DBeaver
 -jdk版本:jdk8
+
+
+### 预览图
+#### 登录
+![登录](refer/登录.png)
+#### 界面
+![界面](refer/界面.png)
+#### 结构
+![结构](refer/结构.png)
+#### 部门
+![部门](refer/部门.png)
+#### 日志
+![日志](refer/日志.png)
