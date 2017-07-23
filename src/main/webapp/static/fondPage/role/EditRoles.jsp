@@ -156,7 +156,7 @@
         <h1 class="page-title">NanYinIU</h1>
         <ul class="breadcrumb">
             <li><a href="/static/fondPage/index.jsp">主页</a> </li>
-            <li class="active">管理人员面板</li>
+            <li class="active">角色管理面板</li>
         </ul>
 
     </div>
@@ -273,6 +273,6 @@
         $('.demo-cancel-click').click(function(){return false;});
     });
 </script>
-
+</div>
 </body>
 </html>

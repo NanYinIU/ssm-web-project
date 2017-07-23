@@ -139,7 +139,7 @@
         <h1 class="page-title">Dashboard</h1>
         <ul class="breadcrumb">
             <li><a href="/static/fondPage/index.jsp">主页</a>  </li>
-            <li class="active">信息更改</li>
+            <li class="active">druid监控</li>
         </ul>
 
     </div>

@@ -157,7 +157,7 @@
         <h1 class="page-title">NanYinIU</h1>
         <ul class="breadcrumb">
             <li><a href="/static/fondPage/index.jsp">主页</a> </li>
-            <li class="active">管理人员面板</li>
+            <li class="active">部门管理面板</li>
         </ul>
 
     </div>

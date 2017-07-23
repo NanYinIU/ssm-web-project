@@ -151,10 +151,12 @@
                     <a href="#widget1container" class="panel-heading" data-toggle="collapse">Collapsible </a>
                     <div id="widget1container" class="panel-body collapse in">
                         <h2>系统功能概述</h2>
-                        <p>This template was developed with <a href="http://middlemanapp.com/" target="_blank">Middleman</a> and includes .erb layouts and views.</p>
-                        <p>All of the views you see here (sign in, sign up, users, etc) are already split up so you don't have to waste your time doing it yourself!</p>
-                        <p>The layout.erb file includes the header, footer, and side navigation and all of the views are broken out into their own files.</p>
-                        <p>If you aren't using Ruby, there is also a set of plain HTML files for each page, just like you would expect.</p>
+                        <p>使用spring，springmvc，mybatis，shiro 框架构建一个简单的后台粗粒度管理系统</p>
+                        <p>前端使用bootstrap技术</p>
+                        <p>bootstrap-table 文档:<a href="http://bootstrap-table.wenzhixin.net.cn/zh-cn/documentation/">http://bootstrap-table.wenzhixin.net.cn/zh-cn/documentation/</a></p>
+                        <p>项目地址：<a href="https://github.com/NanYinIU/ssm-web-project/">https://github.com/NanYinIU/ssm-web-project/</a></p>
+                        <p></p>
+
                     </div>
                 </div>
             </div>
@@ -165,9 +167,11 @@
                 <div class="panel panel-default">
                     <a href="#widget2container" class="panel-heading" data-toggle="collapse">Collapsible </a>
                     <div id="widget2container" class="panel-body collapse in">
-                        <h2>使用BootStrap</h2>
-                        <p>The CSS is built with Less. There is a compiled version included if you prefer plain CSS.</p>
-                        <p>Fava bean jícama seakale beetroot courgette shallot amaranth pea garbanzo carrot radicchio peanut leek pea sprouts arugula brussels sprout green bean. Spring onion broccoli chicory shallot winter purslane pumpkin gumbo cabbage squash beet greens lettuce celery. Gram zucchini swiss chard mustard burdock radish brussels sprout groundnut. Asparagus horseradish beet greens broccoli brussels.</p>
+                        <h2>学习资料</h2>
+                        <p><a href="http://jinnianshilongnian.iteye.com/blog/2018936">shiro 使用教程</a> </p>
+                        <p>希望以后有更多好的代码上传的github上面来！！没想到IT之路才刚刚开始。。。。。。。</p>
+                        <p></p>
+                        <p></p>
                         <p><a class="btn btn-primary">学习更多 »</a></p>
                     </div>
                 </div>
