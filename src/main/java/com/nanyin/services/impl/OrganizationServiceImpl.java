@@ -1,6 +1,7 @@
 package com.nanyin.services.impl;
 
 import com.nanyin.entity.Organization;
+import com.nanyin.entity.vo.OrganizationVo;
 import com.nanyin.mapper.OrganizationMapper;
 import com.nanyin.services.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import java.util.List;
 public class OrganizationServiceImpl implements OrganizationService {
     @Autowired
     private OrganizationMapper organizationMapper;
+
     public List<Organization> selectOrganizations() {
         return organizationMapper.selectOrganizations();
     }
@@ -31,6 +33,14 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     public int delectOrgById(int id) {
         return organizationMapper.delectOrgById(id);
+    }
+
+    public int insertOrg(OrganizationVo organization) {
+        organizationMapper.insertOrg(organization);
+
+        String name = organization.getName();
+//      返回插入的id值
+        return organizationMapper.selectIdByName(name);
     }
 
 

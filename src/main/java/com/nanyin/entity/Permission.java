@@ -8,7 +8,7 @@ package com.nanyin.entity;
 public class Permission {
     private int id ;
     private String permission_name;
-    private int role_id;
+    private String decript;
 
     public int getId() {
         return id;
@@ -26,12 +26,12 @@ public class Permission {
         this.permission_name = permission_name;
     }
 
-    public int getRole_id() {
-        return role_id;
+    public String getDecript() {
+        return decript;
     }
 
-    public void setRole_id(int role_id) {
-        this.role_id = role_id;
+    public void setDecript(String decript) {
+        this.decript = decript;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class Permission {
         return "Permission{" +
                 "id=" + id +
                 ", permission_name='" + permission_name + '\'' +
-                ", role_id=" + role_id +
+                ", decript='" + decript + '\'' +
                 '}';
     }
 }

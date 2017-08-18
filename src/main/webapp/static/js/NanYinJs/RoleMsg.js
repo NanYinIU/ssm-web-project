@@ -80,14 +80,12 @@ var ButtonInit = function () {
     var oInit = new Object();
     var postdata = {};
     var postdata1 = {};
+    var role_id;
     oInit.Init = function () {
         //初始化页面上面的按钮事件
         $("#but_query").click(function () {
         $("#tb_roles").bootstrapTable('refresh',{url:'/role/roleTable'});
     });
-
-
-
 
         $("#but_delete").click(function () {
             var arrselections = $("#tb_roles").bootstrapTable('getSelections');
@@ -159,7 +157,7 @@ var ButtonInit = function () {
             postdata.role_id = arrselections[0].role_id;
             $('#myModal').modal()
 
-        })
+        });
 
         $("#r_submit").click(function () {
 
@@ -178,6 +176,7 @@ var ButtonInit = function () {
                             toastr.success('提交数据成功');
                             $("#tb_roles").bootstrapTable('refresh');
                         }
+                        alert("操作成功");
                     },
                     error: function () {
                         toastr.error('Error');
@@ -189,12 +188,84 @@ var ButtonInit = function () {
 
         });
 
+        $("#but_addPermission").click(function () {
+            var arrays = $("#tb_roles").bootstrapTable('getSelections');
+
+            if (arrays.length > 1) {
+                toastr.warning('只能选择一行进行编辑');
+
+                return;
+            }
+            if (arrays.length <= 0) {
+                toastr.warning('请选择有效数据');
+
+                return;
+            }
+            $("#myModalLabel1").text("编辑");
+            role_id = arrays[0].role_id;
+            $('#myModal1').modal()
+
+        });
+
+        $("#AP_submit").click(function () {
+            var permission_id = $("#sel_menu2").val();
+            var permissionData = {};
+            permissionData.roleId = role_id;
+            permissionData.permissionId = permission_id;
+            $.ajax({
+                type: "post",
+                url: "/per/InsertPermission",
+                data:JSON.stringify(permissionData),
+                dataType: "json",contentType:"application/json;UTF-8",
+                success: function (data, status) {
+                    if (status == "success") {
+                        toastr.success('提交数据成功');
+                        // $("#tb_roles").bootstrapTable('refresh');
+                    }
+                },
+                error: function () {
+                    toastr.error('Error');
+                }
+            })
+        })
+
+        $("#but_add").click(function () {
+            $("#myModalLabel2").text("新建");
+            $('#myModal2').modal()
+        });
+
+        $("#add_submit").click(function () {
+
+            var roleName = $("#add_roleName").val();
+            var roleDescribe = $("#add_describe").val();
+            var permissionData = {};
+            permissionData.role_name = roleName;
+            permissionData.describe = roleDescribe;
+
+            var bootstrapValidator = $("#form3").data('bootstrapValidator');
+            bootstrapValidator.validate();
+            if(bootstrapValidator.isValid()){
+            $.ajax({
+                type: "post",
+                url: "/role/insertRole",
+                data:JSON.stringify(permissionData),
+                dataType: "json",contentType:"application/json;UTF-8",
+                success: function (data, status) {
+                    if (status == "success") {
+                        toastr.success('提交数据成功');
+                        $("#tb_roles").bootstrapTable('refresh');
+                    }
+                },
+                error: function () {
+                    toastr.error('Error');
+                }
+            })
+            }
+        })
 
 
 
     };
-
-
 
 
     return oInit;

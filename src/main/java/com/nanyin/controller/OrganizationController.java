@@ -1,14 +1,12 @@
 package com.nanyin.controller;
 
 import com.nanyin.entity.Organization;
+import com.nanyin.entity.vo.OrganizationVo;
 import com.nanyin.services.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -47,4 +45,14 @@ public class OrganizationController {
     public String returnOrgPage(){
         return "/static/fondPage/organization/DisOrganization.jsp";
     }
+
+    @RequestMapping(value = "/insertOrg"
+            ,method = RequestMethod.POST)
+    public @ResponseBody int insertOrg(String name , Integer pId){
+        OrganizationVo organization = new OrganizationVo();
+        organization.setName(name);
+        organization.setpId(pId);
+        return organizationService.insertOrg(organization);
+    }
+
 }

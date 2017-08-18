@@ -6,6 +6,9 @@ import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.session.Session;
 import org.junit.Test;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+
 /**
  * Created by NanYin on 2017-07-11 下午2:27.
  * 包名： test
@@ -27,5 +30,11 @@ public class hashTest {
         Session session = SecurityUtils.getSubject().getSession();
         session.getHost();
         SecurityUtils.getSubject().getSession().getHost();
+    }
+
+    @Test
+    public void test2(){
+        java.util.Date date = new java.util.Date();
+        System.out.println(new java.util.Date(12));
     }
 }

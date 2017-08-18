@@ -3,13 +3,13 @@ package com.nanyin.controller;
 import com.nanyin.common.annotation.Log;
 import com.nanyin.entity.Role;
 import com.nanyin.services.RoleService;
+import com.nanyin.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +24,8 @@ import java.util.Map;
 public class RoleController {
     @Autowired
     RoleService roleService;
+    @Autowired
+    UserService userService;
     @RequestMapping("/roleTable")
     public @ResponseBody Map<String,Object> selectRoles(int pageSize,int pageNumber ,String name){
         int a=(pageNumber-1)*pageSize;
@@ -54,5 +56,26 @@ public class RoleController {
         return "/static/fondPage/role/EditRoles.jsp";
     }
 
+    @RequestMapping(value = "/validRole")
+    public @ResponseBody Map<String,Boolean> validRole(@RequestParam String add_roleName){
+//        动态验证
+        boolean valid = true;
+        List<Role> roleList = roleService.Roles();
+        Map<String,Boolean> map = new HashMap<String, Boolean>();
+        for(Role role : roleList){
+            if(role.getRole_name().equals(add_roleName)){
+                valid = false ;
+                break;
+            }
+        }
+        map.put("valid",valid);
+        return map;
+    }
+
+    @RequestMapping(value = "/insertRole"
+            ,consumes = "application/json", method = RequestMethod.POST )
+    public @ResponseBody int insertRole(@RequestBody Role role){
+        return roleService.insertRole(role);
+    }
 
 }

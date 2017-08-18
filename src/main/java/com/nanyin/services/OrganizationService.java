@@ -1,6 +1,7 @@
 package com.nanyin.services;
 
 import com.nanyin.entity.Organization;
+import com.nanyin.entity.vo.OrganizationVo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,8 +13,16 @@ import java.util.List;
  */
 @Service
 public interface OrganizationService {
+
     List<Organization> selectOrganizations();
+
     String selectOrganizationById(int id);
+
     int updateById(Organization organization);
+
     int delectOrgById(int id);
+
+    int insertOrg(OrganizationVo organization);
+
+
 }

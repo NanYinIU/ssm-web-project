@@ -35,6 +35,10 @@
             WHERE r.role_id = #{role_id}
     </update>
 
+    <insert id="insertRole" parameterType="com.nanyin.entity.Role">
+            INSERT INTO db_shiro.S_role(role_name,`describe`)
+            VALUES(#{role_name},#{describe})
+    </insert>
 
 
 

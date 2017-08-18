@@ -4,6 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.nanyin.mapper.UserMapper">
+
     <select id="selectById"  parameterType="java.lang.Integer" resultType="com.nanyin.entity.User">
         SELECT * FROM S_User WHERE id = #{id}
     </select>
@@ -21,9 +22,9 @@
 
     <select id="getPermission"  parameterType="java.lang.String" resultType="java.lang.String">
         SELECT permission_name
-        FROM S_User u, S_permission p, S_role r
+        FROM db_shiro.S_User u, db_shiro.S_role r,db_shiro.role_permission rp,db_shiro.S_permission p
         WHERE u.name = #{name}
-        AND u.roleId = r.role_id AND r.role_id = p.role_id
+        AND u.roleId = r.role_id AND r.role_id = rp.r_id AND p.id=rp.p_id;
     </select>
 
     <select id="displayUser" resultType="com.nanyin.entity.User">
@@ -39,12 +40,6 @@
     <update id="updateThisUser" parameterType="com.nanyin.entity.User">
         UPDATE S_User SET name = #{name}, password = #{password} , sex = #{sex} , age = #{age} WHERE id = #{id}
     </update>
-
-
-
-
-
-
 
 
     <cache type="org.mybatis.caches.ehcache.LoggingEhcache" >

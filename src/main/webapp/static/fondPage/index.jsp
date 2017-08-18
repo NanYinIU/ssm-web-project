@@ -23,6 +23,7 @@
     <script src="/static/js/jquery/jquery-1.11.1.min.js" type="text/javascript"></script>
 
     <script src="/static/js/jquery/jquery.knob.js" type="text/javascript"></script>
+    <script src="/static/js/template-web.js"></script>
     <script type="text/javascript">
         $(function() {
             $(".knob").knob();
@@ -32,6 +33,8 @@
 
     <link rel="stylesheet" type="text/css" href="/static/css/theme.css">
     <link rel="stylesheet" type="text/css" href="/static/css/premium.css">
+    <%--<script src="/static/js/flatUi/flat-ui.js" type="text/javascript"></script>--%>
+    <%--<link rel="stylesheet" type="text/css" href="/static/css/flat-ui.css">--%>
 
 </head>
 <body class=" theme-3">
@@ -89,7 +92,7 @@
             <li class="dropdown hidden-xs">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <span class="glyphicon glyphicon-music padding-right-small" style="position:relative;top: 3px;"></span>当前用户： ${user}
-                    <i class="fa fa-caret-down"></i>
+
                 </a>
 
             </li>
@@ -121,7 +124,7 @@
            <shiro:hasAnyRoles name="admin,manager"> <li ><a href="/other/returnDruidPage"><span class="fa fa-caret-right"></span>Druid监控</a></li></shiro:hasAnyRoles>
             <li ><a href="#"><span class="fa fa-caret-right"></span> 页面资源管理</a></li>
         </ul></li>
-
+        <li><a href="/cal/returnCal" class="nav-header"><i class="fa fa-fw fa-bank"></i> 个人日程</a></li>
         <li><a href="/logout" class="nav-header"><i class="fa fa-fw fa-sign-out"></i> 安全登出</a></li>
         <shiro:hasAnyRoles name="admin,manager"> <li><a href="/log/returnLog" class="nav-header"><i class="fa fa-fw fa-cloud"></i> 登录日志</a></li></shiro:hasAnyRoles>
     </ul>
@@ -129,15 +132,34 @@
 
 <div class="content">
     <div class="header">
-        <div class="stats">
-            <p class="stat"><span class="label label-info">5</span> Tickets</p>
-            <p class="stat"><span class="label label-success">27</span> Tasks</p>
-            <p class="stat"><span class="label label-danger">15</span> Overdue</p>
-        </div>
+
+        <div id="content"></div>
+
+        <script id="test" type="text/html">
+            <div class="stats">
+                <p class="stat"><b>您还有</b> <span class="label label-info">{{count}}</span><b>个事件未处理</b></p>
+                <p class="stat"><b>查看</b> <span class="label label-danger"><a href="/cal/returnCal"><font color="#f0f8ff"> 个人日程</font></a></span></p>
+            </div>
+        </script>
+
+        <script>
+            var data = '' ;
+            $.ajax({
+                type: "post",
+                url: "/cal/count",
+                dataType: "json",contentType:"application/json;UTF-8",
+                success:function (json) {
+                    data =json
+                    var html1 = template('test', data);
+
+                    document.getElementById('content').innerHTML = html1;
+                }
+            });
+        </script>
 
         <h1 class="page-title">Dashboard</h1>
         <ul class="breadcrumb">
-            <li><a href="index.html">主页</a> </li>
+            <li><a href="/returnIndex">主页</a> </li>
             <li class="active">主界面</li>
         </ul>
 
@@ -148,15 +170,15 @@
         <div class="row">
             <div class="col-sm-12 col-md-12">
                 <div class="panel panel-default">
-                    <a href="#widget1container" class="panel-heading" data-toggle="collapse">Collapsible </a>
+                    <a href="#widget1container" class="panel-heading" data-toggle="collapse">系统功能概述 </a>
                     <div id="widget1container" class="panel-body collapse in">
                         <h2>系统功能概述</h2>
                         <p>使用spring，springmvc，mybatis，shiro 框架构建一个简单的后台粗粒度管理系统</p>
                         <p>前端使用bootstrap技术</p>
                         <p>bootstrap-table 文档:<a href="http://bootstrap-table.wenzhixin.net.cn/zh-cn/documentation/">http://bootstrap-table.wenzhixin.net.cn/zh-cn/documentation/</a></p>
                         <p>项目地址：<a href="https://github.com/NanYinIU/ssm-web-project/">https://github.com/NanYinIU/ssm-web-project/</a></p>
-                        <p></p>
-
+                        <p>8.17 新增简单的角色权限分配 </p>
+                        <p> 新增个人日程页面，新增echart报表支持 </p>
                     </div>
                 </div>
             </div>
@@ -165,11 +187,10 @@
         <div class="row">
             <div class="col-sm-12 col-md-12">
                 <div class="panel panel-default">
-                    <a href="#widget2container" class="panel-heading" data-toggle="collapse">Collapsible </a>
+                    <a href="#widget2container" class="panel-heading" data-toggle="collapse">学习资料 </a>
                     <div id="widget2container" class="panel-body collapse in">
                         <h2>学习资料</h2>
-                        <p><a href="http://jinnianshilongnian.iteye.com/blog/2018936">shiro 使用教程</a> </p>
-                        <p>希望以后有更多好的代码上传的github上面来！！没想到IT之路才刚刚开始。。。。。。。</p>
+                        <p><a href="http://jinnianshilongnian.iteye.com/blog/2018936">shiro 实用使用教程</a> </p>
                         <p></p>
                         <p></p>
                         <p><a class="btn btn-primary">学习更多 »</a></p>
@@ -179,24 +200,12 @@
         </div>
 
 
-        <footer>
-            <hr>
-
-            <!-- Purchase a site license to remove this link from the footer: http://www.portnine.com/bootstrap-themes -->
-            <p class="pull-right">A <a href="http://www.portnine.com/bootstrap-themes" target="_blank">Free Bootstrap Theme</a> by <a href="http://www.portnine.com" target="_blank">Portnine</a></p>
-            <p>© 2014 <a href="http://www.portnine.com" target="_blank">Portnine</a></p>
-        </footer>
     </div>
 </div>
 
 
 <script src="/static/js/bootstrap/bootstrap.js"></script>
-<script type="text/javascript">
-    $("[rel=tooltip]").tooltip();
-    $(function() {
-        $('.demo-cancel-click').click(function(){return false;});
-    });
-</script>
+
 
 
 </body></html>

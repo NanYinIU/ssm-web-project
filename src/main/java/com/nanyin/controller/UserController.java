@@ -9,7 +9,6 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.crypto.hash.Md5Hash;
 import org.apache.shiro.session.Session;
-import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,7 +37,7 @@ public class UserController {
     @RequestMapping("/login")
 //    通过登录页面传来 name 和 password
     @Log(operationType = "select操作",operationName = "用户登录")
-    public String login(String name, String password , HttpServletRequest request , HttpSession session){
+    public String login(String name, String password , HttpServletRequest request ){
 
             org.apache.shiro.subject.Subject subject = SecurityUtils.getSubject();
             String pass = null;
@@ -48,15 +47,12 @@ public class UserController {
                 pass = new Md5Hash(password, salt, 1024).toString();
             }
             try {
-
             UsernamePasswordToken token = new UsernamePasswordToken(name,pass);
 
             subject.login(token);
 //            基于shiro的session控制
-            Session session1 =  subject.getSession();
-            session1.setAttribute("user",name);
-
-//            session.setAttribute("user",name);
+            Session session =  subject.getSession();
+            session.setAttribute("user",name);
             return "/static/fondPage/index.jsp";
         }catch (Exception e){
             request.setAttribute("error","用户名或密码错误");

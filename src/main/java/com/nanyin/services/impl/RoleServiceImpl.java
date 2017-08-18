@@ -50,4 +50,8 @@ public class RoleServiceImpl implements RoleService {
         return roleMapper.UpdateRole(role);
 
     }
+
+    public int insertRole(Role role) {
+        return roleMapper.insertRole(role);
+    }
 }

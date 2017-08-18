@@ -23,7 +23,7 @@
 
     <script src="/static/js/jquery/jquery-1.11.1.min.js" type="text/javascript"></script>
     <script src="/static/js/jquery/jquery.knob.js" type="text/javascript"></script>
-
+    <script src="/static/js/template-web.js"></script>
     <link href="/static/css/toastr.css" rel="stylesheet" />
     <script src="/static/js/bootstrap/toastr.min.js"></script>
     <script type="text/javascript">
@@ -35,6 +35,8 @@
 
     <link rel="stylesheet" type="text/css" href="/static/css/theme.css">
     <link rel="stylesheet" type="text/css" href="/static/css/premium.css">
+    <%--<script src="/static/js/flatUi/flat-ui.js" type="text/javascript"></script>--%>
+    <%--<link rel="stylesheet" type="text/css" href="/static/css/flat-ui.css">--%>
 
 </head>
 <body class=" theme-blue">
@@ -105,26 +107,14 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="" href="index.html"><span class="navbar-brand"><span class="fa fa-database"></span> 管理系统</span></a></div>
+        <a class="" href="/returnIndex"><span class="navbar-brand"><span class="fa fa-database"></span> 管理系统</span></a></div>
 
     <div class="navbar-collapse collapse" style="height: 1px;">
         <ul id="main-menu" class="nav navbar-nav navbar-right">
             <li class="dropdown hidden-xs">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <span class="glyphicon glyphicon-music padding-right-small" style="position:relative;top: 3px;"></span>当前用户： ${user}
-                    <i class="fa fa-caret-down"></i>
                 </a>
-
-                <%--<ul class="dropdown-menu">--%>
-                    <%--<li><a href="/selectByName">我的账号</a></li>--%>
-                    <%--<li class="divider">   </li>--%>
-                    <%--<li class="dropdown-header"> <shiro:hasRole name="admin"><a href="/mes/AllMessageDis/"></shiro:hasRole>管理员面板</a></li>--%>
-                  <%--<li><a href="../">用户</a></li>--%>
-                    <%--<li><a href="../">安全</a></li>--%>
-                    <%--<li><a tabindex="-1" href="../">Payments</a></li>--%>
-                    <%--<li class="divider"></li>--%>
-                    <%--<li><a tabindex="-1" href="/logout">登出</a></li>--%>
-                <%--</ul>--%>
             </li>
         </ul>
 
@@ -154,7 +144,7 @@
             <shiro:hasAnyRoles name="admin,manager"> <li ><a href="/other/returnDruidPage"><span class="fa fa-caret-right"></span>Druid监控</a></li></shiro:hasAnyRoles>
             <li ><a href="#"><span class="fa fa-caret-right"></span> 页面资源管理</a></li>
         </ul></li>
-
+        <li><a href="/cal/returnCal" class="nav-header"><i class="fa fa-fw fa-bank"></i> 个人日程</a></li>
         <li><a href="/logout" class="nav-header"><i class="fa fa-fw fa-sign-out"></i> 安全登出</a></li>
         <shiro:hasAnyRoles name="admin,manager"> <li><a href="/log/returnLog" class="nav-header"><i class="fa fa-fw fa-cloud"></i> 登录日志</a></li></shiro:hasAnyRoles>
     </ul>
@@ -162,11 +152,29 @@
 
 <div class="content">
     <div class="header">
-        <div class="stats">
-            <p class="stat"><span class="label label-info">5</span> Tickets</p>
-            <p class="stat"><span class="label label-success">27</span> Tasks</p>
-            <p class="stat"><span class="label label-danger">15</span> Overdue</p>
-        </div>
+        <div id="content"></div>
+
+        <script id="test" type="text/html">
+            <div class="stats">
+                <p class="stat"><b>您还有</b> <span class="label label-info">{{count}}</span><b>个事件未处理</b></p>
+                <p class="stat"><b>查看</b> <span class="label label-danger"><a href="/cal/returnCal"><font color="#f0f8ff"> 个人日程</font></a></span></p>
+            </div>
+        </script>
+
+        <script>
+            var data = '' ;
+            $.ajax({
+                type: "post",
+                url: "/cal/count",
+                dataType: "json",contentType:"application/json;UTF-8",
+                success:function (json) {
+                    data =json
+                    var html1 = template('test', data);
+
+                    document.getElementById('content').innerHTML = html1;
+                }
+            });
+        </script>
 
         <h1 class="page-title">Dashboard</h1>
         <ul class="breadcrumb">
@@ -228,17 +236,6 @@
             </div>
         </div>
 
-        <%--<div class="modal small fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">--%>
-            <%--<div class="modal-dialog">--%>
-                <%--<div class="modal-content">--%>
-                    <%--<div class="modal-header">--%>
-                        <%--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>--%>
-                        <%--<h3 id="myModalLabel">Delete Confirmation</h3>--%>
-                    <%--</div>--%>
-                <%--<div class="modal-body">--%>
-                        <%--<p class="error-text"><i class="fa fa-warning modal-icon"></i>Are you sure you want to delete the user?</p>--%>
-            <%--</div>--%>
-        <%--</div>--%>
         <script>
             $("#btn_save").click(function () {
                 var data = {"id":$('#id').val(),"name":$('#name').val(),"password":$('#password').val(),"sex":$('#sex').val(),"age":$("#age").val()};

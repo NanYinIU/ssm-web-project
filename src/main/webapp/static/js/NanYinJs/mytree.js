@@ -36,8 +36,8 @@ function builePlanTree() {
             renameTitle : "rename",
         },
         view:{
-            // addHoverDom:addHoverDom,
-            // removeHoverDom:removeHoverDom,
+            addHoverDom:addHoverDom,
+            removeHoverDom:removeHoverDom,
             selectedMulti:true
             ,showIcon:true,
             showLine:true,
@@ -149,6 +149,51 @@ function builePlanTree() {
         });
         return true ;
     }
+    // 添加子部门操作
+    var newCount = 0;
+    function addHoverDom(treeId, treeNode) {
+        var sObj = $("#" + treeNode.tId + "_span");
+        if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
+        var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
+            + "' title='添加' onfocus='this.blur();'></span>";
+        sObj.after(addStr);
+        var btn = $("#addBtn_"+treeNode.tId);
+        //var isAdded=false;
+        if (btn) btn.bind("click", function(){
+            newCount++;
+            var organization = {};
+            organization.name = "新部门" + newCount;
+            organization.pId = treeNode.id;
+            alert(JSON.stringify(organization));
+            $.ajax({
+                type : "POST",
+                async : false,
+                url : "/org/insertOrg",
+                data :
+                    // {
+                    //     name : "新部门" + newCount,
+                    //     pId:treeNode.id
+                    // }
+                     organization
+                    ,
+                success:function(result){
+                    if(""!=result ){
+                        var zTree = $.fn.zTree.getZTreeObj("planTree");
+                        zTree.addNodes(treeNode, {id:result, pId:treeNode.id, name:"新部门" + (newCount)});
+                        return false;
+                    }else{
+                        alert("无法添加新部门，请联系管理员！");
+                    }
+                }
+            });
+            return false;
+        });
+    };
+
+// 用于当鼠标移出节点时，隐藏用户自定义控件
+    function removeHoverDom(treeId, treeNode) {
+        $("#addBtn_"+treeNode.tId).unbind().remove();
+    };
 
 
 

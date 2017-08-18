@@ -30,7 +30,10 @@
     <link href="/static/css/bootstrap-table.css" rel="stylesheet" />
     <script src="/static/js/bootstrap/bootstrap-table-zh-CN.js"></script>
     <script src="/static/js/bootstrap/bootbox.min.js"></script>
+    <script src="/static/js/template-web.js"></script>
     <script src="/static/js/NanYinJs/logMsg.js"></script>
+    <%--<script src="/static/js/flatUi/flat-ui.js" type="text/javascript"></script>--%>
+    <%--<link rel="stylesheet" type="text/css" href="/static/css/flat-ui.css">--%>
 
 
 
@@ -100,7 +103,6 @@
             <li class="dropdown hidden-xs">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <span class="glyphicon glyphicon-music padding-right-small" style="position:relative;top: 3px;"></span> 当前用户：${user}
-                    <i class="fa fa-caret-down"></i>
                 </a>
 
             </li>
@@ -138,11 +140,28 @@
 </div>
 <div class="content">
     <div class="header">
-        <div class="stats">
-            <p class="stat"><span class="label label-info">5</span> Tickets</p>
-            <p class="stat"><span class="label label-success">27</span> Tasks</p>
-            <p class="stat"><span class="label label-danger">15</span> Overdue</p>
-        </div>
+        <div id="content"></div>
+
+        <script id="test" type="text/html">
+            <div class="stats">
+                <p class="stat"><b>您还有</b> <span class="label label-info">{{count}}</span><b>个事件未处理</b></p>
+                <p class="stat"><b>查看</b> <span class="label label-danger"><a href="/cal/returnCal"><font color="#f0f8ff"> 个人日程</font></a></span></p>
+            </div>
+        </script>
+
+        <script>
+            var data = '' ;
+            $.ajax({
+                type: "post",
+                url: "/cal/count",
+                dataType: "json",contentType:"application/json;UTF-8",
+                success:function (json) {
+                    data =json
+                    var html1 = template('test', data);
+                    document.getElementById('content').innerHTML = html1;
+                }
+            });
+        </script>
         <h1 class="page-title">NanYin</h1>
         <ul class="breadcrumb">
             <li><a href="/static/fondPage/index.jsp">主页</a>  </li>

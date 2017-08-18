@@ -11,4 +11,6 @@
     <bean id="organizationService" class="com.nanyin.services.impl.OrganizationServiceImpl"/>
     <bean id="systemLogService" class="com.nanyin.services.impl.SystemLogServiceImpl"/>
     <bean id="organizationVoService" class="com.nanyin.services.impl.OrganizationVoServiceImpl"/>
+    <bean id="calendarService" class="com.nanyin.services.impl.CalendarServiceImpl"/>
+    <bean id="permissionService" class="com.nanyin.services.impl.PermissionServiceImpl"/>
 </beans>

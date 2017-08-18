@@ -39,14 +39,14 @@
 
     <link href="/static/css/bootstrapValidator.min.css" rel="stylesheet" />
     <script src="/static/js/bootstrap/bootstrapValidator.min.js"></script>
-
+    <script src="/static/js/template-web.js"></script>
     <script src="/static/js/NanYinJs/UserMsg.js"></script>
     <script src="/static/js/NanYinJs/MyValidator.js"></script>
-    <%--<script type="text/javascript">--%>
-        <%--$(function() {--%>
-            <%--$(".knob").knob();--%>
-        <%--});--%>
-    <%--</script>--%>
+    <script type="text/javascript">
+        $(function() {
+            $(".knob").knob();
+        });
+    </script>
 
 
     <link rel="stylesheet" type="text/css" href="/static/css/theme.css">
@@ -93,13 +93,9 @@
 </script>
 <%--<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>--%>
 
-<div class="navbar navbar-default" role="navigation">
+<div class="navbar navbar-default navbar-static-top" role="navigation">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
         </button>
         <a class="" href="index.html"><span class="navbar-brand"><span class="fa fa-database"></span> 管理系统</span></a></div>
 
@@ -108,7 +104,6 @@
             <li class="dropdown hidden-xs">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <span class="glyphicon glyphicon-music padding-right-small" style="position:relative;top: 3px;"></span> 当前用户：${user}
-                    <i class="fa fa-caret-down"></i>
                 </a>
 
             </li>
@@ -139,7 +134,7 @@
             <shiro:hasAnyRoles name="admin,manager"> <li ><a href="/other/returnDruidPage"><span class="fa fa-caret-right"></span>Druid监控</a></li></shiro:hasAnyRoles>
             <li ><a href="#"><span class="fa fa-caret-right"></span> 页面资源管理</a></li>
         </ul></li>
-
+        <li><a href="/cal/returnCal" class="nav-header"><i class="fa fa-fw fa-bank"></i> 个人日程</a></li>
         <li><a href="/logout" class="nav-header"><i class="fa fa-fw fa-sign-out"></i> 安全登出</a></li>
         <shiro:hasAnyRoles name="admin,manager"> <li><a href="/log/returnLog" class="nav-header"><i class="fa fa-fw fa-cloud"></i> 登录日志</a></li></shiro:hasAnyRoles>
     </ul>
@@ -147,11 +142,28 @@
 
 <div class="content">
     <div class="header">
-        <div class="stats">
-            <p class="stat"><span class="label label-info">5</span> Tickets</p>
-            <p class="stat"><span class="label label-success">27</span> Tasks</p>
-            <p class="stat"><span class="label label-danger">15</span> Overdue</p>
-        </div>
+        <div id="content"></div>
+
+        <script id="test" type="text/html">
+            <div class="stats">
+                <p class="stat"><b>您还有</b> <span class="label label-info">{{count}}</span><b>个事件未处理</b></p>
+                <p class="stat"><b>查看</b> <span class="label label-danger"><a href="/cal/returnCal"><font color="#f0f8ff"> 个人日程</font></a></span></p>
+            </div>
+        </script>
+
+        <script>
+            var data = '' ;
+            $.ajax({
+                type: "post",
+                url: "/cal/count",
+                dataType: "json",contentType:"application/json;UTF-8",
+                success:function (json) {
+                    data =json
+                    var html1 = template('test', data);
+                    document.getElementById('content').innerHTML = html1;
+                }
+            });
+        </script>
 
         <h1 class="page-title">NanYinIU</h1>
         <ul class="breadcrumb">
@@ -164,33 +176,33 @@
         <%--表格部分了--%>
 
             <div class="panel-body" style="padding-bottom:0px;">
-                <div class="panel panel-default">
-                    <div class="panel-heading">查询条件</div>
-                    <div class="panel-body">
-                        <form id="formSearch" class="form-horizontal">
-                            <div class="form-group" style="margin-top:15px">
-                                <label class="control-label col-sm-1" for="ByName">用户名：</label>
-                                <div class="col-sm-3">
-                                    <input type="text" class="form-control" placeholder="输入用户名关键字查询- -" id="ByName">
-                                </div>
-                                <div class="col-sm-4" style="text-align:left;">
-                                    <button type="button" style="margin-left:50px" id="btn_query" class="btn btn-primary">查询</button>
-                                </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">查询条件</div>
+                <div class="panel-body">
+                    <form id="formSearch" class="form-horizontal">
+                        <div class="form-group" style="margin-top:15px">
+                            <label class="control-label col-sm-2" for="ByName">输入用户名关键字查询：</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" placeholder="Search.." id="ByName">
                             </div>
-                        </form>
-                    </div>
+                            <div class="col-sm-2" style="text-align:left;">
+                                <button type="button" style="margin-left:50px" id="btn_query" class="btn btn-success">查询</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
+            </div>
 
                 <div id="toolbar" class="btn-group">
                     
-                    <shiro:hasPermission name="user:insert"><button id="btn_add" type="button" class="btn btn-default">
+                    <shiro:hasPermission name="user:insert"><button id="btn_add" type="button" class="btn btn-danger">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
                     </button></shiro:hasPermission>
                     
-                    <sihro:hasPermission name="user:update"><button id="btn_edit" type="button" class="btn btn-default">
+                    <sihro:hasPermission name="user:update"><button id="btn_edit" type="button" class="btn btn-warning">
                         <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>修改
                     </button></sihro:hasPermission>
-                    <shiro:hasPermission name="user:delect"><button id="btn_delete" type="button" class="btn btn-default">
+                    <shiro:hasPermission name="user:delect"><button id="btn_delete" type="button" class="btn btn-info">
                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>删除
                     </button></shiro:hasPermission>
                 </div>
@@ -423,25 +435,11 @@
 
 
 
-
-
-
-        <footer>
-            <hr>
-            <%--<c:out value="${User[0].name}">${Users[0].name}</c:out>--%>
-            <!-- Purchase a site license to remove this link from the footer: http://www.portnine.com/bootstrap-themes -->
-        </footer>
     </div>
 </div>
 
 
 <script src="/static/js/bootstrap/bootstrap.js"></script>
-<script type="text/javascript">
-    $("[rel=tooltip]").tooltip();
-    $(function() {
-        $('.demo-cancel-click').click(function(){return false;});
-    });
-</script>
 
 </body>
 </html>

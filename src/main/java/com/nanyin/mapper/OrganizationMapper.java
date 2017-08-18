@@ -1,6 +1,7 @@
 package com.nanyin.mapper;
 
 import com.nanyin.entity.Organization;
+import com.nanyin.entity.vo.OrganizationVo;
 
 import java.util.List;
 
@@ -20,4 +21,7 @@ public interface OrganizationMapper {
 
     int delectOrgById(int id);
 
+    int insertOrg(OrganizationVo organization);
+
+    int selectIdByName(String name);
 }

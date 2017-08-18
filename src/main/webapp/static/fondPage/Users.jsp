@@ -33,6 +33,8 @@
 
     <link rel="stylesheet" type="text/css" href="/static/css/theme.css">
     <link rel="stylesheet" type="text/css" href="/static/css/premium.css">
+    <script src="/static/js/flatUi/flat-ui.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/flat-ui.css">
 
 </head>
 <body class=" theme-blue">

@@ -24,6 +24,7 @@
     <script src="/static/js/jquery/jquery-1.11.1.min.js" type="text/javascript"></script>
     <script src="/static/js/jquery/jquery.knob.js" type="text/javascript"></script>
     <script src="/static/js/echarts.js"></script>
+    <script src="/static/js/template-web.js"></script>
     <script type="text/javascript">
         $(function() {
             $(".knob").knob();
@@ -33,6 +34,8 @@
 
     <link rel="stylesheet" type="text/css" href="/static/css/theme.css">
     <link rel="stylesheet" type="text/css" href="/static/css/premium.css">
+    <%--<script src="/static/js/flatUi/flat-ui.js" type="text/javascript"></script>--%>
+    <%--<link rel="stylesheet" type="text/css" href="/static/css/flat-ui.css">--%>
 
 </head>
 <body class=" theme-blue">
@@ -73,7 +76,26 @@
         $('#main-menu').append(uls.clone());
     });
 </script>
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
 
+<!-- Le fav and touch icons -->
+<link rel="shortcut icon" href="../assets/ico/favicon.ico">
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+<link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
+
+
+<!--[if lt IE 7 ]> <body class="ie ie6"> <![endif]-->
+<!--[if IE 7 ]> <body class="ie ie7 "> <![endif]-->
+<!--[if IE 8 ]> <body class="ie ie8 "> <![endif]-->
+<!--[if IE 9 ]> <body class="ie ie9 "> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
+
+<!--<![endif]-->
 
 
 <div class="navbar navbar-default" role="navigation">
@@ -84,14 +106,13 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="" href="index.html"><span class="navbar-brand"><span class="fa fa-database"></span> 管理系统</span></a></div>
+        <a class="" href="/returnIndex"><span class="navbar-brand"><span class="fa fa-database"></span> 管理系统</span></a></div>
 
     <div class="navbar-collapse collapse" style="height: 1px;">
         <ul id="main-menu" class="nav navbar-nav navbar-right">
             <li class="dropdown hidden-xs">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <span class="glyphicon glyphicon-music padding-right-small" style="position:relative;top: 3px;"></span>当前用户： ${user}
-                    <i class="fa fa-caret-down"></i>
                 </a>
 
             </li>
@@ -119,23 +140,46 @@
 
 
         <li><a href="#" data-target=".legal-menu" class="nav-header collapsed" data-toggle="collapse"><i class="fa fa-fw fa-legal"></i> 资源管理器<i class="fa fa-collapse"></i></a></li>
-        <li><ul class="legal-menu nav nav-list collapse">
-            <shiro:hasAnyRoles name="admin,manager"> <li ><a href="/other/returnDruidPage"><span class="fa fa-caret-right"></span>Druid监控</a></li></shiro:hasAnyRoles>
+        <li>
+            <ul class="legal-menu nav nav-list collapse">
+            <shiro:hasAnyRoles name="admin,manager">
+             <li ><a href="/other/returnDruidPage"><span class="fa fa-caret-right"></span>Druid监控</a></li></shiro:hasAnyRoles>
             <li ><a href="#"><span class="fa fa-caret-right"></span> 页面资源管理</a></li>
-        </ul></li>
-
+        </ul>
+        </li>
+        <li><a href="/cal/returnCal" class="nav-header"><i class="fa fa-fw fa-bank"></i> 个人日程</a></li>
         <li><a href="/logout" class="nav-header"><i class="fa fa-fw fa-sign-out"></i> 安全登出</a></li>
-        <shiro:hasAnyRoles name="admin,manager"> <li><a href="/log/returnLog" class="nav-header"><i class="fa fa-fw fa-cloud"></i> 登录日志</a></li></shiro:hasAnyRoles>
+        <shiro:hasAnyRoles name="admin,manager">
+            <li><a href="/log/returnLog" class="nav-header"><i class="fa fa-fw fa-cloud"></i> 登录日志</a></li>
+        </shiro:hasAnyRoles>
     </ul>
 </div>
 
 <div class="content">
     <div class="header">
-        <div class="stats">
-            <p class="stat"><span class="label label-info">5</span> Tickets</p>
-            <p class="stat"><span class="label label-success">27</span> Tasks</p>
-            <p class="stat"><span class="label label-danger">15</span> Overdue</p>
-        </div>
+        <div id="content"></div>
+
+        <script id="test" type="text/html">
+            <div class="stats">
+                <p class="stat"><b>您还有</b> <span class="label label-info">{{count}}</span><b>个事件未处理</b></p>
+                <p class="stat"><b>查看</b> <span class="label label-danger"><a href="/cal/returnCal"><font color="#f0f8ff"> 个人日程</font></a></span></p>
+            </div>
+        </script>
+
+        <script>
+            var data = '' ;
+            $.ajax({
+                type: "post",
+                url: "/cal/count",
+                dataType: "json",contentType:"application/json;UTF-8",
+                success:function (json) {
+                    data =json
+                    var html1 = template('test', data);
+
+                    document.getElementById('content').innerHTML = html1;
+                }
+            });
+        </script>
         <h1 class="page-title">Dashboard</h1>
         <ul class="breadcrumb">
             <li><a href="/static/fondPage/index.jsp">主页</a>  </li>

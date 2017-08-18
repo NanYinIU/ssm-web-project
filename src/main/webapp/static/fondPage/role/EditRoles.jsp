@@ -25,9 +25,7 @@
     <script src="/static/js/jquery/jquery-1.11.1.min.js" type="text/javascript"></script>
     <script src="/static/js/jquery/jquery.knob.js" type="text/javascript"></script>
 
-    <script src="/static/js/jquery/jquery-1.11.1.min.js"></script>
     <script src="/static/js/bootstrap/bootstrap.js"></script>
-    <link href="/static/css/bootstrap.css" rel="stylesheet" />
     <script src="/static/js/bootstrap/bootstrap-table.js"></script>
     <link href="/static/css/bootstrap-table.css" rel="stylesheet" />
     <script src="/static/js/bootstrap/bootstrap-table-zh-CN.js"></script>
@@ -40,16 +38,15 @@
     <script src="/static/js/bootstrap/bootstrapValidator.min.js"></script>
 
     <script src="/static/js/NanYinJs/RoleMsg.js"></script>
-
-    <%--<script type="text/javascript">--%>
-        <%--$(function() {--%>
-            <%--$(".knob").knob();--%>
-        <%--});--%>
-    <%--</script>--%>
-
-
+    <script src="/static/js/NanYinJs/roleValidator.js"></script>
+    <link rel="stylesheet"  href="/static/css/select2-bootstrap.css">
+    <link rel="stylesheet"  href="/static/css/select2.css">
+    <script src="/static/js/bootstrap/select2.full.js"></script>
+    <script src="/static/js/template-web.js"></script>
     <link rel="stylesheet" type="text/css" href="/static/css/theme.css">
     <link rel="stylesheet" type="text/css" href="/static/css/premium.css">
+    <%--<script src="/static/js/flatUi/flat-ui.js" type="text/javascript"></script>--%>
+    <%--<link rel="stylesheet" type="text/css" href="/static/css/flat-ui.css">--%>
 
 </head>
 <body class=" theme-blue">
@@ -108,7 +105,6 @@
             <li class="dropdown hidden-xs">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <span class="glyphicon glyphicon-music padding-right-small" style="position:relative;top: 3px;"></span> 当前用户：${user}
-                    <i class="fa fa-caret-down"></i>
                 </a>
 
 
@@ -140,18 +136,36 @@
             <shiro:hasAnyRoles name="admin,manager"> <li ><a href="/other/returnDruidPage"><span class="fa fa-caret-right"></span>Druid监控</a></li></shiro:hasAnyRoles>
             <li ><a href="#"><span class="fa fa-caret-right"></span> 页面资源管理</a></li>
         </ul></li>
-
+        <li><a href="/cal/returnCal" class="nav-header"><i class="fa fa-fw fa-bank"></i> 个人日程</a></li>
         <li><a href="/logout" class="nav-header"><i class="fa fa-fw fa-sign-out"></i> 安全登出</a></li>
         <shiro:hasAnyRoles name="admin,manager"> <li><a href="/log/returnLog" class="nav-header"><i class="fa fa-fw fa-cloud"></i> 登录日志</a></li></shiro:hasAnyRoles>
     </ul>
 </div>
 <div class="content">
     <div class="header">
-        <div class="stats">
-            <p class="stat"><span class="label label-info">5</span> Tickets</p>
-            <p class="stat"><span class="label label-success">27</span> Tasks</p>
-            <p class="stat"><span class="label label-danger">15</span> Overdue</p>
-        </div>
+        <div id="content"></div>
+
+        <script id="test" type="text/html">
+            <div class="stats">
+                <p class="stat"><b>您还有</b> <span class="label label-info">{{count}}</span><b>个事件未处理</b></p>
+                <p class="stat"><b>查看</b> <span class="label label-danger"><a href="/cal/returnCal"><font color="#f0f8ff"> 个人日程</font></a></span></p>
+            </div>
+        </script>
+
+        <script>
+            var data = '' ;
+            $.ajax({
+                type: "post",
+                url: "/cal/count",
+                dataType: "json",contentType:"application/json;UTF-8",
+                success:function (json) {
+                    data =json
+                    var html1 = template('test', data);
+
+                    document.getElementById('content').innerHTML = html1;
+                }
+            });
+        </script>
 
         <h1 class="page-title">NanYinIU</h1>
         <ul class="breadcrumb">
@@ -170,10 +184,10 @@
                         <form id="formSearch" class="form-horizontal">
                             <div class="form-group" style="margin-top:15px">
                                 <label class="control-label col-sm-1" for="name">用户名：</label>
-                                <div class="col-sm-3">
+                                <div class="col-sm-9">
                                     <input type="text" class="form-control" placeholder="输入用户名关键字查询- -" id="name">
                                 </div>
-                                <div class="col-sm-4" style="text-align:left;">
+                                <div class="col-sm-2" style="text-align:left;">
                                     <button type="button" style="margin-left:50px" id="but_query" class="btn btn-primary">查询</button>
                                 </div>
                             </div>
@@ -182,17 +196,30 @@
                 </div>
 
                 <div id="toolbar" class="btn-group">
+                    <shiro:hasPermission name="role:add">
+                        <button id="but_add" type="button" class="btn btn-danger">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>增加
+                        </button>
+                    </shiro:hasPermission>
 
                     <shiro:hasPermission name="role:update">
-                        <button id="but_edit" type="button" class="btn btn-default">
+                    <button id="but_edit" type="button" class="btn btn-success">
                         <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>修改
                     </button>
                     </shiro:hasPermission>
+
                     <shiro:hasPermission name="role:delect">
-                    <button id="but_delete" type="button" class="btn btn-default">
+                    <button id="but_delete" type="button" class="btn btn-info">
                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>删除
                     </button>
                     </shiro:hasPermission>
+
+                    <shiro:hasPermission name="role:addPermission">
+                        <button id="but_addPermission" type="button" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-leaf" aria-hidden="true"></span>更改权限
+                        </button>
+                    </shiro:hasPermission>
+
                 </div>
 
 
@@ -201,7 +228,7 @@
 
 
 
-
+                <%-- 修改开始 --%>
                 <div class="modal small fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -253,26 +280,134 @@
                         </div>
                     </div>
                 </div>
+                <%--修改结束--%>
+
+                <%--权限增加开始--%>
+                <div class="modal large fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h3 id="myModalLabel1">删除提示</h3>
+                            </div>
+                            <div class="modal-body">
+
+                                            <form id="form2" name="form2">
+                                                <%--表单开始--%>
+                                                <div class="form-group">
+                                                    <div class="controls">
+                                                    <label class="control-label">请选择/变更权限</label>
+                                                        <select id="sel_menu2" multiple="multiple" ></select>
+                                                        <style> select{width:500px; padding:20px 0;}</style>
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="controls">
+                                                        <button id="AP_submit" name="AP_submit" type="submit" class="btn btn-success">提交</button>
+                                                    </div>
+                                                </div>
+
+
+                                                    <script type="text/javascript">
+                                                        $("#sel_menu2").select2({
+                                                            tags: true,
+                                                            placeholder:{
+                                                                id:'-1',
+                                                                text:'选择权限名称'
+                                                            },
+                                                            multiple: true,
+                                                            ajax: {
+                                                                url: "/per/AllPermission",
+                                                                processResults: function (data, page) {
+                                                                    console.log(data);
+                                                                    var parsed = data;
+                                                                    var arr = [];
+                                                                    for (var x in parsed) {
+                                                                        arr.push(parsed[x]); //这个应该是个json对象
+                                                                    }
+                                                                    console.log(arr);
+                                                                    return {
+                                                                        results: arr
+                                                                    };
+                                                                }
+                                                            }
+                                                        });
+
+
+                                                    </script>
+                                            </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">取消</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <%--权限增加结束--%>
+
+                <%-- 增加开始 --%>
+                <div class="modal small fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h3 id="myModalLabel2">增加提示</h3>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container-fluid">
+                                    <div class="row-fluid">
+                                        <div class="span12">
+
+                                            <form class="form-horizontal" id="form3" name="form3">
+                                                <%--表单开始--%>
+                                                <div class="form-group">
+                                                    <label class="control-label" >角色名:</label>
+                                                    <div class="controls">
+                                                        <input  id="add_roleName" name="add_roleName" type="text" class="form-control"/>
+                                                    </div>
+                                                </div>
 
 
 
+                                                <div class="form-group">
+                                                    <label class="control-label">角色描述:</label>
+                                                    <div class="controls">
+                                                        <input id="add_describe" name="add_describe" type="text" class="form-control"/>
+                                                    </div>
+                                                </div>
 
-        <footer>
-            <hr>
-            <%--<c:out value="${User[0].name}">${Users[0].name}</c:out>--%>
-            <!-- Purchase a site license to remove this link from the footer: http://www.portnine.com/bootstrap-themes -->
-        </footer>
+
+                                                <div class="form-group">
+                                                    <div class="controls">
+                                                        <button id="add_submit" name="add_submit" type="submit" class="btn btn-success">提交</button>
+                                                    </div>
+                                                </div>
+
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">取消</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <%--增加结束--%>
+
+
     </div>
     </div>
 
 
-<script src="/static/js/bootstrap/bootstrap.js"></script>
-<script type="text/javascript">
-    $("[rel=tooltip]").tooltip();
-    $(function() {
-        $('.demo-cancel-click').click(function(){return false;});
-    });
-</script>
+<%--<script src="/static/js/bootstrap/bootstrap.js"></script>--%>
 </div>
 </body>
 </html>

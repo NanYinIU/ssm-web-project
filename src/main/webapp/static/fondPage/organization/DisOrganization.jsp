@@ -50,9 +50,12 @@
     <script src="/static/js/zTree/jquery.ztree.excheck.min.js"></script>
     <script src="/static/js/zTree/jquery.ztree.exhide.min.js"></script>
     <script src="/static/js/zTree/jquery.ztree.exedit.min.js"></script>
-
+    <script src="/static/js/template-web.js"></script>
     <script src ="/static/js/NanYinJs/mytree.js"></script>
     <script src="/static/js/NanYinJs/orgMsg.js"></script>
+    <script src="/static/js/echarts.js" type="text/javascript"></script>
+    <%--<script src="/static/js/flatUi/flat-ui.js" type="text/javascript"></script>--%>
+    <%--<link rel="stylesheet" type="text/css" href="/static/css/flat-ui.css">--%>
 </head>
 <body class=" theme-blue">
 
@@ -92,6 +95,26 @@
         $('#main-menu').append(uls.clone());
     });
 </script>
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<!-- Le fav and touch icons -->
+<link rel="shortcut icon" href="../assets/ico/favicon.ico">
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+<link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
+
+
+<!--[if lt IE 7 ]> <body class="ie ie6"> <![endif]-->
+<!--[if IE 7 ]> <body class="ie ie7 "> <![endif]-->
+<!--[if IE 8 ]> <body class="ie ie8 "> <![endif]-->
+<!--[if IE 9 ]> <body class="ie ie9 "> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
+
+<!--<![endif]-->
 
 <div class="navbar navbar-default" role="navigation">
     <div class="navbar-header">
@@ -108,10 +131,7 @@
             <li class="dropdown hidden-xs">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <span class="glyphicon glyphicon-music padding-right-small" style="position:relative;top: 3px;"></span>当前用户： ${user}
-                    <i class="fa fa-caret-down"></i>
                 </a>
-
-
             </li>
         </ul>
 
@@ -140,7 +160,7 @@
             <shiro:hasAnyRoles name="admin,manager"> <li ><a href="/other/returnDruidPage"><span class="fa fa-caret-right"></span>Druid监控</a></li></shiro:hasAnyRoles>
             <li ><a href="#"><span class="fa fa-caret-right"></span> 页面资源管理</a></li>
         </ul></li>
-
+        <li><a href="/cal/returnCal" class="nav-header"><i class="fa fa-fw fa-bank"></i> 个人日程</a></li>
         <li><a href="/logout" class="nav-header"><i class="fa fa-fw fa-sign-out"></i> 安全登出</a></li>
         <shiro:hasAnyRoles name="admin,manager"> <li><a href="/log/returnLog" class="nav-header"><i class="fa fa-fw fa-cloud"></i> 登录日志</a></li></shiro:hasAnyRoles>
     </ul>
@@ -148,11 +168,29 @@
 
 <div class="content">
     <div class="header">
-        <div class="stats">
-            <p class="stat"><span class="label label-info">5</span> Tickets</p>
-            <p class="stat"><span class="label label-success">27</span> Tasks</p>
-            <p class="stat"><span class="label label-danger">15</span> Overdue</p>
-        </div>
+        <div id="content"></div>
+
+        <script id="test" type="text/html">
+            <div class="stats">
+                <p class="stat"><b>您还有</b> <span class="label label-info">{{count}}</span><b>个事件未处理</b></p>
+                <p class="stat"><b>查看</b> <span class="label label-danger"><a href="/cal/returnCal"><font color="#f0f8ff"> 个人日程</font></a></span></p>
+            </div>
+        </script>
+
+        <script>
+            var data = '' ;
+            $.ajax({
+                type: "post",
+                url: "/cal/count",
+                dataType: "json",contentType:"application/json;UTF-8",
+                success:function (json) {
+                    data =json
+                    var html1 = template('test', data);
+
+                    document.getElementById('content').innerHTML = html1;
+                }
+            });
+        </script>
 
         <h1 class="page-title">NanYinIU</h1>
         <ul class="breadcrumb">
@@ -167,35 +205,113 @@
 
                 <div class="span12"><span class="label"></span>
                     <div class="row-fluid">
+                    <shiro:hasAnyRoles name="admin,manager,driver">
+                       <div class="col-sm-6 col-md-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading no-collapse"><b> Tip : 可进行拖拽，编辑，删除，来改变部门结构和内容</b><span class="label label-warning">谨慎调整</span></div>
 
-                        <div class="span8">
-                            <%--这是一个树形结构--%>
-                            <%--<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 pt10">--%>
-                                <%--<div class="well sidebar-nav ">--%>
-                              <shiro:hasAnyRoles name="admin,manager,driver"> <b><span class="label-info">Tip:可进行拖拽，编辑，删除，来改变部门结构和内容</span></b>
-                                <ul id="planTree" class="ztree"></ul></shiro:hasAnyRoles>
-                                <%--</div>--%>
-                            <%--</div>--%>
+                                <ul id="planTree" class="ztree"></ul>
+                            </div>
                         </div>
+                       </div>
+                    </shiro:hasAnyRoles>
+                    <div class="col-sm-6 col-md-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading no-collapse">人员分布饼状图<span class="label label-primary">实时</span></div>
+                            <div id="main" style="width: 600px;height:400px;"></div>
+                            <script type="text/javascript">
+                                function loadOneColumn() {
+                                    var myChart = echarts.init(document.getElementById('main'));
+                                    // 显示标题，图例和空的坐标轴
+                                    myChart.setOption({
+                                        color: ['#ff7d27', '#47b73d', '#fcc36e', '#57a2fd', "#228b22"],//饼图颜色
+                                        title: {
+                                            text: '各部门人员分布情况',
+                                            subtext: '及时统计',
+                                            x:'center'
+                                        },
+                                        tooltip: {
+                                            trigger: 'item',
+                                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                                        },
+                                        legend: {
+                                            orient: 'vertical',
+                                            x: 'left',
+                                            data: []
+                                        },
+                                        toolbox: {
+                                            show: true,
+                                            feature: {
+                                                mark: { show: true },
+                                                dataView: { show: true, readOnly: false },
+                                                magicType: {
+                                                    show: true,
+                                                    type: ['pie', 'funnel'],
+                                                    option: {
+                                                        funnel: {
+                                                            x: '25%',
+                                                            width: '50%',
+                                                            funnelAlign: 'left',
+                                                            max: 1548
+                                                        }
+                                                    }
+                                                },
+                                                restore: { show: true },
+                                                saveAsImage: { show: true }
+                                            }
+                                        },
+                                        series: [{
+                                            name: '人员统计',
+                                            type: 'pie',
+                                            radius: '55%',
+                                            center: ['50%', '60%'],
+                                            data: []
+                                        }]
+                                    });
+                                    myChart.showLoading();    //数据加载完之前先显示一段简单的loading动画
+                                    var names = [];    //类别数组（用于存放饼图的类别）
+                                    var brower = [];
+                                    $.ajax({
+                                        type: 'get',
+                                        url: '/organization/resEchart',//请求数据的地址
+                                        dataType: "json",        //返回数据形式为json
+                                        success: function (result) {
+                                            //请求成功时执行该函数内容，result即为服务器返回的json对象
+                                            $.each(result.list, function (index, item) {
+                                                names.push(item.name);    //挨个取出类别并填入类别数组
+                                                brower.push({
+                                                    name: item.name,
+                                                    value: item.count
+                                                });
+                                            });
+                                            myChart.hideLoading();    //隐藏加载动画
+                                            myChart.setOption({        //加载数据图表
+                                                legend: {
+                                                    data: names
+                                                },
+                                                series: [{
+                                                    data: brower
+                                                }]
+                                            });
+                                        },
+                                        error: function (errorMsg) {
+                                            //请求失败时执行该函数
+                                            alert("图表请求数据失败!");
+                                            myChart.hideLoading();
+                                        }
+                                    });
+                                };
+                                loadOneColumn();
+                            </script>
+                        </div>
+                    </div>
 
-                        <div class="span4">
-                            <div id="toolbar" class="btn-group">
-                            <button id="b_refresh" type="button" class="btn btn-default">
-                                <span class="glyphicon glyphicon-circle-arrow-down" aria-hidden="true"></span>&nbsp;刷新表格
-                            </button>
-                                <script>
-                                    $("#b_refresh").click(function () {
-                                        window.location.reload();
-                                    })
-                                </script>
-                        </div>
-                        <%--表格--%>
-                        <table id="td_org"></table>
-                        </div>
+
                     </div>
                 </div>
 
             </div>
+    </div>
 </div>
 
 

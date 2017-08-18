@@ -25,6 +25,15 @@ public class User {
     private String sex;
     private Date create_time;
     private int organizationId;
+    private int status;
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
     public int getId() {
         return id;

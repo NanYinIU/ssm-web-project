@@ -53,9 +53,6 @@ public class UserVoController {
        return modelAndView;
     }
 
-
-
-
     @RequestMapping("/selectByName")
     public @ResponseBody
     Map<String,Object> selectByName(int pageSize, int pageNumber,String ByName){
@@ -86,18 +83,6 @@ public class UserVoController {
         return userVoService.insertUserVo(role[0]);
     }
 
-    //  geterrors 函数返回验证错误的信息
-//    private Map<String, String> getErrors(BindingResult result) {
-//        Map<String, String> map = new HashMap<String, String>();
-//        List<FieldError> list = result.getFieldErrors();
-//        for (FieldError error : list) {
-//            System.out.println("error.getField():" + error.getField());
-//            System.out.println("error.getDefaultMessage():" + error.getDefaultMessage());
-//
-//            map.put(error.getField(), error.getDefaultMessage());
-//        }
-//        return map;
-//    }
 
     @RequestMapping(value = "/UpdateUserVo"
             ,consumes = "application/json" , method = RequestMethod.POST)

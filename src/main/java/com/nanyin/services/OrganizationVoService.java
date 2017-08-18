@@ -16,4 +16,6 @@ public interface OrganizationVoService {
     Map<String,Object> displayOrganizationVo(Map<String,Object> map);
 
     int updateNode(OrganizationVo organizationVo);
+
+    List orgEchart();
 }

@@ -24,6 +24,12 @@
         SET pId=#{pId} WHERE id=#{id}
     </update>
 
+    <select id="orgEchart" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT COUNT(*)
+        FROM db_shiro.S_organization o, db_shiro.S_User u
+        WHERE  o.id = u.organizationId AND o.name = #{name}
+    </select>
+
 
 
 

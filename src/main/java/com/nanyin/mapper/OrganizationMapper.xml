@@ -31,7 +31,15 @@
         DELETE FROM db_shiro.S_organization WHERE id = #{id}
     </delete>
 
+    <insert id="insertOrg" parameterType="com.nanyin.entity.vo.OrganizationVo">
+        INSERT into db_shiro.S_organization (name,pId)
+        VALUES(#{name},#{pId});
+    </insert>
 
+    <select id="selectIdByName" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT id FROM db_shiro.S_organization
+        WHERE name=#{name};
+    </select>
 
 
 

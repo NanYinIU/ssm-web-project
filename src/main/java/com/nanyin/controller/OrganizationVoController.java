@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,5 +45,12 @@ public class OrganizationVoController {
     @RequestMapping("/updateNode")
     public @ResponseBody int updateNode(@RequestBody OrganizationVo organizationVo){
         return organizationVoService.updateNode(organizationVo);
+    }
+
+    @RequestMapping("/resEchart")
+    public @ResponseBody Map resEchart(){
+        Map<String,List> map = new HashMap<String,List>();
+        map.put("list",organizationVoService.orgEchart());
+        return map;
     }
 }
