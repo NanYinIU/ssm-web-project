@@ -33,7 +33,7 @@ import java.util.UUID;
 public class SystemLogAspect {
 
     //注入Service用于把日志保存数据库
-    @Resource  //这里我用resource注解，一般用的是@Autowired，他们的区别如有时间我会在后面的博客中来写
+    @Resource  //这里我用resource注解，一般用的是@Autowired
     private SystemLogService systemLogService;
 
     private  static  final Logger logger = LoggerFactory.getLogger(SystemLogAspect. class);
@@ -74,7 +74,7 @@ public class SystemLogAspect {
      * @param joinPoint 切点
      */
     @After("controllerAspect()")
-    public  void after(JoinPoint joinPoint) {
+    public void after(JoinPoint joinPoint) {
 
        /* HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         HttpSession session = request.getSession();  */

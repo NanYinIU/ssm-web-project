@@ -10,6 +10,7 @@
         <!--配置数据源-->
         <property name="dataSource" ref="dataSource"/>
     </bean>
+
     <tx:advice  id="txAdvice" transaction-manager="transactionManager">
         <!--声明式事务控制 REQUIRED是必须进行事务控制的-->
         <tx:attributes>
@@ -17,6 +18,7 @@
             <tx:method name="delect*" propagation="REQUIRED"/>
             <tx:method name="update*" propagation="REQUIRED"/>
             <tx:method name="insert*" propagation="REQUIRED"/>
+            <tx:method name="get*" propagation="REQUIRED"/>
         </tx:attributes>
     </tx:advice>
 

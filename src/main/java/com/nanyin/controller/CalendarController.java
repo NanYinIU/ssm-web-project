@@ -26,7 +26,7 @@ import java.util.Map;
 /**
  * Created by NanYin on 2017-08-15 下午10:40.
  * 包名： com.nanyin.controller
- * 类描述：
+ * 类描述：日程表的controller类
  */
 @Controller
 @RequestMapping("/cal")
@@ -71,6 +71,7 @@ public class CalendarController {
     public @ResponseBody int updateEvent(@RequestBody List<Calendar> up){
         logger.info(up.get(0).getClassName());
         if(up.get(0).getClassName()==1){
+//      这里把颜色固定到程序里
             up.get(0).setColor("#FFEBAC");
         }
         logger.info(up.get(0).toString());
