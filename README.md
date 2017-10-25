@@ -42,6 +42,12 @@ zTree | 树插件  | [http://www.treejs.cn/v3/](http://www.treejs.cn/v3/)
 #### 结构
 ![结构](refer/结构.png)
 #### 部门
-![部门](refer/部门.png)
+![部门](refer/9部门.png)
+#### 个人日程
+![个人日程](refer/e_个人日程.png)
 #### 日志
 ![日志](refer/日志.png)
+
+
+
+
