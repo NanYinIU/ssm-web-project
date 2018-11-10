@@ -2,7 +2,7 @@ package com.nanyin.services.impl;
 
 import com.nanyin.entity.User;
 import com.nanyin.entity.vo.UserVo;
-import com.nanyin.mapper.OrganizationMapper;
+import com.nanyin.mapper.UnitMapper;
 import com.nanyin.mapper.RoleMapper;
 import com.nanyin.mapper.UserVoMapper;
 import com.nanyin.services.UserVoService;
@@ -10,7 +10,6 @@ import org.apache.shiro.crypto.hash.SimpleHash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.NotNull;
 import java.util.*;
 
 /**
@@ -25,7 +24,7 @@ public class UserVoServiceImpl implements UserVoService {
     @Autowired
     private RoleMapper roleMapper;
     @Autowired
-    private OrganizationMapper organizationMapper;
+    private UnitMapper unitMapper;
 
 
     public List<UserVo> AllMessageDis() {
@@ -69,18 +68,17 @@ public class UserVoServiceImpl implements UserVoService {
 
         if(describe!=null&&!"".equals(describe)) {
             int role_id = roleMapper.selectByRoleName(describe);
-            user.setRoleId(role_id);
         }
 //        如果没有传进name值默认分配roleid=5 也就是guest角色
-        else {
-            user.setRoleId(5);
-        }
+//        else {
+//            user.setRoleId(5);
+//        }
         String OrganName = userVo.getOrganization_name();
         if(!"".equals(OrganName)&&OrganName!=null) {
-           int organ_id = organizationMapper.selectOrganizationByName(OrganName);
-            user.setOrganizationId(organ_id);
+           int organ_id = unitMapper.selectOrganizationByName(OrganName);
+            user.setUnitId(organ_id);
         }else{
-            user.setOrganizationId(5);
+            user.setUnitId(5);
         }
         userVoMapper.insertUserVo(user);
         return 0;
@@ -96,20 +94,20 @@ public class UserVoServiceImpl implements UserVoService {
 
         String describe = userVo.getRole_describe();
 
-        if(describe!=null&&!"".equals(describe)) {
-            int role_id = roleMapper.selectByRoleName(describe);
-            user.setRoleId(role_id);
-        }
+//        if(describe!=null&&!"".equals(describe)) {
+//            int role_id = roleMapper.selectByRoleName(describe);
+//            user.setRoleId(role_id);
+//        }
 //        如果没有传进name值默认分配roleid=5 也就是guest角色
-        else {
-            user.setRoleId(5);
-        }
+//        else {
+//            user.setRoleId(5);
+//        }
         String OrganName = userVo.getOrganization_name();
         if(!"".equals(OrganName)&&OrganName!=null) {
-            int organ_id = organizationMapper.selectOrganizationByName(OrganName);
-            user.setOrganizationId(organ_id);
+            int organ_id = unitMapper.selectOrganizationByName(OrganName);
+            user.setUnitId(organ_id);
         }else{
-            user.setOrganizationId(5);
+            user.setUnitId(5);
         }
 
         return userVoMapper.UpdateUserVo(user);

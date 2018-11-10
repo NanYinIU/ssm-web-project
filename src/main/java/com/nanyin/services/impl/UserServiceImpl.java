@@ -47,8 +47,7 @@ public class UserServiceImpl implements UserService {
         user.setCreate_time(date);
         user.setSalt("salt");
 //        提供默认的roleId 为2
-        user.setOrganizationId(1);
-        user.setRoleId(2);
+        user.setUnitId(1);
         return userMapper.insertUser(user);
     }
 

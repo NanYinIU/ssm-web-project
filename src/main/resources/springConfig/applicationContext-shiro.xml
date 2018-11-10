@@ -118,9 +118,11 @@
         <!-- Shiro连接约束配置,即过滤链的定义 -->
         <property name="filterChainDefinitions">
             <value>
-
                 /login= anon
-                /static/** = anon
+                /js/** = anon
+                /css/** = anon
+                /fonts/** = anon
+                /image/** = anon
                 <!--/mes/** = authc-->
                 /logout = logout
                 /** = user

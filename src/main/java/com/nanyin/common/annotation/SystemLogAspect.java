@@ -1,9 +1,7 @@
 package com.nanyin.common.annotation;
 
-import com.nanyin.entity.SystemLog;
-import com.nanyin.services.SystemLogService;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.PrincipalCollection;
+import com.nanyin.entity.Log;
+import com.nanyin.services.logService;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
@@ -14,11 +12,9 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
-import javax.security.auth.Subject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.Date;
 import java.util.UUID;
 
@@ -34,7 +30,7 @@ public class SystemLogAspect {
 
     //注入Service用于把日志保存数据库
     @Resource  //这里我用resource注解，一般用的是@Autowired
-    private SystemLogService systemLogService;
+    private logService logService;
 
     private  static  final Logger logger = LoggerFactory.getLogger(SystemLogAspect. class);
 
@@ -101,8 +97,8 @@ public class SystemLogAspect {
                 if (method.getName().equals(methodName)) {
                     Class[] clazzs = method.getParameterTypes();
                     if (clazzs.length == arguments.length) {
-                        operationType = method.getAnnotation(Log.class).operationType();
-                        operationName = method.getAnnotation(Log.class).operationName();
+                        operationType = method.getAnnotation(com.nanyin.common.annotation.Log.class).operationType();
+                        operationName = method.getAnnotation(com.nanyin.common.annotation.Log.class).operationName();
                         break;
                     }
                 }
@@ -114,20 +110,19 @@ public class SystemLogAspect {
             System.out.println("请求人:" + name);
             System.out.println("请求IP:" + ip);
             //*========数据库日志=========*//
-            SystemLog log = new SystemLog();
+            Log log = new Log();
 //            随机的识别码id
             log.setId(UUID.randomUUID().toString());
-            log.setDescription(operationName);
-            log.setMethod((joinPoint.getTarget().getClass().getName() + "." + joinPoint.getSignature().getName() + "()")+"."+operationType);
+            log.setContent(operationName+(joinPoint.getTarget().getClass().getName() + "." + joinPoint.getSignature().getName() + "()")+"."+operationType);
             log.setLogType("0");
-            log.setResultIp(ip);
-            log.setParams("null");
-            log.setCreateBy(name);
+            log.setIp(ip);
+            log.setType_id("null");
+//            log.setUser(name);
             log.setCreateDate(new Date());
             System.out.println(log.toString());
             //保存数据库
             try {
-                systemLogService.insert(log);
+                logService.insert(log);
             }catch (Exception e){
                 System.out.println("这里有错");
             }

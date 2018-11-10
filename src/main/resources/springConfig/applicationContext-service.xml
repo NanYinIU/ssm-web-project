@@ -8,9 +8,9 @@
     <bean id="userServices" class="com.nanyin.services.impl.UserServiceImpl"/>
     <bean id="userVoServices" class="com.nanyin.services.impl.UserVoServiceImpl"/>
     <bean id="roleService" class="com.nanyin.services.impl.RoleServiceImpl"/>
-    <bean id="organizationService" class="com.nanyin.services.impl.OrganizationServiceImpl"/>
-    <bean id="systemLogService" class="com.nanyin.services.impl.SystemLogServiceImpl"/>
+    <bean id="unitService" class="com.nanyin.services.impl.UnitServiceImpl"/>
+    <bean id="logService" class="com.nanyin.services.impl.LogServiceImpl"/>
     <bean id="organizationVoService" class="com.nanyin.services.impl.OrganizationVoServiceImpl"/>
     <bean id="calendarService" class="com.nanyin.services.impl.CalendarServiceImpl"/>
-    <bean id="permissionService" class="com.nanyin.services.impl.PermissionServiceImpl"/>
+    <bean id="authService" class="com.nanyin.services.impl.AuthServiceImpl"/>
 </beans>

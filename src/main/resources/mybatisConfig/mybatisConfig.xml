@@ -12,11 +12,11 @@
 <mappers>
     <mapper resource="com/nanyin/mapper/UserMapper.xml"/>
     <mapper resource="com/nanyin/mapper/UserVoMapper.xml"/>
-    <mapper resource="com/nanyin/mapper/OrganizationMapper.xml"/>
+    <mapper resource="com/nanyin/mapper/UnitMapper.xml"/>
     <mapper resource="com/nanyin/mapper/RoleMapper.xml"/>
     <mapper resource="com/nanyin/mapper/OrganizationVoMapper.xml"/>
     <mapper resource="com/nanyin/mapper/CalendarMapper.xml"/>
-    <mapper resource="com/nanyin/mapper/PermissionMapper.xml"/>
+    <mapper resource="com/nanyin/mapper/AuthMapper.xml"/>
 </mappers>
 
 

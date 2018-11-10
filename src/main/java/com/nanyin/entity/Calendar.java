@@ -15,9 +15,9 @@ public class Calendar {
     private int id;
     private String title;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Timestamp start;
+    private Timestamp plan_start;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Timestamp end;
+    private Timestamp plan_end;
     private int allDay;
     private String color;
     private int className;
@@ -39,20 +39,20 @@ public class Calendar {
         this.title = title;
     }
 
-    public Timestamp getStart() {
-        return start;
+    public Timestamp getPlan_start() {
+        return plan_start;
     }
 
-    public void setStart(Timestamp start) {
-        this.start = start;
+    public void setPlan_start(Timestamp plan_start) {
+        this.plan_start = plan_start;
     }
 
-    public Timestamp getEnd() {
-        return end;
+    public Timestamp getPlan_end() {
+        return plan_end;
     }
 
-    public void setEnd(Timestamp end) {
-        this.end = end;
+    public void setPlan_end(Timestamp plan_end) {
+        this.plan_end = plan_end;
     }
 
     public int getAllDay() {
@@ -87,17 +87,4 @@ public class Calendar {
         this.u_id = u_id;
     }
 
-    @Override
-    public String toString() {
-        return "Calendar{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", start=" + start +
-                ", end=" + end +
-                ", allDay=" + allDay +
-                ", color='" + color + '\'' +
-                ", className=" + className +
-                ", u_id=" + u_id +
-                '}';
-    }
 }

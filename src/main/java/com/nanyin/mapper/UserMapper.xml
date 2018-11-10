@@ -6,29 +6,32 @@
 <mapper namespace="com.nanyin.mapper.UserMapper">
 
     <select id="selectById"  parameterType="java.lang.Integer" resultType="com.nanyin.entity.User">
-        SELECT * FROM S_User WHERE id = #{id}
+        SELECT * FROM user WHERE id = #{id}
     </select>
 
     <select id="selectByName" parameterType="java.lang.String" resultType="com.nanyin.entity.User">
-        SELECT * FROM S_User WHERE name = #{name}
+        SELECT * FROM user WHERE name = #{name}
     </select>
 
     <select id="getRoles" parameterType="java.lang.String" resultType="java.lang.String">
-        SELECT role_name
-        FROM S_role r, S_User u
-        WHERE u.name = #{name}
-        AND r.role_id =  u.roleId
+     SELECT r.name FROM user u
+     LEFT JOIN
+      r_user_role ru ON u.id = ru.user_id
+     LEFT JOIN
+      role r ON r.id = ru.role_id
     </select>
 
     <select id="getPermission"  parameterType="java.lang.String" resultType="java.lang.String">
-        SELECT permission_name
-        FROM db_shiro.S_User u, db_shiro.S_role r,db_shiro.role_permission rp,db_shiro.S_permission p
-        WHERE u.name = #{name}
-        AND u.roleId = r.role_id AND r.role_id = rp.r_id AND p.id=rp.p_id;
+     SELECT a.name
+     FROM user u
+     LEFT JOIN
+     r_user_auth ru ON u.id = ru.user_id
+     LEFT JOIN
+     auth a ON a.id = ru.auth_id
     </select>
 
     <select id="displayUser" resultType="com.nanyin.entity.User">
-        SELECT * FROM S_User
+        SELECT * FROM user
     </select>
 
     <!--parameterType 输入参数类型 resultType 输出参数类型 -->
@@ -38,7 +41,7 @@
     <!--</insert>-->
 
     <update id="updateThisUser" parameterType="com.nanyin.entity.User">
-        UPDATE S_User SET name = #{name}, password = #{password} , sex = #{sex} , age = #{age} WHERE id = #{id}
+        UPDATE user SET name = #{name}, password = #{password} , sex = #{sex} , age = #{age} WHERE id = #{id}
     </update>
 
 

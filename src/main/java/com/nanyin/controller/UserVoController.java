@@ -6,14 +6,12 @@ import com.nanyin.entity.Organization;
 import com.nanyin.entity.Role;
 
 import com.nanyin.entity.vo.UserVo;
-import com.nanyin.services.OrganizationService;
+import com.nanyin.services.UnitService;
 import com.nanyin.services.RoleService;
-import com.nanyin.services.UserService;
 import com.nanyin.services.UserVoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -36,7 +34,7 @@ public class UserVoController {
     @Autowired
     private RoleService roleService;
     @Autowired
-    private OrganizationService organizationService;
+    private UnitService unitService;
 
 //      人员信息显示
     @RequestMapping(value = "/AllMessageDis")
@@ -44,7 +42,7 @@ public class UserVoController {
     public ModelAndView AllMessageDis(){
        ModelAndView modelAndView = new ModelAndView();
        List<Role> roleList = roleService.Roles();
-       List<Organization> organizationList = organizationService.selectOrganizations();
+       List<Organization> organizationList = unitService.selectOrganizations();
 
        modelAndView.addObject("Roles",roleList);
        modelAndView.addObject("organ",organizationList);

@@ -63,7 +63,7 @@ public class RoleController {
         List<Role> roleList = roleService.Roles();
         Map<String,Boolean> map = new HashMap<String, Boolean>();
         for(Role role : roleList){
-            if(role.getRole_name().equals(add_roleName)){
+            if(role.getName().equals(add_roleName)){
                 valid = false ;
                 break;
             }

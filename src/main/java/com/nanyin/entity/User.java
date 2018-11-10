@@ -8,7 +8,7 @@ import java.util.Date;
 
 /**
  * Created by NanYin on 17-7-8.
- * 用户的基本注册信息 不包括部门 权限 职位等信息
+ *
  */
 public class User {
     private int id;
@@ -19,21 +19,12 @@ public class User {
     @Length(max=12, min=3, message="密码在3到30位之间")
     private String password;
     private String salt;
-    private int roleId;
     @Max(value=100, message="{年龄不能超过100}")
     private int age;
-    private String sex;
+    private int sex;
     private Date create_time;
-    private int organizationId;
+    private int unitId;
     private int status;
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
 
     public int getId() {
         return id;
@@ -67,14 +58,6 @@ public class User {
         this.salt = salt;
     }
 
-    public int getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(int roleId) {
-        this.roleId = roleId;
-    }
-
     public int getAge() {
         return age;
     }
@@ -83,11 +66,11 @@ public class User {
         this.age = age;
     }
 
-    public String getSex() {
+    public int getSex() {
         return sex;
     }
 
-    public void setSex(String sex) {
+    public void setSex(int sex) {
         this.sex = sex;
     }
 
@@ -99,26 +82,19 @@ public class User {
         this.create_time = create_time;
     }
 
-    public int getOrganizationId() {
-        return organizationId;
+    public int getUnitId() {
+        return unitId;
     }
 
-    public void setOrganizationId(int organizationId) {
-        this.organizationId = organizationId;
+    public void setUnitId(int unitId) {
+        this.unitId = unitId;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", password='" + password + '\'' +
-                ", salt='" + salt + '\'' +
-                ", roleId=" + roleId +
-                ", age=" + age +
-                ", sex='" + sex + '\'' +
-                ", create_time=" + create_time +
-                ", organizationId=" + organizationId +
-                '}';
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

@@ -3,6 +3,7 @@ package com.nanyin.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.nanyin.common.annotation.Log;
+import com.nanyin.common.util.EDSUtil;
 import com.nanyin.entity.User;
 import com.nanyin.services.UserService;
 import org.apache.shiro.SecurityUtils;
@@ -21,7 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
-
 /**
  * Created by NanYin on 2017-07-08 下午6:14.
  * 包名： com.nanyin.controller
@@ -35,39 +35,31 @@ public class UserController {
 
 //  登录页 login
     @RequestMapping("/login")
-//    通过登录页面传来 name 和 password
     @Log(operationType = "select操作",operationName = "用户登录")
     public String login(String name, String password , HttpServletRequest request ){
-
             org.apache.shiro.subject.Subject subject = SecurityUtils.getSubject();
-            String pass = null;
-            User user = userService.selectByName(name);
-            if(user!=null) {
-                String salt = user.getSalt();
-                pass = new Md5Hash(password, salt, 1024).toString();
-            }
-            try {
-            UsernamePasswordToken token = new UsernamePasswordToken(name,pass);
 
+            String pass = EDSUtil.getDecryptString(password);
+            try {
+            UsernamePasswordToken token = new UsernamePasswordToken(name,password);
             subject.login(token);
 //            基于shiro的session控制
             Session session =  subject.getSession();
             session.setAttribute("user",name);
-            return "/static/fondPage/index.jsp";
+            return "/WEB-INF/jsp/index.jsp";
         }catch (Exception e){
             request.setAttribute("error","用户名或密码错误");
-            return "/static/fondPage/login.jsp";
+            return "/WEB-INF/jsp/login.jsp";
         }
 
     }
-
 
     @RequestMapping("/logout")
     @Log(operationType = "select操作",operationName = "用户登出")
     public String logout(HttpServletRequest request){
 //          清除session
         request.getSession().invalidate();
-        return "/static/fondPage/login.jsp" ;
+        return "/WEB-INF/jsp/login.jsp" ;
     }
 
     @RequestMapping("/Users/{firstpage}")
@@ -77,12 +69,12 @@ public class UserController {
         PageInfo<User> pageInfo = new PageInfo<User>(userList);
         request.setAttribute("Users",userList);
         request.setAttribute("page",pageInfo);
-        return "/static/fondPage/Users.jsp";
+        return "/WEB-INF/jsp/Users.jsp";
     }
 //    返回主页
     @RequestMapping("/returnIndex")
     public String returnIndex(){
-        return "/static/fondPage/index.jsp";
+        return "/WEB-INF/jsp/index.jsp";
     }
 
 
@@ -96,7 +88,7 @@ public class UserController {
       ModelAndView modelAndView = new ModelAndView();
       modelAndView.addObject("userMessage",user);
 
-      modelAndView.setViewName("/static/fondPage/Users/UpdateUser.jsp");
+      modelAndView.setViewName("/WEB-INF/jsp/Users/UpdateUser.jsp");
       return modelAndView;
     }
 

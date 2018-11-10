@@ -38,7 +38,7 @@ public class ShiroMyRealm extends AuthorizingRealm {
         User user = (User) userService.selectByName(username);
         if(user != null){
 //  只有当前用户存在 并且状态未被锁定 才能能登录
-            if(user.getStatus()==1) {
+            if(user.getStatus()==0) {
                 AuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(username, user.getPassword(), "myreaml");
                 return authenticationInfo;
             }else return null;

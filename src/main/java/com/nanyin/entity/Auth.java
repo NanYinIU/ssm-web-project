@@ -3,16 +3,16 @@ package com.nanyin.entity;
 import java.util.Date;
 
 /**
- * Created by NanYin on 2017-07-10 下午1:27.
- * 包名： com.nanyin.entity
- * 类描述：角色的实体类
+ * Created by NanYin on 2017-07-10 下午2:19.
+ * 包名： com.nanyin.entity.vo
+ * 类描述：权限表的实体类
  */
-public class Role {
-    private int id;
+public class Auth {
+    private int id ;
     private String name;
-    private String ord;
+    private int ord;
     private String comm;
-    private Date create_date;
+    private Date create_data;
 
     public int getId() {
         return id;
@@ -30,11 +30,11 @@ public class Role {
         this.name = name;
     }
 
-    public String getOrd() {
+    public int getOrd() {
         return ord;
     }
 
-    public void setOrd(String ord) {
+    public void setOrd(int ord) {
         this.ord = ord;
     }
 
@@ -46,11 +46,11 @@ public class Role {
         this.comm = comm;
     }
 
-    public Date getCreate_date() {
-        return create_date;
+    public Date getCreate_data() {
+        return create_data;
     }
 
-    public void setCreate_date(Date create_date) {
-        this.create_date = create_date;
+    public void setCreate_data(Date create_data) {
+        this.create_data = create_data;
     }
 }

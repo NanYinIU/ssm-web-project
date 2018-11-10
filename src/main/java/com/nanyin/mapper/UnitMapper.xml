@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nanyin.mapper.UnitMapper">
+    <select id="selectOrganizations" resultType="com.nanyin.entity.Organization">
+        SELECT o.id, o.name
+        FROM db_shiro.S_organization o
+    </select>
+
+    <select id="selectOrganizationById" resultType="java.lang.String" parameterType="java.lang.Integer">
+        SELECT o.name
+        FROM db_shiro.S_organization o, db_shiro.S_User u
+        WHERE u.organizationId = o.id
+            AND u.id = #{id}
+    </select>
+    <select id="selectOrganizationByName" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT o.id
+        FROM db_shiro.S_organization o
+        WHERE o.name = #{name}
+    </select>
+
+    <update id="updateById" parameterType="com.nanyin.entity.Organization">
+        UPDATE db_shiro.S_organization
+        SET name = #{name}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delectOrgById" parameterType="java.lang.Integer">
+        DELETE FROM db_shiro.S_organization WHERE id = #{id}
+    </delete>
+
+    <insert id="insertOrg" parameterType="com.nanyin.entity.vo.OrganizationVo">
+        INSERT into db_shiro.S_organization (name,pId)
+        VALUES(#{name},#{pId});
+    </insert>
+
+    <select id="selectIdByName" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT id FROM db_shiro.S_organization
+        WHERE name=#{name};
+    </select>
+
+
+
+
+
+
+
+
+
+    <!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" >-->
+        <!--<property name="timeToIdleSeconds" value="3600"/>-->
+        <!--<property name="timeToLiveSeconds" value="3600"/>-->
+        <!--<property name="maxEntriesLocalHeap" value="1000"/>-->
+        <!--<property name="maxEntriesLocalDisk" value="10000000"/>-->
+        <!--<property name="memoryStoreEvictionPolicy" value="LRU"/>-->
+    <!--</cache>-->
+
+
+
+</mapper>
