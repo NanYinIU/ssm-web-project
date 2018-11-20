@@ -8,6 +8,9 @@
     <settings>
         <!-- 打印查询语句 -->
         <setting name="logImpl" value="STDOUT_LOGGING" />
+        <!--实体类-数据库表使用驼峰进行构造-->
+        <setting name="mapUnderscoreToCamelCase" value="true" />
+        <setting name="useGeneratedKeys" value="true" />
     </settings>
 <mappers>
     <mapper resource="com/nanyin/mapper/UserMapper.xml"/>
@@ -17,6 +20,7 @@
     <mapper resource="com/nanyin/mapper/OrganizationVoMapper.xml"/>
     <mapper resource="com/nanyin/mapper/CalendarMapper.xml"/>
     <mapper resource="com/nanyin/mapper/AuthMapper.xml"/>
+    <mapper resource="com/nanyin/mapper/NavBarMapper.xml"/>
 </mappers>
 
 

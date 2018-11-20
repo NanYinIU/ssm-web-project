@@ -36,19 +36,21 @@ public class UserController {
 //  登录页 login
     @RequestMapping("/login")
     @Log(operationType = "select操作",operationName = "用户登录")
-    public String login(String name, String password , HttpServletRequest request ){
-            org.apache.shiro.subject.Subject subject = SecurityUtils.getSubject();
-
-            String pass = EDSUtil.getDecryptString(password);
-            try {
-            UsernamePasswordToken token = new UsernamePasswordToken(name,password);
+    public String login(String name, String password, HttpServletRequest request) {
+        org.apache.shiro.subject.Subject subject = SecurityUtils.getSubject();
+        String pass = null;
+        if (password != null) {
+            pass = EDSUtil.getEncryptString(password);
+        }
+        try {
+            UsernamePasswordToken token = new UsernamePasswordToken(name, pass);
             subject.login(token);
 //            基于shiro的session控制
-            Session session =  subject.getSession();
-            session.setAttribute("user",name);
+            Session session = subject.getSession();
+            session.setAttribute("user", name);
             return "/WEB-INF/jsp/index.jsp";
-        }catch (Exception e){
-            request.setAttribute("error","用户名或密码错误");
+        } catch (Exception e) {
+            request.setAttribute("error", "用户名或密码错误");
             return "/WEB-INF/jsp/login.jsp";
         }
 

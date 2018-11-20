@@ -13,4 +13,6 @@
     <bean id="organizationVoService" class="com.nanyin.services.impl.OrganizationVoServiceImpl"/>
     <bean id="calendarService" class="com.nanyin.services.impl.CalendarServiceImpl"/>
     <bean id="authService" class="com.nanyin.services.impl.AuthServiceImpl"/>
+    <bean id="navBarService" class="com.nanyin.services.impl.NavBarServiceImpl"/>
+
 </beans>

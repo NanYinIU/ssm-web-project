@@ -8,36 +8,36 @@
 
     <select id="findEventByUserName" parameterType="list" resultType="com.nanyin.entity.Calendar">
         SELECT c.id, c.title, c.`start`, c.`end`, c.className,c.color
-        FROM db_shiro.calendar c, db_shiro.S_User u
+        FROM calendar c, S_User u
         WHERE u.id = c.u_id
         AND u.name = #{name};
     </select>
 
     <insert id="insertEventByUserName" parameterType="com.nanyin.entity.Calendar">
-        INSERT INTO db_shiro.calendar(title,`start`,`end`,color,u_id)
+        INSERT INTO calendar(title,`start`,`end`,color,u_id)
         VALUES(#{title},#{start},#{end},NULL,#{u_id});
     </insert>
 
     <update id="updateEvent" parameterType="com.nanyin.entity.Calendar">
-        UPDATE db_shiro.calendar
+        UPDATE calendar
         SET title=#{title}, `start`=#{start}, `end`=#{end},color=#{color},className=#{className}
         WHERE id=#{id}
     </update>
 
     <delete id="delectEvent" parameterType="java.lang.Integer">
-        DELETE  FROM db_shiro.calendar WHERE id=#{id}
+        DELETE  FROM calendar WHERE id=#{id}
     </delete>
 
     <select id="selectAllEvents" resultType="java.lang.Integer" parameterType="java.lang.String">
        SELECT COUNT(*)
-       FROM db_shiro.calendar c , db_shiro.S_User u
+       FROM calendar c , S_User u
        WHERE c.u_id = u.id
        AND u.name=#{name}
     </select>
 
     <select id="selectFinishedEvents" resultType="java.lang.Integer" parameterType="java.lang.String">
        SELECT COUNT(*)
-       FROM db_shiro.calendar c,db_shiro.S_User u
+       FROM calendar c,S_User u
        WHERE color="#FFEBAC"
        AND c.u_id = u.id
        AND u.name=#{name}
