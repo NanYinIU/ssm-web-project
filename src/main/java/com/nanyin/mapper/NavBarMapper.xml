@@ -6,12 +6,32 @@
 <mapper namespace="com.nanyin.mapper.NavBarMapper">
 
     <select id="findNavBarByUserId" parameterType="java.lang.Integer" resultType="com.nanyin.entity.NavBar">
-        SELECT s.id,s.name,s.url,s.clazz,s.parent_nav_id
+        SELECT s.id,s.name,s.url,s.clazz,s.parent_nav_id,s.icon,s.is_deleted,s.ord
         FROM s_nav_bar s
         LEFT JOIN r_nav_auth r on r.nav_id = s.id
         LEFT JOIN auth a on a.id = r.auth_id
         LEFT JOIN r_user_auth ra on ra.auth_id = a.id
         LEFT JOIN `user` user on user.id = ra.user_id WHERE user.id=#{userId}
+    </select>
+
+    <select id="findParentNode" resultType="com.nanyin.entity.NavBar" parameterType="java.lang.Integer">
+        SELECT s.id,s.name,s.url,s.clazz,s.parent_nav_id,s.icon,s.is_deleted,s.ord
+        from s_nav_bar s
+        LEFT JOIN r_nav_auth r on r.nav_id = s.id
+        LEFT JOIN auth a on a.id = r.auth_id
+        LEFT JOIN r_user_auth ra on ra.auth_id = a.id
+        LEFT JOIN `user` user on user.id = ra.user_id
+        where s.parent_nav_id is NULL and s.is_deleted=0 AND user.id=#{userId} ORDER BY s.ord;
+    </select>
+
+    <select id="findChildNode" resultType="com.nanyin.entity.NavBar" parameterType="java.util.Map">
+      select s.id,s.name,s.url,s.clazz,s.parent_nav_id,s.icon,s.is_deleted,s.ord
+      from s_nav_bar s
+      LEFT JOIN r_nav_auth r on r.nav_id = s.id
+      LEFT JOIN auth a on a.id = r.auth_id
+      LEFT JOIN r_user_auth ra on ra.auth_id = a.id
+      LEFT JOIN `user` user on user.id = ra.user_id
+      where s.parent_nav_id = #{parentId} and s.is_deleted=0 AND user.id=#{userId}  ORDER BY s.ord
     </select>
 
     <cache type="org.mybatis.caches.ehcache.LoggingEhcache" >

@@ -10,11 +10,17 @@
     <!--静态资源的解析 包括js css img html等等
         Handles HTTP GET requests for /resources/**
         by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+    <mvc:resources mapping="/jquery/**" location="/jquery/"/>
     <mvc:resources mapping="/js/**" location="/js/"/>
     <mvc:resources mapping="/css/**" location="/css/"/>
-    <mvc:resources mapping="/image/**" location="/image/"/>
-    <mvc:resources mapping="/fonts/**" location="/fonts/"/>
-<!--配置使用注解的方式配置处理器映射器和处理器适配器-->
+    <mvc:resources mapping="/datas/**" location="/datas/"/>
+    <mvc:resources mapping="/plugins/**" location="/plugins/"/>
+    <mvc:resources mapping="/temp/**" location="/temp/"/>
+    <mvc:resources mapping="/images/**" location="/images/"/>
+
+
+
+    <!--配置使用注解的方式配置处理器映射器和处理器适配器-->
     <!--<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"/>-->
     <!--<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>-->
     <mvc:annotation-driven validator="validatorFactoryBean">

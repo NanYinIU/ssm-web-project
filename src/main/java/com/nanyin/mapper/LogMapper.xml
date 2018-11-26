@@ -5,21 +5,21 @@
 
 <mapper namespace="com.nanyin.mapper.LogMapper">
 
-<insert id="insertSelective" parameterType="com.nanyin.entity.Log">
+    <insert id="insertSelective" parameterType="com.nanyin.entity.Log">
     INSERT INTO db_shiro.SystemLog
     VALUES(#{id},#{description},#{method},#{logType},#{requestIp},#{params},#{createBy},#{createDate});
-</insert>
+    </insert>
 
-<select id="select" parameterType="Map" resultType="com.nanyin.entity.Log">
+    <select id="select" parameterType="Map" resultType="com.nanyin.entity.Log">
     SELECT * FROM db_shiro.SystemLog
     LIMIT #{a},#{b}
-</select>
+    </select>
 
     <select id="selectAll" resultType="com.nanyin.entity.Log">
         SELECT * FROM db_shiro.SystemLog
     </select>
 
-    <cache type="org.mybatis.caches.ehcache.LoggingEhcache" >
+    <cache type="org.mybatis.caches.ehcache.LoggingEhcache">
         <property name="timeToIdleSeconds" value="3600"/>
         <property name="timeToLiveSeconds" value="3600"/>
         <property name="maxEntriesLocalHeap" value="1000"/>

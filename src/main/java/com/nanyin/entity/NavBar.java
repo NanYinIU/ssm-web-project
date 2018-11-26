@@ -11,6 +11,33 @@ public class NavBar {
     String url;
     String clazz;
     Integer parentNavId;
+    String icon;
+    Integer isDeleted;
+    Integer ord;
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public Integer getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Integer isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
+    public Integer getOrd() {
+        return ord;
+    }
+
+    public void setOrd(Integer ord) {
+        this.ord = ord;
+    }
 
     public Integer getId() {
         return id;

@@ -1,69 +1,81 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: ggx
-  Date: 17-7-9
-  Time: 上午10:45
-  To change this template use File | Settings | File Templates.
---%>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
 <html>
+
 <head>
-    <meta charset="utf-8"/>
-    <title>后台登录</title>
-    <meta name="author" content="DeathGhost" />
-    <link rel="stylesheet" type="text/css" href="/css/style.css" />
-    <style>
-        body{height:100%;background:#16a085;overflow:hidden;}
-        canvas{z-index:-1;position:absolute;}
-    </style>
-    <script src="js/jquery/jquery-1.11.1.min.js"></script>
-    <script src="js/verificationNumbers.js"></script>
-    <script src="js/Particleground.js"></script>
-    <script>
-        $(document).ready(function() {
-            //粒子背景特效
-            $('body').particleground({
-                dotColor: '#5cbdaa',
-                lineColor: '#5cbdaa'
-            });
-            //验证码 js写的
-            createCode();
-        });
-    </script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>登录</title>
+    <link rel="stylesheet" href="plugins/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="css/login.css" />
 </head>
-<body>
 
-
-<dl class="admin_login">
-    <dt>
-        <sm>管理系统</sm>
-        <em>Management System</em>
-    </dt>
-    <form action="/login" method="post" onsubmit="return validate()">
-        <dd class="user_icon">
-            <input type="text" name="name" placeholder="账号" class="login_txtbx" maxlength="50"/>
-        </dd>
-        <dd class="pwd_icon">
-            <input type="password" name="password" placeholder="密码" class="login_txtbx" maxlength="32"/>
-        </dd>
-        <dd class="val_icon">
-            <div class="checkcode">
-                <input type="text" name="checkcode" id="J_codetext" placeholder="验证码" maxlength="4" class="login_txtbx">
-                <canvas class="J_codeimg" id="myCanvas" onclick="createCode()">对不起，您的浏览器不支持canvas，请下载最新版浏览器!</canvas>
+<body class="beg-login-bg">
+<div class="beg-login-box">
+    <header>
+        <h1>后台登录</h1>
+    </header>
+    <div class="beg-login-main">
+        <form action="/toLogin" class="layui-form" method="post">
+            <%--<input name="__RequestVerificationToken" type="hidden" value="fkfh8D89BFqTdrE2iiSdG_L781RSRtdWOH411poVUWhxzA5MzI8es07g6KPYQh9Log-xf84pIR2RIAEkOokZL3Ee3UKmX0Jc8bW8jOdhqo81" />--%>
+            <div class="layui-form-item">
+                <label class="beg-login-icon">
+                    <i class="layui-icon">&#xe612;</i>
+                </label>
+                <input type="text" id="name" name="name" lay-verify="userName" autocomplete="off" placeholder="这里输入登录名" class="layui-input">
             </div>
-            <input type="button" value="验证码核验" class="ver_btn" onClick="validate();">
-        </dd>
-        <dd>
-            <input type="submit" value="立即登陆" class="submit_btn"/>
-        </dd>
-    </form>
-    <dd>
-        <p>© 2016-2017 版权所有</p>
-        <p>Email：admin@abc.com.cn</p>
-    </dd>
-</dl>
+            <div class="layui-form-item">
+                <label class="beg-login-icon">
+                    <i class="layui-icon">&#xe642;</i>
+                </label>
+                <input type="password" id="password" name="password" lay-verify="password" autocomplete="off" placeholder="这里输入密码" class="layui-input">
+            </div>
+            <div class="layui-form-item">
+                <div class="beg-pull-left beg-login-remember">
+                    <label>记住帐号？</label>
+                    <input type="checkbox" name="rememberMe" value="true" lay-skin="switch" checked title="记住帐号">
+                </div>
+                <div class="beg-pull-right">
+                    <button class="layui-btn layui-btn-primary" lay-submit lay-filter="login">
+                        <i class="layui-icon">&#xe650;</i> 登录
+                    </button>
+                </div>
+                <div class="beg-clear"></div>
+            </div>
+        </form>
+    </div>
+    <footer>
+        <p>Beginner © www.zhengjinfan.cn</p>
+    </footer>
+</div>
+<script type="text/javascript" src="plugins/layui/layui.js"></script>
+<script>
+    layui.use(['layer', 'form'], function() {
+        var layer = layui.layer,
+                $ = layui.jquery,
+                form = layui.form();
 
-
+        form.on('submit(login)',function(data){
+//            layer.msg(JSON.stringify(data.field));
+            $.ajax({
+                type: "post",
+                url: "/toLogin",
+                data:data.field.serialize(),
+//                dataType: "json",
+//                contentType:"application/json;UTF-8",
+                success:function (json) {
+//                    if(json === "login"){
+//                        layer.msg("登录失败")
+//                    }else{
+//                        location.href=json;
+//                    }
+                }
+            });
+            return false;
+        });
+    });
+</script>
 </body>
+
 </html>

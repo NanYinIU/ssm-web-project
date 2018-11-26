@@ -3,6 +3,7 @@ package com.nanyin.mapper;
 import com.nanyin.entity.NavBar;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Auther: NanYin
@@ -12,4 +13,8 @@ import java.util.List;
 public interface NavBarMapper {
 
     List<NavBar> findNavBarByUserId(Integer userId);
+
+    List<NavBar> findParentNode(Integer userId);
+
+    List<NavBar> findChildNode(Map<String,Integer> map);
 }

@@ -119,10 +119,14 @@
         <property name="filterChainDefinitions">
             <value>
                 /login= anon
+                /toLogin= anon
                 /js/** = anon
                 /css/** = anon
-                /fonts/** = anon
-                /image/** = anon
+                /data/** = anon
+                /layui/** = anon
+                /images/** = anon
+                /plugins/** = anon
+                /jquery/** = anon
                 <!--/mes/** = authc-->
                 /logout = logout
                 /** = user

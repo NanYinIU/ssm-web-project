@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Auther: NanYin
@@ -22,7 +23,9 @@ public class AdminController {
     NavBarService navBarService;
 
     @RequestMapping(value = "/navBar",method = RequestMethod.GET)
-    public @ResponseBody List<NavBar> findNavBarByUserId(Integer userId){
-        return navBarService.findNavBarByUserId(1);
+    public @ResponseBody
+    Map<String, Object> findNavBarByUserId(Integer userId){
+        return navBarService.findNavTree(1);
     }
+
 }

@@ -4,6 +4,7 @@ import com.nanyin.entity.NavBar;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Auther: NanYin
@@ -13,4 +14,6 @@ import java.util.List;
 @Service
 public interface NavBarService {
     List<NavBar> findNavBarByUserId(Integer userId);
+
+    Map<String,Object> findNavTree(Integer userId);
 }
