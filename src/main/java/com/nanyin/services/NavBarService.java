@@ -1,6 +1,7 @@
 package com.nanyin.services;
 
 import com.nanyin.entity.NavBar;
+import com.nanyin.entity.vo.NavBarVo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,5 +16,5 @@ import java.util.Map;
 public interface NavBarService {
     List<NavBar> findNavBarByUserId(Integer userId);
 
-    Map<String,Object> findNavTree(Integer userId);
+    List<NavBarVo> findNavTree(Integer userId);
 }

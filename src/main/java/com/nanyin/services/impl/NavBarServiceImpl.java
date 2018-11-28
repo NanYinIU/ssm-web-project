@@ -1,6 +1,7 @@
 package com.nanyin.services.impl;
 
 import com.nanyin.entity.NavBar;
+import com.nanyin.entity.vo.NavBarVo;
 import com.nanyin.mapper.NavBarMapper;
 import com.nanyin.services.NavBarService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,28 +26,26 @@ public class NavBarServiceImpl implements NavBarService {
         return navBarMapper.findNavBarByUserId(userId);
     }
 
-    public Map<String,Object> findNavTree(Integer userId) {
-        Map<String,Object> navBarMap = new HashMap<String,Object>();
-
-
-        List<Map> NavTreeList = new LinkedList<Map>();
-
-        List<NavBar> parentNodes = navBarMapper.findParentNode(userId);
-        for (int i = 0; i < parentNodes.size(); i++) {
-            List<NavBar> temp = new LinkedList<NavBar>();
-            Map<String,Object> subBarMap = new HashMap<String, Object>();
-
-            temp.add(parentNodes.get(i));
-            Map<String,Integer> map = new HashMap<String, Integer>();
-            map.put("parentId",parentNodes.get(i).getId());
+    public List<NavBarVo> findNavTree(Integer userId) {
+        List<NavBarVo> navTree = new LinkedList<NavBarVo>();
+//        父节点
+        List<NavBar> parentList = navBarMapper.findParentNode(userId);
+        for (NavBar n:parentList
+             ) {
+            NavBarVo parentNode = new NavBarVo();
+            Map<String,Object> map = new HashMap<String, Object>();
+            map.put("parentId",n.getId());
             map.put("userId",userId);
-            temp.addAll(navBarMapper.findChildNode(map));
-            subBarMap.put("sList",temp);
-
-            NavTreeList.add(subBarMap);
+            List<NavBar> childNode = navBarMapper.findChildNode(map);
+            parentNode.setId(n.getId());
+            parentNode.setHref(n.getHref());
+            parentNode.setIcon(n.getIcon());
+            parentNode.setName(n.getName());
+            parentNode.setSpread(n.getSpread());
+            parentNode.setChildren(childNode);
+            navTree.add(parentNode);
         }
-        navBarMap.put("pList",NavTreeList);
-        return navBarMap;
+        return navTree;
     }
 
 

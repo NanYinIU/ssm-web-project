@@ -62,10 +62,10 @@ layui.config({
     navbar.set({
         spreadOne: true,
         elem: '#admin-side',
-        //cached: true,
+        cached: true,
         //data: navs,
         //cached:true,
-		url: 'datas/nav.json'
+		url: '/admin/navBar'
     });
     //渲染navbar
     navbar.render();

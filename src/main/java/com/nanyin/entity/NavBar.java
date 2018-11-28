@@ -8,12 +8,20 @@ package com.nanyin.entity;
 public class NavBar {
     Integer id;
     String name;
-    String url;
-    String clazz;
+    String href;
     Integer parentNavId;
     String icon;
     Integer isDeleted;
     Integer ord;
+    Integer spread;
+
+    public Integer getSpread() {
+        return spread;
+    }
+
+    public void setSpread(Integer spread) {
+        this.spread = spread;
+    }
 
     public String getIcon() {
         return icon;
@@ -55,20 +63,12 @@ public class NavBar {
         this.name = name;
     }
 
-    public String getUrl() {
-        return url;
+    public String getHref() {
+        return href;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getClazz() {
-        return clazz;
-    }
-
-    public void setClazz(String clazz) {
-        this.clazz = clazz;
+    public void setHref(String href) {
+        this.href = href;
     }
 
     public Integer getParentNavId() {
@@ -79,14 +79,4 @@ public class NavBar {
         this.parentNavId = parentNavId;
     }
 
-    @Override
-    public String toString() {
-        return "NavBar{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", url='" + url + '\'' +
-                ", clazz='" + clazz + '\'' +
-                ", parentNavId=" + parentNavId +
-                '}';
-    }
 }

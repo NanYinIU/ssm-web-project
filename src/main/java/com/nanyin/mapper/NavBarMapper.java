@@ -16,5 +16,5 @@ public interface NavBarMapper {
 
     List<NavBar> findParentNode(Integer userId);
 
-    List<NavBar> findChildNode(Map<String,Integer> map);
+    List<NavBar> findChildNode(Map<String,Object> map);
 }

@@ -152,7 +152,7 @@ layui.define(['element', 'common'], function (exports) {
                                     field: {
                                         href: href,
                                         icon: icon,
-                                        title: title
+                                        name: title
                                     }
                                 }
                                 callback(data);
@@ -169,7 +169,7 @@ layui.define(['element', 'common'], function (exports) {
                                 field: {
                                     href: href,
                                     icon: icon,
-                                    title: title
+                                    name: title
                                 }
                             }
                             callback(data);
@@ -207,11 +207,11 @@ layui.define(['element', 'common'], function (exports) {
                         ulHtml += '<i class="layui-icon" data-icon="' + data[i].icon + '">' + data[i].icon + '</i>';
                     }
                 }
-                ulHtml += '<cite>' + data[i].title + '</cite>'
+                ulHtml += '<cite>' + data[i].name + '</cite>'
                 ulHtml += '</a>';
                 ulHtml += '<dl class="layui-nav-child">'
                 for (var j = 0; j < data[i].children.length; j++) {
-                    ulHtml += '<dd title="' + data[i].children[j].title + '">';
+                    ulHtml += '<dd title="' + data[i].children[j].name + '">';
                     ulHtml += '<a href="javascript:;" data-url="' + data[i].children[j].href + '">';
                     if (data[i].children[j].icon !== undefined && data[i].children[j].icon !== '') {
                         if (data[i].children[j].icon.indexOf('fa-') !== -1) {
@@ -220,7 +220,7 @@ layui.define(['element', 'common'], function (exports) {
                             ulHtml += '<i class="layui-icon" data-icon="' + data[i].children[j].icon + '">' + data[i].children[j].icon + '</i>';
                         }
                     }
-                    ulHtml += '<cite>' + data[i].children[j].title + '</cite>';
+                    ulHtml += '<cite>' + data[i].children[j].name + '</cite>';
                     ulHtml += '</a>';
                     ulHtml += '</dd>';
                 }
@@ -235,7 +235,7 @@ layui.define(['element', 'common'], function (exports) {
                         ulHtml += '<i class="layui-icon" data-icon="' + data[i].icon + '">' + data[i].icon + '</i>';
                     }
                 }
-                ulHtml += '<cite>' + data[i].title + '</cite>'
+                ulHtml += '<cite>' + data[i].name + '</cite>'
                 ulHtml += '</a>';
             }
             ulHtml += '</li>';

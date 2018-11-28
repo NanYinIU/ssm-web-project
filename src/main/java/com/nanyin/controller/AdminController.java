@@ -1,6 +1,6 @@
 package com.nanyin.controller;
 
-import com.nanyin.entity.NavBar;
+import com.nanyin.entity.vo.NavBarVo;
 import com.nanyin.services.NavBarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Auther: NanYin
@@ -24,8 +23,18 @@ public class AdminController {
 
     @RequestMapping(value = "/navBar",method = RequestMethod.GET)
     public @ResponseBody
-    Map<String, Object> findNavBarByUserId(Integer userId){
+    List<NavBarVo> findNavBarByUserId(Integer userId){
         return navBarService.findNavTree(1);
+    }
+
+    @RequestMapping(value = "/main",method = RequestMethod.GET)
+    public String main(){
+        return "/WEB-INF/jsp/admin/main.jsp";
+    }
+
+    @RequestMapping(value = "/userManage",method = RequestMethod.GET)
+    public String userManage(){
+        return "/WEB-INF/jsp/admin/userManage.jsp";
     }
 
 }
