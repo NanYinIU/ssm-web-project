@@ -12,64 +12,60 @@
 </head>
 
 <body class="beg-login-bg">
-<div class="beg-login-box">
-    <header>
-        <h1>后台登录</h1>
-    </header>
-    <div class="beg-login-main">
-        <form action="/toLogin" class="layui-form" method="post">
-            <%--<input name="__RequestVerificationToken" type="hidden" value="fkfh8D89BFqTdrE2iiSdG_L781RSRtdWOH411poVUWhxzA5MzI8es07g6KPYQh9Log-xf84pIR2RIAEkOokZL3Ee3UKmX0Jc8bW8jOdhqo81" />--%>
-            <div class="layui-form-item">
-                <label class="beg-login-icon">
-                    <i class="layui-icon">&#xe612;</i>
-                </label>
-                <input type="text" id="name" name="name" lay-verify="userName" autocomplete="off" placeholder="这里输入登录名" class="layui-input">
-            </div>
-            <div class="layui-form-item">
-                <label class="beg-login-icon">
-                    <i class="layui-icon">&#xe642;</i>
-                </label>
-                <input type="password" id="password" name="password" lay-verify="password" autocomplete="off" placeholder="这里输入密码" class="layui-input">
-            </div>
-            <div class="layui-form-item">
-                <div class="beg-pull-left beg-login-remember">
-                    <label>记住帐号？</label>
-                    <input type="checkbox" name="rememberMe" value="true" lay-skin="switch" checked title="记住帐号">
+<div class="kit-login">
+    <div class="kit-login-bg"></div>
+    <div class="kit-login-wapper">
+        <h2 class="kit-login-slogan">欢迎使用 <br> KITADMIN 1.x后台模板</h2>
+        <div class="kit-login-form">
+            <h4 class="kit-login-title">登录</h4>
+            <form class="layui-form" action="/toLogin">
+                <div class="kit-login-row">
+                    <div class="kit-login-col">
+                        <i class="layui-icon">&#xe612;</i>
+              <span class="kit-login-input">
+                <input type="text" name="name" lay-verify="required" placeholder="用户名/邮箱/手机号" />
+              </span>
+                    </div>
+                    <div class="kit-login-col"></div>
                 </div>
-                <div class="beg-pull-right">
-                    <button class="layui-btn layui-btn-primary" lay-submit lay-filter="login">
-                        <i class="layui-icon">&#xe650;</i> 登录
-                    </button>
+                <div class="kit-login-row">
+                    <div class="kit-login-col">
+                        <i class="layui-icon">&#xe64c;</i>
+              <span class="kit-login-input">
+                <input type="password" name="password" lay-verify="required" placeholder="密码" />
+              </span>
+                    </div>
+                    <div class="kit-login-col"></div>
                 </div>
-                <div class="beg-clear"></div>
-            </div>
-        </form>
+                <div class="kit-login-row">
+                    <div class="kit-login-col">
+                        <input type="checkbox" name="rememberMe" title="记住帐号" lay-skin="primary">
+                    </div>
+                </div>
+                <div class="kit-login-row">
+                    <button class="layui-btn kit-login-btn" lay-submit="submit" lay-filter="login">登录</button>
+                </div>
+                <div class="kit-login-row" style="margin-bottom:0;">
+                    <a href="javascript:;" style="color: rgb(153, 153, 153); text-decoration: none; font-size: 13px;" id="forgot">忘记密码</a>
+                </div>
+            </form>
+        </div>
     </div>
-    <footer>
-        <p>Beginner © www.zhengjinfan.cn</p>
-    </footer>
 </div>
+<%--<script src="plugins/polyfill.min.js"></script>--%>
 <script type="text/javascript" src="plugins/layui/layui.js"></script>
 <script>
     layui.use(['layer', 'form'], function() {
         var layer = layui.layer,
                 $ = layui.jquery,
-                form = layui.form();
+                form = layui.form;
 
         form.on('submit(login)',function(data){
-//            layer.msg(JSON.stringify(data.field));
             $.ajax({
                 type: "post",
                 url: "/toLogin",
                 data:data.field.serialize(),
-//                dataType: "json",
-//                contentType:"application/json;UTF-8",
                 success:function (json) {
-//                    if(json === "login"){
-//                        layer.msg("登录失败")
-//                    }else{
-//                        location.href=json;
-//                    }
                 }
             });
             return false;

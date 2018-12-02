@@ -34,12 +34,12 @@
       where s.parent_nav_id = #{parentId} and s.is_deleted=0 AND user.id=#{userId}  ORDER BY s.ord
     </select>
 
-    <cache type="org.mybatis.caches.ehcache.LoggingEhcache" >
-        <property name="timeToIdleSeconds" value="3600"/>
-        <property name="timeToLiveSeconds" value="3600"/>
-        <property name="maxEntriesLocalHeap" value="1000"/>
-        <property name="maxEntriesLocalDisk" value="10000000"/>
-        <property name="memoryStoreEvictionPolicy" value="LRU"/>
-    </cache>
+    <!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" >-->
+        <!--<property name="timeToIdleSeconds" value="3600"/>-->
+        <!--<property name="timeToLiveSeconds" value="3600"/>-->
+        <!--<property name="maxEntriesLocalHeap" value="1000"/>-->
+        <!--<property name="maxEntriesLocalDisk" value="10000000"/>-->
+        <!--<property name="memoryStoreEvictionPolicy" value="LRU"/>-->
+    <!--</cache>-->
 
 </mapper>
