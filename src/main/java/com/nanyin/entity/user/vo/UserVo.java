@@ -1,6 +1,6 @@
-package com.nanyin.entity.vo;
+package com.nanyin.entity.user.vo;
 
-import com.nanyin.entity.User;
+import com.nanyin.entity.user.User;
 
 
 

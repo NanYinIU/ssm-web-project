@@ -1,6 +1,6 @@
 package com.nanyin.services;
 
-import com.nanyin.entity.User;
+import com.nanyin.entity.user.User;
 
 import java.util.List;
 import java.util.Set;
@@ -12,17 +12,12 @@ import java.util.Set;
  * 类描述：
  */
 public interface UserService {
-    List<User> selectById(int id);
+    User findUserById(int id);
 
-    User selectByName(String name);
+    User findUserByName(String name);
 
     Set<String> getRoles(String username);
 
     Set<String> getPermissions(String username);
 
-    List<User> displayUser();
-
-    int insertUser(User user);
-
-    int updateThisUser(User user);
 }

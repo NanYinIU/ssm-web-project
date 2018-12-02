@@ -1,7 +1,6 @@
 package com.nanyin.services;
 
-import com.nanyin.entity.vo.UserVo;
-import org.springframework.stereotype.Service;
+import com.nanyin.entity.user.vo.UserVo;
 
 import java.util.List;
 import java.util.Map;

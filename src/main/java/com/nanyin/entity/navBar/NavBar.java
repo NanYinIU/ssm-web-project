@@ -1,4 +1,4 @@
-package com.nanyin.entity;
+package com.nanyin.entity.navBar;
 
 /**
  * @Auther: NanYin

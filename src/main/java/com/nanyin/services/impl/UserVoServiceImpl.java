@@ -1,7 +1,7 @@
 package com.nanyin.services.impl;
 
-import com.nanyin.entity.User;
-import com.nanyin.entity.vo.UserVo;
+import com.nanyin.entity.user.User;
+import com.nanyin.entity.user.vo.UserVo;
 import com.nanyin.mapper.UnitMapper;
 import com.nanyin.mapper.RoleMapper;
 import com.nanyin.mapper.UserVoMapper;

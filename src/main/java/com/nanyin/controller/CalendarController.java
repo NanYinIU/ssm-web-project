@@ -1,23 +1,19 @@
 package com.nanyin.controller;
 
 import com.nanyin.entity.Calendar;
-import com.nanyin.entity.User;
+import com.nanyin.entity.user.User;
 import com.nanyin.services.CalendarService;
 import com.nanyin.services.UserService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.apache.shiro.web.session.HttpServletSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.terracotta.statistics.MappedOperationStatistic;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +57,7 @@ public class CalendarController {
     public @ResponseBody int insertEventByUserName(@RequestBody List<Calendar> calendar, HttpServletRequest request){
         HttpSession session = request.getSession();
         String username = ( String ) session.getAttribute("user");
-        User user = userService.selectByName(username);
+        User user = userService.findUserByName(username);
         int id = user.getId();
         calendar.get(0).setU_id(id);
         return calendarService.insertEventByUserName(calendar.get(0));

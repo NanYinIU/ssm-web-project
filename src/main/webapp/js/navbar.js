@@ -21,7 +21,8 @@ layui.define(['layer', 'laytpl', 'element'], function(exports) {
       remote: {
         url: undefined, //接口地址
         type: 'GET', //请求方式
-        jsonp: false //跨域
+        jsonp: false, //跨域
+        data:undefined
       },
       cached: true, //是否缓存
       elem: undefined, //容器
@@ -177,7 +178,7 @@ layui.define(['layer', 'laytpl', 'element'], function(exports) {
       } else {
         var dataType = _remote.jsonp ? 'jsonp' : 'json';
         var options = {
-          url: _remote.url,
+          url: _remote.url, data:_remote.data,
           type: _remote.type,
           error: function(xhr, status, thrown) {
             layui.hint().error('Navbar error:AJAX请求出错.' + thrown);

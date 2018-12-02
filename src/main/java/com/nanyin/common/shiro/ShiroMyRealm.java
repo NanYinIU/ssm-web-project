@@ -1,11 +1,10 @@
 package com.nanyin.common.shiro;
 
-import com.nanyin.entity.User;
+import com.nanyin.entity.user.User;
 import com.nanyin.services.UserService;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
-import org.apache.shiro.crypto.hash.Md5Hash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.slf4j.Logger;
@@ -35,7 +34,7 @@ public class ShiroMyRealm extends AuthorizingRealm {
 // 先拿到用户名 去比对 name不可能重复 去数据库里面去查如果用户存在获取认证信息 不存在返回空
         String username = (String) authenticationToken.getPrincipal();
 
-        User user = (User) userService.selectByName(username);
+        User user = (User) userService.findUserByName(username);
         if(user != null){
 //  只有当前用户存在 并且状态未被锁定 才能能登录
             if(user.getStatus()==0) {

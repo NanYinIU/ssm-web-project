@@ -1,6 +1,7 @@
 package com.nanyin.mapper;
 
-import com.nanyin.entity.NavBar;
+import com.nanyin.entity.navBar.NavBar;
+import com.nanyin.entity.navBar.NavBarCategory;
 
 import java.util.List;
 import java.util.Map;
@@ -12,9 +13,11 @@ import java.util.Map;
  */
 public interface NavBarMapper {
 
-    List<NavBar> findNavBarByUserId(Integer userId);
+    List<NavBar> findNavBarByUserId(Map<String,Object> map);
 
-    List<NavBar> findParentNode(Integer userId);
+    List<NavBar> findParentNode(Map<String,Object> map);
 
     List<NavBar> findChildNode(Map<String,Object> map);
+
+    List<NavBarCategory> findCategoryByUserId(Integer userId);
 }

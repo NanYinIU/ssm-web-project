@@ -1,4 +1,4 @@
-package com.nanyin.entity;
+package com.nanyin.entity.user;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;

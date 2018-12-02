@@ -1,11 +1,11 @@
 package com.nanyin.services;
 
-import com.nanyin.entity.NavBar;
-import com.nanyin.entity.vo.NavBarVo;
+import com.nanyin.entity.navBar.NavBar;
+import com.nanyin.entity.navBar.NavBarCategory;
+import com.nanyin.entity.navBar.vo.NavBarVo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Auther: NanYin
@@ -14,7 +14,9 @@ import java.util.Map;
  */
 @Service
 public interface NavBarService {
-    List<NavBar> findNavBarByUserId(Integer userId);
+    List<NavBar> findNavBarByUserId(Integer userId,Integer categoryId);
 
-    List<NavBarVo> findNavTree(Integer userId);
+    List<NavBarVo> findNavTree(Integer userId,Integer categoryId);
+
+    List<NavBarCategory> findCategoryByUserId(Integer userId);
 }

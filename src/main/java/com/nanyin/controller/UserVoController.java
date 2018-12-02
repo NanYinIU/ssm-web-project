@@ -5,7 +5,7 @@ import com.nanyin.common.annotation.Log;
 import com.nanyin.entity.Organization;
 import com.nanyin.entity.Role;
 
-import com.nanyin.entity.vo.UserVo;
+import com.nanyin.entity.user.vo.UserVo;
 import com.nanyin.services.UnitService;
 import com.nanyin.services.RoleService;
 import com.nanyin.services.UserVoService;

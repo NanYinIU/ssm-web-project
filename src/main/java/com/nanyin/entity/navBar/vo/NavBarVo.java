@@ -1,6 +1,6 @@
-package com.nanyin.entity.vo;
+package com.nanyin.entity.navBar.vo;
 
-import com.nanyin.entity.NavBar;
+import com.nanyin.entity.navBar.NavBar;
 
 import java.util.List;
 

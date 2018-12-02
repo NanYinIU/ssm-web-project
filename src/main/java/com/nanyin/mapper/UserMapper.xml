@@ -5,11 +5,11 @@
 
 <mapper namespace="com.nanyin.mapper.UserMapper">
 
-    <select id="selectById"  parameterType="java.lang.Integer" resultType="com.nanyin.entity.User">
+    <select id="findUserById"  parameterType="java.lang.Integer" resultType="com.nanyin.entity.user.User">
         SELECT * FROM user WHERE id = #{id}
     </select>
 
-    <select id="selectByName" parameterType="java.lang.String" resultType="com.nanyin.entity.User">
+    <select id="findUserByName" parameterType="java.lang.String" resultType="com.nanyin.entity.user.User">
         SELECT * FROM user WHERE name = #{name}
     </select>
 
@@ -29,20 +29,6 @@
      LEFT JOIN
      auth a ON a.id = ru.auth_id
     </select>
-
-    <select id="displayUser" resultType="com.nanyin.entity.User">
-        SELECT * FROM user
-    </select>
-
-    <!--parameterType 输入参数类型 resultType 输出参数类型 -->
-    <!--<insert id="insertUser" parameterType="com.nanyin.entity.User">-->
-        <!--INSERT INTO S_User-->
-        <!--VALUES (#{User.id},#{User.name},#{User.password},#{User.salt},#{User.roleId},#{User.id},#{User.age},#{User.sex},#{User.create_time});-->
-    <!--</insert>-->
-
-    <update id="updateThisUser" parameterType="com.nanyin.entity.User">
-        UPDATE user SET name = #{name}, password = #{password} , sex = #{sex} , age = #{age} WHERE id = #{id}
-    </update>
 
 
     <cache type="org.mybatis.caches.ehcache.LoggingEhcache" >

@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.nanyin.mapper.UserVoMapper">
-<select id="AllMessageDis"  resultType="com.nanyin.entity.vo.UserVo">
+<select id="AllMessageDis"  resultType="com.nanyin.entity.user.vo.UserVo">
     SELECT u.id, u.name, u.password, u.salt, u.roleId
 	      , u.age, u.sex, u.create_time, u.organizationId, r.`describe` AS "role_describe"
 	      , o.name AS "organization_name"
@@ -13,7 +13,7 @@
 	AND   u.organizationId = o.id
 </select>
 
-    <select id="selectMsgByName" parameterType="java.lang.String" resultType="com.nanyin.entity.vo.UserVo">
+    <select id="selectMsgByName" parameterType="java.lang.String" resultType="com.nanyin.entity.user.vo.UserVo">
     SELECT u.id, u.name, u.password, u.salt, u.roleId
 	      , u.age, u.sex, u.create_time, u.organizationId, r.`describe` AS "role_describe"
 	      , o.name AS "organization_name"
@@ -23,7 +23,7 @@
 	AND   u.name LIKE concat(concat('%',#{u.name}),'%')
     </select>
 
-    <select id="selectByName" parameterType="java.util.Map" resultType="com.nanyin.entity.vo.UserVo">
+    <select id="selectByName" parameterType="java.util.Map" resultType="com.nanyin.entity.user.vo.UserVo">
         SELECT u.id, u.name, u.password, u.salt, u.roleId
         , u.age, u.sex, u.create_time, u.organizationId, r.`describe` AS "role_describe"
         , o.name AS "organization_name"
@@ -44,12 +44,12 @@
     </foreach>
     </delete>
 
-    <insert id="insertUserVo" parameterType="com.nanyin.entity.User">
+    <insert id="insertUserVo" parameterType="com.nanyin.entity.user.User">
         INSERT INTO db_shiro.S_User(name,password,salt,roleId,age,sex,create_time,organizationId)
         VALUES(#{name},#{password},#{salt},#{roleId},#{age},#{sex},#{create_time},#{organizationId})
     </insert>
 
-    <update id="UpdateUserVo" parameterType="com.nanyin.entity.User">
+    <update id="UpdateUserVo" parameterType="com.nanyin.entity.user.User">
         UPDATE db_shiro.S_User
         SET name=#{name},password=#{password},roleId=#{roleId},age=#{age},sex=#{sex},organizationId=#{organizationId}
         WHERE id=#{id}

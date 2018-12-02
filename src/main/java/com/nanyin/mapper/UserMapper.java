@@ -1,6 +1,6 @@
 package com.nanyin.mapper;
 
-import com.nanyin.entity.User;
+import com.nanyin.entity.user.User;
 
 import java.util.List;
 import java.util.Set;
@@ -11,19 +11,14 @@ import java.util.Set;
  * 类描述：
  */
 public interface UserMapper {
-    public List<User> selectById(int id);
+    User findUserById(int id);
 
-    List<User> displayUser();
+    User findUserByName(String name);
 
     User selectByName(String name);
 
     Set<String> getRoles(String name);
 
     Set<String> getPermission(String name);
-
-    int insertUser(User user);
-
-    int updateThisUser(User user);
-
 
 }

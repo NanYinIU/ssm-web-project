@@ -2,6 +2,7 @@ package com.nanyin.controller;
 
 import com.nanyin.common.annotation.Log;
 import com.nanyin.common.util.EDSUtil;
+import com.nanyin.entity.user.User;
 import com.nanyin.services.UserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -37,7 +38,8 @@ public class LoginController {
             subject.login(token);
 //            基于shiro的session控制
             Session session = subject.getSession();
-            session.setAttribute("user", name);
+            User user = userService.findUserByName(name);
+            session.setAttribute("user", user);
             return  "/WEB-INF/jsp/admin/admin.jsp";
         } catch (Exception e) {
             request.setAttribute("error", "用户名或密码错误");

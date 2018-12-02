@@ -1,7 +1,7 @@
 package com.nanyin.mapper;
 
-import com.nanyin.entity.User;
-import com.nanyin.entity.vo.UserVo;
+import com.nanyin.entity.user.User;
+import com.nanyin.entity.user.vo.UserVo;
 
 import java.util.List;
 import java.util.Map;

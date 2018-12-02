@@ -1,6 +1,6 @@
 package com.nanyin.controller;
 
-import com.nanyin.entity.vo.NavBarVo;
+import com.nanyin.entity.navBar.vo.NavBarVo;
 import com.nanyin.services.NavBarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,14 +18,9 @@ import java.util.List;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
-    @Autowired
-    NavBarService navBarService;
 
-    @RequestMapping(value = "/navBar",method = RequestMethod.GET)
-    public @ResponseBody
-    List<NavBarVo> findNavBarByUserId(Integer userId){
-        return navBarService.findNavTree(1);
-    }
+
+
 
     @RequestMapping(value = "/main",method = RequestMethod.GET)
     public String main(){

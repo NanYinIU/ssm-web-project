@@ -93,13 +93,14 @@ layui.define(['element', 'nprogress', 'form', 'table', 'loader', 'tab', 'navbar'
                 //    tab.tabAdd(data);
                 //});
                 //navbar加载方式二，设置远程地址加载
-                 navbar.set({
-                     remote: {
-                         url: '/admin/navBar'
-                     }
-                 }).render(function(data) {
-                     tab.tabAdd(data);
-                 });
+                navbar.set({
+                    remote: {
+                        url: '/nav/navBar',
+                        data:'category=1'
+                    }
+                }).render(function(data) {
+                    tab.tabAdd(data);
+                });
                 //navbar加载方式三，设置data本地数据
                 // navbar.set({
                 //     data: [{
@@ -134,14 +135,15 @@ layui.define(['element', 'nprogress', 'form', 'table', 'loader', 'tab', 'navbar'
                 if (onelevel.hasElem()) {
                     onelevel.set({
                         remote: {
-                            url: '/datas/onelevel1.json' //远程地址
+                            url: '/nav/navbarCategory' //远程地址
                         },
                         onClicked: function(id) {
                             switch (id) {
                                 case 1:
                                     navbar.set({
                                         remote: {
-                                            url: '/admin/navBar'
+                                            url: '/nav/navBar',
+                                            data:'category=1'
                                         }
                                     }).render(function(data) {
                                         tab.tabAdd(data);
@@ -150,40 +152,50 @@ layui.define(['element', 'nprogress', 'form', 'table', 'loader', 'tab', 'navbar'
                                 case 2:
                                     navbar.set({
                                         remote: {
-                                            url: '/datas/navbar2.json'
+                                            url: '/nav/navBar',
+                                            data:'category=2'
                                         }
                                     }).render(function(data) {
                                         tab.tabAdd(data);
                                     });
                                     break;
                                 default:
+                                    //navbar.set({
+                                    //    data: [{
+                                    //        id: "1",
+                                    //        title: "基本元素",
+                                    //        icon: "fa-cubes",
+                                    //        spread: true,
+                                    //        children: [{
+                                    //            id: "7",
+                                    //            title: "表格",
+                                    //            icon: "&#xe6c6;",
+                                    //            url: "test.html"
+                                    //        }, {
+                                    //            id: "8",
+                                    //            title: "表单",
+                                    //            icon: "&#xe63c;",
+                                    //            url: "form.html"
+                                    //        }]
+                                    //    }, {
+                                    //        id: "5",
+                                    //        title: "这是一级导航",
+                                    //        icon: "fa-stop-circle",
+                                    //        url: "https://www.baidu.com",
+                                    //        spread: false
+                                    //    }]
+                                    //}).render(function(data) {
+                                    //    tab.tabAdd(data);
+                                    //});
                                     navbar.set({
-                                        data: [{
-                                            id: "1",
-                                            title: "基本元素",
-                                            icon: "fa-cubes",
-                                            spread: true,
-                                            children: [{
-                                                id: "7",
-                                                title: "表格",
-                                                icon: "&#xe6c6;",
-                                                url: "test.html"
-                                            }, {
-                                                id: "8",
-                                                title: "表单",
-                                                icon: "&#xe63c;",
-                                                url: "form.html"
-                                            }]
-                                        }, {
-                                            id: "5",
-                                            title: "这是一级导航",
-                                            icon: "fa-stop-circle",
-                                            url: "https://www.baidu.com",
-                                            spread: false
-                                        }]
+                                        remote: {
+                                            url: '/nav/navBar',
+                                            data:'category=1'
+                                        }
                                     }).render(function(data) {
                                         tab.tabAdd(data);
                                     });
+                                    break;
                                     break;
                             }
                         },
