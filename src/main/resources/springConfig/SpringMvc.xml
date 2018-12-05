@@ -17,6 +17,7 @@
     <mvc:resources mapping="/plugins/**" location="/plugins/"/>
     <mvc:resources mapping="/build/**" location="/build/"/>
     <mvc:resources mapping="/images/**" location="/images/"/>
+    <mvc:resources mapping="/extend/**" location="/extend/"/>
 
 
 

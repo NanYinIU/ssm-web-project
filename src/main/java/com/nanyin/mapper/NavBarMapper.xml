@@ -5,7 +5,7 @@
 
 <mapper namespace="com.nanyin.mapper.NavBarMapper">
 
-    <select id="findNavBarByUserId" parameterType="java.util.Map" resultType="com.nanyin.entity.navBar.NavBar">
+    <select id="findNavBarByUserId" parameterType="map" resultType="com.nanyin.entity.navBar.NavBar">
         select
 	    s.*
         FROM
@@ -19,7 +19,7 @@
         WHERE u.id=#{userId} and sc.id=#{categoryId} and s.is_deleted=0 ORDER BY s.ord;
     </select>
 
-    <select id="findParentNode" resultType="com.nanyin.entity.navBar.NavBar" parameterType="java.util.Map">
+    <select id="findParentNode" resultType="com.nanyin.entity.navBar.NavBar" parameterType="map">
         select
 	    s.*
         FROM
@@ -33,7 +33,7 @@
         WHERE s.parent_nav_id is NULL and s.is_deleted=0 and u.id=#{userId} and sc.id=#{categoryId} ORDER BY s.ord;
     </select>
 
-    <select id="findChildNode" resultType="com.nanyin.entity.navBar.NavBar" parameterType="java.util.Map">
+    <select id="findChildNode" resultType="com.nanyin.entity.navBar.NavBar" parameterType="map">
       select
 	    s.*
         FROM
@@ -47,7 +47,7 @@
         where s.parent_nav_id = #{parentId} and s.is_deleted=0 AND u.id=#{userId} and sc.id=#{categoryId} ORDER BY s.ord
     </select>
 
-    <select id="findCategoryByUserId" resultType="com.nanyin.entity.navBar.NavBarCategory" parameterType="java.lang.Integer">
+    <select id="findCategoryByUserId" resultType="com.nanyin.entity.navBar.NavBarCategory" parameterType="integer">
         SELECT
 	    DISTINCT sc.*
         FROM
@@ -57,7 +57,7 @@
         WHERE
 	    r.user_id = #{userId};
     </select>
-
+    
     <!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" >-->
         <!--<property name="timeToIdleSeconds" value="3600"/>-->
         <!--<property name="timeToLiveSeconds" value="3600"/>-->

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * Created by NanYin on 2017-07-08 下午6:14.
@@ -37,7 +38,7 @@ public class LoginController {
             UsernamePasswordToken token = new UsernamePasswordToken(name, pass);
             subject.login(token);
 //            基于shiro的session控制
-            Session session = subject.getSession();
+            HttpSession session = request.getSession();
             User user = userService.findUserByName(name);
             session.setAttribute("user", user);
             return  "/WEB-INF/jsp/admin/admin.jsp";
@@ -58,7 +59,8 @@ public class LoginController {
     @Log(operationType = "select操作",operationName = "用户登出")
     public String logout(HttpServletRequest request){
 //          清除session
-        request.getSession().invalidate();
+        org.apache.shiro.subject.Subject subject = SecurityUtils.getSubject();
+        subject.getSession().stop();
         return "/WEB-INF/jsp/login.jsp" ;
     }
 //    返回主页
