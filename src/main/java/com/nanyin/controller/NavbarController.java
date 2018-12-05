@@ -7,6 +7,7 @@ import com.nanyin.entity.user.User;
 import com.nanyin.services.NavBarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -59,5 +60,34 @@ public class NavbarController {
     public String navManage(){
         return "/WEB-INF/jsp/admin/navManage.jsp";
     }
+
+    /*删除一级菜单*/
+    @RequestMapping(value = "/oneLevelBar/{id}", method = RequestMethod.DELETE)
+    public
+    @ResponseBody
+    boolean deleteOneLevelNavBar(@PathVariable(value = "id") Integer id) {
+        User user = ObjectInSession.getUserInSession();
+        try {
+            navBarService.deleteOneLevelBarByUserId(user.getId(), id);
+            if (!navBarService.checkOneLevelBarIsUsed(id)) {
+                navBarService.deleteNavCategoryById(id);
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /*更新或者添加数据*/
+    @RequestMapping(value = "/oneLevelBar/{id}", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    boolean addOrUpdateOneLevelNavBar(NavBarCategory category, @PathVariable(value = "id") Integer id) {
+        return true;
+    }
+
+
+
 
 }

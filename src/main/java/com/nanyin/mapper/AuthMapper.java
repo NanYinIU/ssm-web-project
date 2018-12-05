@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by NanYin on 2017-08-16 下午10:41.
@@ -14,9 +15,6 @@ import java.util.Map;
 @Repository
 public interface AuthMapper {
 
-    List<Auth> selectAllPermission();
+    Set<String> getPermission(String name);
 
-    int insertPermissionById(Map<String,Object> map);
-
-    int delectPermissionByRoleId(int role_id);
 }

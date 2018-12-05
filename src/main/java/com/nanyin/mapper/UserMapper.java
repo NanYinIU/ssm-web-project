@@ -17,8 +17,7 @@ public interface UserMapper {
 
     User selectByName(String name);
 
-    Set<String> getRoles(String name);
 
-    Set<String> getPermission(String name);
+
 
 }

@@ -57,8 +57,6 @@
 
 
 
-
-
     <cache type="org.mybatis.caches.ehcache.LoggingEhcache" >
         <property name="timeToIdleSeconds" value="3600"/>
         <property name="timeToLiveSeconds" value="3600"/>

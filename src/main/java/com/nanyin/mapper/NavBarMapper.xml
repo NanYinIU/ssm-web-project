@@ -52,12 +52,37 @@
 	    DISTINCT sc.*
         FROM
 	    s_nav_category sc
-        LEFT JOIN r_nav_user r on
+        LEFT JOIN r_nav_category_user r on
 	    r.category_id = sc.id
         WHERE
 	    r.user_id = #{userId};
     </select>
+
+    <delete id="deleteOneLevelBarByUserId" parameterType="map" >
+        DELETE FROM r_nav_user r where r.category_id= #{categoryId} and r.user_id= #{userId};
+    </delete>
+
+    <select id="checkOneLevelBarIsUsed" parameterType="integer" resultType="integer">
+        SELECT COUNT(*) FROM r_nav_user r WHERE r.category_id=#{categoryId}
+    </select>
     
+    <delete id="deleteNavCategoryById" parameterType="integer">
+        DELETE FROM s_nav_category WHERE id=#{categoryId}
+    </delete>
+
+    <insert id="insertSNavCategory" parameterType="com.nanyin.entity.navBar.NavBarCategory" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO s_nav_category (name,comment,icon,ord) VALUES (#{name},#{comment},#{icon},#{ord});
+    </insert>
+
+    <!--category的关联表-->
+    <insert id="insertRNavCategoryUser" parameterType="com.nanyin.entity.navBar.RNavCategoryUser" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO r_nav_category_user(nav_category_id,user_id) VALUES(#{navCategoryId},#{userId});
+    </insert>
+
+    <update id="updateNavCategoryById" parameterType="com.nanyin.entity.navBar.NavBarCategory" >
+        UPDATE s_nav_category SET name=#{name},comment=#{comment},icon=#{icon},ord=#{ord} WHERE id=#{id}
+    </update>
+
     <!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" >-->
         <!--<property name="timeToIdleSeconds" value="3600"/>-->
         <!--<property name="timeToLiveSeconds" value="3600"/>-->

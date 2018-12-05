@@ -13,22 +13,7 @@
         SELECT * FROM user WHERE name = #{name}
     </select>
 
-    <select id="getRoles" parameterType="java.lang.String" resultType="java.lang.String">
-     SELECT r.name FROM user u
-     LEFT JOIN
-      r_user_role ru ON u.id = ru.user_id
-     LEFT JOIN
-      role r ON r.id = ru.role_id
-    </select>
 
-    <select id="getPermission"  parameterType="java.lang.String" resultType="java.lang.String">
-     SELECT a.name
-     FROM user u
-     LEFT JOIN
-     r_user_auth ru ON u.id = ru.user_id
-     LEFT JOIN
-     auth a ON a.id = ru.auth_id
-    </select>
 
 
     <cache type="org.mybatis.caches.ehcache.LoggingEhcache" >

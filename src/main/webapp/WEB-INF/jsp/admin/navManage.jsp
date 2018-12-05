@@ -15,7 +15,7 @@
         <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
             <ul class="layui-tab-title">
                 <li class="layui-this">一级navBar管理</li>
-                <li >侧边栏NavBar管理</li>
+                <li >侧边栏navBar管理</li>
             </ul>
             <div class="layui-tab-content" style="height: 100px;">
                 <div class="layui-tab-item layui-show">
@@ -71,6 +71,7 @@
                     obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
                     layer.close(index);
                     //向服务端发送删除指令
+
                 });
             } else if(layEvent === 'edit'){ //编辑
                 //do something

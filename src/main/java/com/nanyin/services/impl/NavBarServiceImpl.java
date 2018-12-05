@@ -59,5 +59,19 @@ public class NavBarServiceImpl implements NavBarService {
         return navTree;
     }
 
+    public void deleteOneLevelBarByUserId(Integer userId,Integer categoryId){
+        Map<String,Object> map = new HashMap<String, Object>();
+        map.put("userId",userId);
+        map.put("categoryId",categoryId);
+        navBarMapper.deleteOneLevelBarByUserId(map);
+    }
 
+    public boolean checkOneLevelBarIsUsed(Integer categoryId) {
+        Integer count = navBarMapper.checkOneLevelBarIsUsed(categoryId);
+        return (count > 0);
+    }
+
+    public void deleteNavCategoryById(Integer categoryId){
+        navBarMapper.deleteNavCategoryById(categoryId);
+    }
 }

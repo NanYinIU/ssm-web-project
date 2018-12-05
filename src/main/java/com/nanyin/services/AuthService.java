@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by NanYin on 2017-08-16 下午10:42.
@@ -14,7 +15,6 @@ import java.util.Map;
 @Service
 public interface AuthService {
 
-    List<select2> selectAllPermission();
+    Set<String> getPermissions(String username);
 
-    int insertPermissionById(Map<String,Object> map);
 }

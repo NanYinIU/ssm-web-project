@@ -1,6 +1,8 @@
 package com.nanyin.common.shiro;
 
 import com.nanyin.entity.user.User;
+import com.nanyin.services.AuthService;
+import com.nanyin.services.RoleService;
 import com.nanyin.services.UserService;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -20,13 +22,17 @@ public class ShiroMyRealm extends AuthorizingRealm {
     private static final Logger logger = LoggerFactory.getLogger(ShiroMyRealm.class);
     @Autowired
     private UserService userService;
+    @Autowired
+    private AuthService authService;
+    @Autowired
+    private RoleService roleService;
 //    授予权限和角色 已经登录成功的
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         logger.info("##############执行权限认证###############");
         String username = (String) principalCollection.getPrimaryPrincipal(); //获取用户名
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-        authorizationInfo.setRoles(userService.getRoles(username));
-        authorizationInfo.setStringPermissions(userService.getPermissions(username));
+        authorizationInfo.setRoles(roleService.getRoles(username));
+        authorizationInfo.setStringPermissions(authService.getPermissions(username));
         return authorizationInfo;
     }
 //验证当前用户信息

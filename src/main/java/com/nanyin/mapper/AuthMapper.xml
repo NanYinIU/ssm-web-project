@@ -5,23 +5,14 @@
 
 <mapper namespace="com.nanyin.mapper.AuthMapper">
 
-    <select id="selectAllPermission" resultType="com.nanyin.entity.Auth">
-        SELECT id,decript
-        FROM db_shiro.S_permission
+    <select id="getPermission"  parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT a.name
+        FROM user u
+        LEFT JOIN
+        r_user_auth ru ON u.id = ru.user_id
+        LEFT JOIN
+        auth a ON a.id = ru.auth_id
     </select>
-
-    <insert id="insertPermissionById" parameterType="map">
-        INSERT INTO db_shiro.role_permission(r_id,p_id)
-        VALUES
-            <foreach collection="p_id" index="index" item="item" separator=","  >
-                (#{r_id},  #{item})
-            </foreach>
-    </insert>
-
-    <delete id="delectPermissionByRoleId" parameterType="java.lang.Integer">
-        DELETE FROM db_shiro.role_permission
-        WHERE r_id = #{r_id};
-    </delete>
 
     <cache type="org.mybatis.caches.ehcache.LoggingEhcache" >
         <property name="timeToIdleSeconds" value="3600"/>

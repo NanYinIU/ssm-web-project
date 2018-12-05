@@ -20,4 +20,10 @@ public interface NavBarMapper {
     List<NavBar> findChildNode(Map<String,Object> map);
 
     List<NavBarCategory> findCategoryByUserId(Integer userId);
+
+    Integer deleteOneLevelBarByUserId(Map<String,Object> map);
+
+    Integer checkOneLevelBarIsUsed(Integer categoryId);
+
+    Integer deleteNavCategoryById(Integer categoryId);
 }

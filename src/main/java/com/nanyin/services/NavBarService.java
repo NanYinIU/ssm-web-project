@@ -19,4 +19,10 @@ public interface NavBarService {
     List<NavBarVo> findNavTree(Integer userId,Integer categoryId);
 
     List<NavBarCategory> findCategoryByUserId(Integer userId);
+
+    void deleteOneLevelBarByUserId(Integer userId,Integer categoryId);
+
+    boolean checkOneLevelBarIsUsed(Integer categoryId);
+
+    void deleteNavCategoryById(Integer categoryId);
 }
