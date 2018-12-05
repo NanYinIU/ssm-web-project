@@ -61,7 +61,7 @@ public class NavbarController {
         return "/WEB-INF/jsp/admin/navManage.jsp";
     }
 
-    /*删除一级菜单*/
+    /*删除一级菜单 todo*/
     @RequestMapping(value = "/oneLevelBar/{id}", method = RequestMethod.DELETE)
     public
     @ResponseBody
@@ -79,7 +79,7 @@ public class NavbarController {
         }
     }
 
-    /*更新或者添加数据*/
+    /*更新或者添加数据 todo*/
     @RequestMapping(value = "/oneLevelBar/{id}", method = RequestMethod.POST)
     public
     @ResponseBody

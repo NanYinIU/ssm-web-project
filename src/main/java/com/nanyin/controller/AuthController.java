@@ -27,24 +27,5 @@ public class AuthController {
 
     private List<Integer> permissionId;
 
-    @RequestMapping(value = "/AllPermission")
-    public @ResponseBody List<select2> AllPermission(){
-        return authService.selectAllPermission();
-    }
-
-    @RequestMapping(value = "/InsertPermission"
-            ,consumes = "application/json" , method = RequestMethod.POST)
-    public @ResponseBody int InsertPermission(@RequestBody PermissionFormat permissionFormat){
-            logger.info(permissionFormat);
-            int roleid = permissionFormat.getRoleId();
-            logger.info(roleid);
-            List<Integer> permissionId = permissionFormat.getPermissionId();
-            logger.info(permissionId);
-            Map<String ,Object> map = new HashMap<String, Object>();
-            map.put("r_id",roleid);
-            map.put("p_id",permissionId);
-
-            return authService.insertPermissionById(map);
-    }
 
 }

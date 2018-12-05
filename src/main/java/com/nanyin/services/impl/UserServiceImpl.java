@@ -30,13 +30,5 @@ public class UserServiceImpl implements UserService {
         return userMapper.findUserByName(name);
     }
 
-    public Set<String> getRoles(String username) {
-        return userMapper.getRoles(username);
-    }
-
-    public Set<String> getPermissions(String username) {
-        return userMapper.getPermission(username);
-    }
-
 
 }
