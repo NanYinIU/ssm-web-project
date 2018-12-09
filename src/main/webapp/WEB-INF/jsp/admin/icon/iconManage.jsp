@@ -105,7 +105,7 @@
                     layer.close(index);
                     //向服务端发送删除指令
                     $.ajax({
-                        url:'/oneLevelBar/'+data.id,
+                        url:'//'+data.id,
                         type:'POST',
                         data:'{_method:"DELETE",id:"'+data.id+'"}',
                         dataType:'json',
@@ -115,19 +115,16 @@
                     })
                 });
             } else if (layEvent === 'edit') { //编辑
-                //同步更新缓存对应的值
-                obj.update({
-                    username: '123'
-                    , title: 'xxx'
+                layer.open({
+                    type: 2,
+                    area: ['820px', '400px'],
+                    content: ['/icon/addOrModifyIconPage','no'] //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
                 });
-            } else if (layEvent === 'add') { //编辑
-                //do something
-                //打开 iframe
-                //同步更新缓存对应的值
-                obj.update({
-                    username: '123'
-                    , title: 'xxx'
-                });
+//                //同步更新缓存对应的值
+//                obj.update({
+//                    username: '123'
+//                    , title: 'xxx'
+//                });
             }
         });
         // 监听表格上方工具条
@@ -138,7 +135,7 @@
                     layer.open({
                         type: 2,
                         area: ['820px', '400px'],
-                        content: ['/icon/addIconPage','no'] //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                        content: ['/icon/addOrModifyIconPage','no'] //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
                     });
                     break;
                 case 'delete':

@@ -45,23 +45,31 @@
 <script type="text/javascript" src="/plugins/layui/layui.js"></script>
 </body>
 <script>
-    layui.use(['element', 'table', 'laypage',' layer','form'], function () {
+    layui.use(['element', 'table', 'laypage','form'], function () {
         var $ = layui.jquery;
         var element = layui.element;
         var table = layui.table; //Tab的切换功能，切换事件监听等，需要依赖element模块
         var laypage = layui.laypage;
-        var layer = layui.layer;
         var form = layui.form;
-
+        parent.table;
         form.on('submit(addIconSubmit)', function(data){
             layer.msg(JSON.stringify(data.field));
             $.ajax({
                 url:'/icon/icon',
                 type:'POST',
-                data:JSON.stringify(data.field),
+                data:data.field,
                 dataType:'json',
-                success:function(){
-                    layer.alert('添加成功')
+                success:function(data){
+                    if(data){
+                        /*父页面刷新*/
+                        window.parent.location.reload();
+                       /*关闭当前页面*/
+                        var index=parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                        layer.alert('添加成功')
+                    }else{
+                        layer.alert('添加时出错，请重试！！')
+                    }
                 }
             })
             return false;

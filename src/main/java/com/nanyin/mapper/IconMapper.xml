@@ -36,7 +36,7 @@
     </select>
 
     <insert id="addIcon" parameterType="com.nanyin.entity.icon.Icon" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO icon(<include refid="iconField"/>) VALUES(#{iconName},#{iconClass},#{iconUnicode});
+        INSERT INTO icon(<include refid="iconField"/>) VALUES(#{iconName},#{iconClass},#{iconUnicode})
     </insert>
 
     <update id="updateIcon" parameterType="com.nanyin.entity.icon.Icon">

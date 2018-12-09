@@ -61,21 +61,21 @@
         <property name="activeSessionsCacheName" value="shiro-activeSessionCache"/>
     </bean>
 
-    <!--<bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">-->
-        <!--&lt;!&ndash; 在Tomcat运行下默认使用的Cookie的名字为JSESSIONID &ndash;&gt;-->
-        <!--&lt;!&ndash;<constructor-arg value="mldn-session-id"/>&ndash;&gt;-->
-        <!--&lt;!&ndash; 保证该系统不会受到跨域的脚本操作供给 &ndash;&gt;-->
-        <!--&lt;!&ndash;<property name="httpOnly" value="true"/>&ndash;&gt;-->
-        <!--&lt;!&ndash;&lt;!&ndash; 定义Cookie的过期时间，单位为秒，如果设置为-1表示浏览器关闭，则Cookie消失 &ndash;&gt;&ndash;&gt;-->
-        <!--&lt;!&ndash;<property name="maxAge" value="-1"/>&ndash;&gt;-->
-        <!--<constructor-arg name="name" value="meta.session.id"/>-->
+    <bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <!-- 在Tomcat运行下默认使用的Cookie的名字为JSESSIONID -->
+        <!--<constructor-arg value="mldn-session-id"/>-->
+        <!-- 保证该系统不会受到跨域的脚本操作供给 -->
+        <!--<property name="httpOnly" value="true"/>-->
+        <!--&lt;!&ndash; 定义Cookie的过期时间，单位为秒，如果设置为-1表示浏览器关闭，则Cookie消失 &ndash;&gt;-->
+        <!--<property name="maxAge" value="-1"/>-->
+        <constructor-arg name="name" value="meta.session.id"/>
 
-    <!--</bean>-->
-
-    <bean id="simpleCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
-        <constructor-arg name="name" value="shiro.sesssion"/>
-        <property name="path" value="/"/>
     </bean>
+
+    <!--<bean id="simpleCookie" class="org.apache.shiro.web.servlet.SimpleCookie">-->
+        <!--<constructor-arg name="name" value="shiro.sesssion"/>-->
+        <!--<property name="path" value="/"/>-->
+    <!--</bean>-->
 
     <!-- 定义会话管理器的操作 -->
     <bean id="sessionManager"
@@ -91,7 +91,7 @@
         <!-- 定义Session可以进行序列化的工具类 -->
         <property name="sessionDAO" ref="sessionDAO"/>
         <!-- 所有的session一定要将id设置到Cookie之中，需要提供有Cookie的操作模版 -->
-        <property name="sessionIdCookie" ref="simpleCookie"/>
+        <property name="sessionIdCookie" ref="sessionIdCookie"/>
         <!-- 定义sessionIdCookie模版可以进行操作的启用 -->
         <property name="sessionIdCookieEnabled" value="true"/>
     </bean>

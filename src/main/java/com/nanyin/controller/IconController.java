@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 import java.util.Map;
@@ -32,8 +33,14 @@ public class IconController {
         return LayJson.Map();
     }
 
-    @RequestMapping(value = "/icon",method = RequestMethod.PUT)
-    public @ResponseBody Boolean addIcon(Icon icon){
+    @RequestMapping(value = "/icon",method = RequestMethod.POST)
+    public @ResponseBody Boolean addIcon(@RequestParam String iconName,
+                                         @RequestParam String iconUnicode,
+                                         @RequestParam String iconClass){
+        Icon icon = new Icon();
+        icon.setIconName(iconName);
+        icon.setIconUnicode(iconUnicode);
+        icon.setIconClass(iconClass);
         return iconService.addIcon(icon);
     }
 
@@ -42,9 +49,9 @@ public class IconController {
         return "/WEB-INF/jsp/admin/icon/iconManage.jsp";
     }
 
-    @RequestMapping(value = "/addIconPage",method = RequestMethod.GET)
-    public String addIconPage(){
-        return "/WEB-INF/jsp/admin/icon/addIcon.jsp";
+    @RequestMapping(value = "/addOrModifyIconPage",method = RequestMethod.GET)
+    public String addOrModifyIconPage(){
+        return "/WEB-INF/jsp/admin/icon/addOrModifyIcon.jsp";
     }
 
     @RequestMapping(value = "/count",method = RequestMethod.GET)
