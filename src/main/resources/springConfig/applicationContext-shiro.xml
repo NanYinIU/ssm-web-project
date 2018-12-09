@@ -81,7 +81,7 @@
     <bean id="sessionManager"
           class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
         <!-- 定义的是全局的session会话超时时间，此操作会覆盖web.xml文件中的超时时间配置 一个小时 -->
-        <property name="globalSessionTimeout" value="3600000"/>
+        <property name="globalSessionTimeout" value="36000000"/>
         <!-- 删除所有无效的Session对象，此时的session被保存在了内存里面 -->
         <property name="deleteInvalidSessions" value="true"/>
         <!-- 定义要使用的无效的Session定时调度器 -->

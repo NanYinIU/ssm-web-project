@@ -284,7 +284,7 @@
                         <h3 id="firstModalLabel">更改提示</h3>
                     </div>
                     <div class="modal-body">
-                        <%--<p class="error-text"><i class="fa fa-warning modal-icon"></i>确定要删除用户?</p>--%>
+                        <%--<p class="error-text"><i class="fa fa-warning modal-Icon"></i>确定要删除用户?</p>--%>
                         <div class="container-fluid">
                             <div class="row-fluid">
                                 <div class="span12">

@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserVoController {
 
     @Autowired
-    private UserVoService userVoService;
-    @Autowired
     private RoleService roleService;
     @Autowired
     private UnitService unitService;

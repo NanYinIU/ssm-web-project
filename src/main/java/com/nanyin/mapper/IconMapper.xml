@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nanyin.mapper.IconMapper">
+
+    <!--column不做限制，可以为任意表的字段，而property须为type 定义的pojo属性-->
+    <!--<resultMap id="iconInfo" type="com.nanyin.entity.icon.vo.IconVo">-->
+        <!--<id column="表的主键字段，或者可以为查询语句中的别名字段" jdbcType="字段类型" property="映射pojo对象的主键属性" />-->
+        <!--<result column="表的一个字段（可以为任意表的一个字段）" jdbcType="字段类型" property="映射到pojo对象的一个属性（须为type定义的pojo对象中的一个属性）"/>-->
+        <!--<association property="pojo的一个对象属性" javaType="pojo关联的pojo对象">-->
+            <!--<id column="关联pojo对象对应表的主键字段" jdbcType="字段类型" property="关联pojo对象的主席属性"/>-->
+            <!--<result  column="任意表的字段" jdbcType="字段类型" property="关联pojo对象的属性"/>-->
+        <!--</association>-->
+        <!--&lt;!&ndash; 集合中的property须为oftype定义的pojo对象的属性&ndash;&gt;-->
+        <!--<collection property="pojo的集合属性" ofType="集合中的pojo对象">-->
+            <!--<id column="集合中pojo对象对应的表的主键字段" jdbcType="字段类型" property="集合中pojo对象的主键属性" />-->
+            <!--<result column="可以为任意表的字段" jdbcType="字段类型" property="集合中的pojo对象的属性" />-->
+        <!--</collection>-->
+    <!--</resultMap>-->
+
+    <sql id="iconFieldWithId">
+        id,icon_name,icon_class,icon_unicode
+    </sql>
+
+    <sql id="iconField">
+        icon_name,icon_class,icon_unicode
+    </sql>
+    <!-- 对icon表的增删改查 -->
+    <select id="findIconIf" resultType="com.nanyin.entity.icon.Icon" parameterType="string">
+        SELECT <include refid="iconFieldWithId"/> FROM icon WHERE 1=1
+        <if test="iconName != null">
+            AND icon_name=#{iconName}
+        </if>
+    </select>
+
+    <insert id="addIcon" parameterType="com.nanyin.entity.icon.Icon" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO icon(<include refid="iconField"/>) VALUES(#{iconName},#{iconClass},#{iconUnicode});
+    </insert>
+
+    <update id="updateIcon" parameterType="com.nanyin.entity.icon.Icon">
+        UPDATE icon SET icon_name=#{iconName},icon_unicode=#{iconUnicode},icon_class=#{iconClass} WHERE id=#{id}
+    </update>
+
+    <delete id="deleteIcon" parameterType="integer">
+       DELETE FROM icon WHERE id=#{id}
+    </delete>
+
+    <select id="getCountNumber" resultType="integer">
+        SELECT count(*) FROM icon
+    </select>
+
+    <cache type="org.mybatis.caches.ehcache.LoggingEhcache" >
+        <property name="timeToIdleSeconds" value="3600"/>
+        <property name="timeToLiveSeconds" value="3600"/>
+        <property name="maxEntriesLocalHeap" value="1000"/>
+        <property name="maxEntriesLocalDisk" value="10000000"/>
+        <property name="memoryStoreEvictionPolicy" value="LRU"/>
+    </cache>
+
+</mapper>

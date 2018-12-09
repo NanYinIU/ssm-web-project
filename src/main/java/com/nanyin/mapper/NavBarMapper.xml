@@ -53,7 +53,7 @@
         FROM
 	    s_nav_category sc
         LEFT JOIN r_nav_category_user r on
-	    r.category_id = sc.id
+	    r.nav_category_id = sc.id
         WHERE
 	    r.user_id = #{userId};
     </select>
