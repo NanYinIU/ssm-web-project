@@ -13,47 +13,47 @@ import java.util.Map;
  */
 public class LayJson {
 
-    public static Object code;
-    public static Object count;
-    public static List<Object> data;
-    public static Object msg;
+    private  Object code;
+    private  Object count;
+    private  List<Object> data;
+    private  Object msg;
 
-    public static Object getCode() {
+    public  Object getCode() {
         if (code==null) code="";
         return code;
     }
 
-    public static void setCode(Object code) {
-        LayJson.code = code;
+    public  void setCode(Object code) {
+        this.code = code;
     }
 
-    public static Object getCount() {
+    public  Object getCount() {
         if (count==null) count="";
         return count;
     }
 
-    public static void setCount(Object count) {
-        LayJson.count = count;
+    public  void setCount(Object count) {
+        this.count = count;
     }
 
-    public static List<Object> getData() {
+    public  List<Object> getData() {
         return data;
     }
 
-    public static void setData(List<Object> data) {
-        LayJson.data = data;
+    public  void setData(List<Object> data) {
+        this.data = data;
     }
 
-    public static Object getMsg() {
+    public  Object getMsg() {
         if (msg==null) msg="";
         return msg;
     }
 
-    public static void setMsg(Object msg) {
-        LayJson.msg = msg;
+    public  void setMsg(Object msg) {
+        this.msg = msg;
     }
 
-    public static Map<Object,Object> Map(){
+    public Map<Object,Object> Map(){
         Map<Object,Object> map = new HashMap<Object, Object>();
         map.put("code",getCode());
         map.put("count",getCount());
@@ -61,5 +61,4 @@ public class LayJson {
         map.put("msg",getMsg());
         return map;
     }
-
 }

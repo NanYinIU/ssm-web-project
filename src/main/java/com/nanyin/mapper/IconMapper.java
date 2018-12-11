@@ -13,7 +13,14 @@ public interface IconMapper {
 
     Integer addIcon(Icon icon);
 
+    Integer updateIcon(Icon icon);
+
     int getCountNumber();
+
+    Integer deleteIcons(List<Integer> id);
+
+    Integer deleteIcon(Integer id);
+
 }
 
 

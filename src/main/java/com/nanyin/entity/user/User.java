@@ -21,7 +21,7 @@ public class User {
     private String salt;
     @Max(value=100, message="{年龄不能超过100}")
     private int age;
-    private int sex;
+    private String sex;
     private Date create_time;
     private int unitId;
     private int status;
@@ -66,11 +66,11 @@ public class User {
         this.age = age;
     }
 
-    public int getSex() {
+    public String getSex() {
         return sex;
     }
 
-    public void setSex(int sex) {
+    public void setSex(String sex) {
         this.sex = sex;
     }
 

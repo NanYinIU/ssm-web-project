@@ -17,5 +17,11 @@ public interface IconService {
 
     Boolean addIcon(Icon icon);
 
+    Boolean modifyIcon(Icon icon);
+
     int getCountNumber();
+
+    Boolean deleteIcon(Integer id);
+
+    boolean deleteIcons(String ids);
 }

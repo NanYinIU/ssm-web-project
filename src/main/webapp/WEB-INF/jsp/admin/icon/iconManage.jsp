@@ -38,14 +38,15 @@
 
 </body>
 <script>
-    layui.use(['element', 'table', 'laypage'], function () {
+    layui.use(['element', 'table', 'laypage','form'], function () {
         var $ = layui.jquery;
         var element = layui.element;
         var table = layui.table; //Tab的切换功能，切换事件监听等，需要依赖element模块
         var laypage = layui.laypage;
+        var form = layui.form
         /*获得分页总页数 开始*/
         $.ajax({
-            url:"/icon/count",
+            url:"/icon/icon/count",
             type:'get',
             dataType:'json',
             success:function(data){
@@ -69,28 +70,31 @@
                 ,{field: 'iconClass', title: '图标class', width: 300}
                 ,{fixed: 'right', title:'操作', toolbar:'#barDemo', width:150}
             ]] //设置表头
-            , url: '/icon/iconInfo'
+            , url: '/icon/icons',
+            // ,page: true,
+            done:function(res, curr, count){
+                /*分页空间渲染 todo */
+                laypage.render({
+                    elem: 'laypage' //注意，这里的 test1 是 ID，不用加 # 号
+                    ,count: count //数据总数，从服务端得到
+                    ,limit:10
+                    ,limits:[10,20,30,50]
+                    ,jump: function(obj, first){
+                        //obj包含了当前分页的所有参数，比如：
+                        console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+                        console.log(obj.limit); //得到每页显示的条数
+                        //首次不执行
+                        if(!first){
+                            //do something
+                        }
+                    }
+                });
+                /*分页空间渲染 结束*/
+            }
         });
         /* 表格渲染结束 */
 
-        /*分页空间渲染*/
-        laypage.render({
-            elem: 'laypage' //注意，这里的 test1 是 ID，不用加 # 号
-            ,count: pageCount //数据总数，从服务端得到
-            ,limit:10
-            ,limits:[10,20,30,50]
-            ,jump: function(obj, first){
-                //obj包含了当前分页的所有参数，比如：
-                console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
-                console.log(obj.limit); //得到每页显示的条数
 
-                //首次不执行
-                if(!first){
-                    //do something
-                }
-            }
-        });
-        /*分页空间渲染 结束*/
 
         //监听表格内工具条
         table.on('tool(iconFilter)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
@@ -101,13 +105,12 @@
             if (layEvent === 'del') { //删除
                 layer.confirm('真的删除行么', function (index) {
                     obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
-//                    var checkStatus = table.checkStatus('iconTable');
                     layer.close(index);
                     //向服务端发送删除指令
                     $.ajax({
-                        url:'//'+data.id,
-                        type:'POST',
-                        data:'{_method:"DELETE",id:"'+data.id+'"}',
+                        url:'/icon/icon/'+data.id,
+                        type:'DELETE',
+                        data:'{"_method":"DELETE",id:"'+data.id+'"}',
                         dataType:'json',
                         success:function(){
                             layer.alert('删除成功')
@@ -116,15 +119,21 @@
                 });
             } else if (layEvent === 'edit') { //编辑
                 layer.open({
+                    title : "编辑图标",
                     type: 2,
                     area: ['820px', '400px'],
-                    content: ['/icon/addOrModifyIconPage','no'] //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                    content: ['/icon/iconManage/modifyIconPage','no'], //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                    success:function (layero, index) {
+                        var body = layui.layer.getChildFrame('body', index);
+                        if(data){
+                            // 取到弹出层里的元素，并把编辑的内容放进去
+                            body.find("#id").val(data.id);  //将选中的数据的id传到编辑页面的隐藏域，便于根据ID修改数据
+                            body.find("#iconName").val(data.iconName);  //将选中的数据的id传到编辑页面的隐藏域，便于根据ID修改数据
+                            body.find("#iconUnicode").val(data.iconUnicode);  //密码
+                            body.find("#iconClass").val(data.iconClass);  //登录时间
+                        }
+                    }
                 });
-//                //同步更新缓存对应的值
-//                obj.update({
-//                    username: '123'
-//                    , title: 'xxx'
-//                });
             }
         });
         // 监听表格上方工具条
@@ -133,13 +142,37 @@
             switch(obj.event){
                 case 'add':
                     layer.open({
+                        title : "添加图标",
                         type: 2,
                         area: ['820px', '400px'],
-                        content: ['/icon/addOrModifyIconPage','no'] //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                        content: ['/icon/iconManage/addIconPage','no'] //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
                     });
                     break;
                 case 'delete':
-                    layer.msg('删除');
+                    layer.confirm('真的删除行么', function (index) {
+                        var DeleteData = [];
+                        var ids;
+                        var checkStatus = table.checkStatus('iconTable');
+                        data = checkStatus.data;
+                        for(var x = 0;x<data.length;x++){
+                            DeleteData[x] = data[x].id;
+                        }
+                        var requestData =  '{_method:"DELETE",ids:"'+DeleteData.join(",")+'"}'
+                        $.ajax({
+                            url:'/icon/icon/batch/'+DeleteData.join(","),
+                            type:'DELETE',
+                            data:requestData,
+                            dataType:'json',
+                            success:function(){
+                                layer.alert('删除成功')
+                                /*todo*/
+                                for (var i = 0; i < DeleteData.length; i++) {
+                                    $("tr[data-index='" + DeleteData[i] + "']").remove();
+                                }
+                            }
+                        })
+                        layer.close(index);
+                    });
                     break;
                 case 'update':
                     layer.msg('编辑');

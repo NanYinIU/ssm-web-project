@@ -4,7 +4,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>图标添加form</title>
+    <title>图标修改form</title>
     <link rel="stylesheet" href="/plugins/layui/css/layui.css" media="all"/>
     <link rel="stylesheet" href="/plugins/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../css/ztree/metro/ztree.css">
@@ -12,28 +12,29 @@
 
 <body style="width: 800px;height: 400px;margin-top: 10px">
 <form class="layui-form" action="">
+    <input type="hidden" name="id" id="id"/>
     <div class="layui-form-item">
         <label class="layui-form-label">图标名称</label>
         <div class="layui-input-block">
-            <input type="text" name="iconName" required  lay-verify="required" placeholder="请输入图标名称" autocomplete="off" class="layui-input">
+            <input type="text" name="iconName" id="iconName" required  lay-verify="required" placeholder="请输入图标名称" autocomplete="off" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">图标unicode</label>
         <div class="layui-input-block">
-            <input type="text" name="iconUnicode" required  lay-verify="required" placeholder="请输入图标名称" autocomplete="off" class="layui-input">
+            <input type="text" name="iconUnicode" id="iconUnicode" required  lay-verify="required" placeholder="请输入内容" autocomplete="off" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">图标class</label>
         <div class="layui-input-block">
-            <input type="text" name="iconClass" required  lay-verify="required" placeholder="请输入图标名称" autocomplete="off" class="layui-input">
+            <input type="text" name="iconClass" id="iconClass" required  lay-verify="required" placeholder="请输入内容" autocomplete="off" class="layui-input">
         </div>
     </div>
 
     <div class="layui-form-item">
         <div class="layui-input-block">
-            <button class="layui-btn" lay-submit lay-filter="addIconSubmit">立即提交</button>
+            <button class="layui-btn" lay-submit lay-filter="addIconSubmit">修改提交</button>
             <button type="reset" class="layui-btn layui-btn-primary">重置</button>
         </div>
     </div>
@@ -42,6 +43,7 @@
 <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px; width: 100%">
     <legend>提示：用到的请参考layui官网图标样式进行添加</legend>
 </fieldset>
+
 <script type="text/javascript" src="/plugins/layui/layui.js"></script>
 </body>
 <script>
@@ -53,10 +55,10 @@
         var form = layui.form;
         parent.table;
         form.on('submit(addIconSubmit)', function(data){
-            layer.msg(JSON.stringify(data.field));
+            // layer.msg(JSON.stringify(data.field));
             $.ajax({
-                url:'/icon/icon',
-                type:'POST',
+                url:'/icon/icon/'+data.field.id,
+                type:'put',
                 data:data.field,
                 dataType:'json',
                 success:function(data){
@@ -66,9 +68,9 @@
                        /*关闭当前页面*/
                         var index=parent.layer.getFrameIndex(window.name);
                         parent.layer.close(index);
-                        layer.alert('添加成功')
+                        layer.alert('修改成功')
                     }else{
-                        layer.alert('添加时出错，请重试！！')
+                        layer.alert('修改时出错，请重试！！')
                     }
                 }
             })

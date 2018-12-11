@@ -6,14 +6,14 @@ package com.nanyin.entity.navBar;
  * @Description: 导航栏内容实体类
  */
 public class NavBar {
-    Integer id;
-    String name;
-    String href;
-    Integer parentNavId;
-    String icon;
-    Integer isDeleted;
-    Integer ord;
-    Integer spread;
+    public Integer id;
+    public String name;
+    public String href;
+    public Integer parentNavId;
+    public String icon;
+    public Integer isDeleted;
+    public Integer ord;
+    public Integer spread;
 
     public Integer getSpread() {
         return spread;

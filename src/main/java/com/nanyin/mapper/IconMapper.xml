@@ -43,8 +43,15 @@
         UPDATE icon SET icon_name=#{iconName},icon_unicode=#{iconUnicode},icon_class=#{iconClass} WHERE id=#{id}
     </update>
 
+    <delete id="deleteIcons" parameterType="list">
+       DELETE FROM icon WHERE id in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
     <delete id="deleteIcon" parameterType="integer">
-       DELETE FROM icon WHERE id=#{id}
+       DELETE FROM icon WHERE id = #{id}
     </delete>
 
     <select id="getCountNumber" resultType="integer">
