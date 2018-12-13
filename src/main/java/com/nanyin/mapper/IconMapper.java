@@ -4,14 +4,17 @@ import com.nanyin.entity.icon.Icon;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Repository
 public interface IconMapper {
 
-    List<Icon> findIconIf(String iconName);
+    List<Icon> findIconIf(Map param);
 
     Integer addIcon(Icon icon);
+
+    Integer countIconIf(String name);
 
     Integer updateIcon(Icon icon);
 

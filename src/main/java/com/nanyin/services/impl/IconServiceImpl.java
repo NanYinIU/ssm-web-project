@@ -6,8 +6,10 @@ import com.nanyin.services.IconService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Auther: NanYin
@@ -19,8 +21,16 @@ public class IconServiceImpl implements IconService {
     @Autowired
     IconMapper iconMapper;
 
-    public List<Icon> findIconInfo(String iconName) {
-        return iconMapper.findIconIf(iconName);
+    public List<Icon> findIconInfo(String name,Integer page,Integer limit) {
+        Map<String,Object> param = new HashMap<String, Object>();
+        param.put("iconName",name);
+        param.put("limit",limit);
+        param.put("start",(page-1)*limit);
+        return iconMapper.findIconIf(param);
+    }
+
+    public Integer countIconIf(String iconName) {
+        return iconMapper.countIconIf(iconName);
     }
 
     public Boolean addIcon(Icon icon) {

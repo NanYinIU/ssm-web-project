@@ -3,6 +3,7 @@ package com.nanyin.controller;
 import com.nanyin.common.util.LayJson;
 import com.nanyin.entity.icon.Icon;
 import com.nanyin.services.IconService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -22,13 +23,22 @@ public class IconController {
     @Autowired
     IconService iconService;
 
+    /**
+     *
+     * @param name 查询框搜索 暂定只有文本搜索 搜索内容可以是icon名称或者class名称
+     * @param page 当前页 从1开始
+     * @param limit 每页数目 可以定义
+     * @return
+     */
     @RequestMapping(value = "/icons",method = RequestMethod.GET)
     public @ResponseBody
-    LayJson iconInfo(@RequestParam(name = "name",required = false) String name){
-        List Data = iconService.findIconInfo(name);
+    LayJson iconInfo(@Param("name") @RequestParam(name = "name",required = false) String name,
+                     Integer page, Integer limit){
+        List Data = iconService.findIconInfo(name,page,limit);
         LayJson layJson = new LayJson();
         layJson.setData(Data);
-        layJson.setCount(Data.size());
+        Integer count = iconService.countIconIf(name);
+        layJson.setCount(count);
         return layJson;
     }
 

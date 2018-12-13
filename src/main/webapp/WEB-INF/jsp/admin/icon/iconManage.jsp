@@ -23,6 +23,24 @@
                 <a class="layui-btn  layui-btn-sm" lay-event="edit">编辑</a>
                 <a class="layui-btn  layui-btn-sm layui-btn-danger" lay-event="del">删除</a>
             </script>
+
+            <div class="layui-row" style="margin-top: 10px">
+                <form class="layui-form" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-col-md3">
+                            <input type="text" name="name" id="name" autocomplete="off"
+                                   placeholder="名称/图标class" class="layui-input">
+                        </div>
+                        <div class="layui-col-md2" style="margin-left: 10px">
+                            <div class="layui-input-inline " style="width: 90px">
+                                <a class="layui-btn" id="searchEmailCompany" data-type="reload" lay-submit lay-filter="iconsSearch">
+                                    <i class="layui-icon" style="font-size: 20px; " ></i> 搜索
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
             <table class="layui-hide" id="icon" lay-filter="iconFilter"></table>
             <div id="laypage"></div>
         </div>
@@ -53,15 +71,15 @@
                 $("#iconTableCount").val(data);
             }
         })
-        var pageCount = $("#iconTableCount").val();
+
         /*获得分页总页数 结束*/
         /* 表格渲染开始 */
-        table.render({
+        var tableId = table.render({
              id:'iconTable'
             ,elem: '#icon' //指定原始表格元素选择器（推荐id选择器）
             ,title: '图标表'
             ,toolbar: '#toolbarDemo'
-            ,height: 'full-100' //容器高度
+            ,height: 'full-150' //容器高度
             ,cols: [[ //表头
                 {type: 'checkbox'}
                 ,{type:'numbers'}
@@ -70,31 +88,20 @@
                 ,{field: 'iconClass', title: '图标class', width: 300}
                 ,{fixed: 'right', title:'操作', toolbar:'#barDemo', width:150}
             ]] //设置表头
-            , url: '/icon/icons',
-            // ,page: true,
-            done:function(res, curr, count){
-                /*分页空间渲染 todo */
-                laypage.render({
-                    elem: 'laypage' //注意，这里的 test1 是 ID，不用加 # 号
-                    ,count: count //数据总数，从服务端得到
-                    ,limit:10
-                    ,limits:[10,20,30,50]
-                    ,jump: function(obj, first){
-                        //obj包含了当前分页的所有参数，比如：
-                        console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
-                        console.log(obj.limit); //得到每页显示的条数
-                        //首次不执行
-                        if(!first){
-                            //do something
-                        }
-                    }
-                });
-                /*分页空间渲染 结束*/
-            }
+            ,url: '/icon/icons'
+            ,page: true
+            ,where:{name:$("#name").val()}
         });
         /* 表格渲染结束 */
-
-
+        // 查询条件，并重载
+        form.on('submit(iconsSearch)', function(data){
+            tableId.reload({
+                // url: '/icon/icons',
+                where: { //设定异步数据接口的额外参数，任意设
+                    name: $("#name").val()
+                }
+            })
+        })
 
         //监听表格内工具条
         table.on('tool(iconFilter)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"

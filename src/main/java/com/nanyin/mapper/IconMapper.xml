@@ -28,13 +28,20 @@
         icon_name,icon_class,icon_unicode
     </sql>
     <!-- 对icon表的增删改查 -->
-    <select id="findIconIf" resultType="com.nanyin.entity.icon.Icon" parameterType="string">
+    <select id="findIconIf" resultType="com.nanyin.entity.icon.Icon" parameterType="map">
         SELECT <include refid="iconFieldWithId"/> FROM icon WHERE 1=1
-        <if test="iconName != null">
-            AND icon_name=#{iconName}
+        <if test="iconName != null and iconName!=''">
+            AND icon_name like CONCAT('%',#{iconName},'%') or icon_class like CONCAT('%',#{iconName},'%')
         </if>
+         limit #{start},#{limit}
     </select>
 
+    <select id="countIconIf" resultType="integer" parameterType="string">
+        SELECT count(*) FROM icon WHERE 1=1
+        <if test="_parameter != null and _parameter!=''">
+            AND icon_name like CONCAT('%',#{name},'%') or icon_class like CONCAT('%',#{name},'%')
+        </if>
+    </select>
     <insert id="addIcon" parameterType="com.nanyin.entity.icon.Icon" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO icon(<include refid="iconField"/>) VALUES(#{iconName},#{iconClass},#{iconUnicode})
     </insert>

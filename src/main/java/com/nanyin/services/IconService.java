@@ -4,6 +4,7 @@ import com.nanyin.entity.icon.Icon;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Auther: NanYin
@@ -13,7 +14,9 @@ import java.util.List;
 @Service
 public interface IconService {
 
-    List<Icon> findIconInfo(String iconName);
+    List<Icon> findIconInfo(String name,Integer page,Integer limit);
+
+    Integer countIconIf(String name);
 
     Boolean addIcon(Icon icon);
 
