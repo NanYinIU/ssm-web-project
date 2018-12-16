@@ -1,16 +1,11 @@
-package com.nanyin.entity.navBar;
+package com.nanyin.entity.navBar.vo;
 
-/**
- * @Auther: NanYin
- * @Date: 12/2/18 17:10
- * @Description:
- */
-public class NavBarCategory {
+public class NavBarCategoryInfos {
     private Integer id;
     private String name;
     private String comment;
     private Integer ord;
-    private Integer icon;
+    private String icon;
 
     public Integer getId() {
         return id;
@@ -44,11 +39,11 @@ public class NavBarCategory {
         this.ord = ord;
     }
 
-    public Integer getIcon() {
+    public String getIcon() {
         return icon;
     }
 
-    public void setIcon(Integer icon) {
+    public void setIcon(String icon) {
         this.icon = icon;
     }
 }

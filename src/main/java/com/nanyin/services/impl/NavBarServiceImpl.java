@@ -2,9 +2,14 @@ package com.nanyin.services.impl;
 
 import com.nanyin.entity.navBar.NavBar;
 import com.nanyin.entity.navBar.NavBarCategory;
+import com.nanyin.entity.navBar.RNavCategoryUser;
+import com.nanyin.entity.navBar.vo.NavBarCategoryInfos;
+import com.nanyin.entity.navBar.vo.NavBarInfos;
 import com.nanyin.entity.navBar.vo.NavBarVo;
+import com.nanyin.entity.user.User;
 import com.nanyin.mapper.NavBarMapper;
 import com.nanyin.services.NavBarService;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
@@ -22,15 +27,19 @@ public class NavBarServiceImpl implements NavBarService {
     @Autowired
     NavBarMapper navBarMapper;
 
-    public List<NavBar> findNavBarByUserId(Integer userId,Integer categoryId) {
+    public List<NavBarInfos> findNavBarByUserId(Integer userId,Integer categoryId) {
         Map<String,Object> param = new HashMap<String, Object>();
         param.put("userId",userId);
         param.put("categoryId",categoryId);
         return navBarMapper.findNavBarByUserId(param);
     }
 
-    public List<NavBarCategory> findCategoryByUserId(Integer userId) {
+    public List<NavBarCategoryInfos> findCategoryByUserId(Integer userId) {
         return navBarMapper.findCategoryByUserId(userId);
+    }
+
+    public List<NavBarCategoryInfos> findOneLevelBarByUserId(Integer userId) {
+        return navBarMapper.findOneLevelBarByUserId(userId);
     }
 
     public List<NavBarVo> findNavTree(Integer userId,Integer categoryId) {
@@ -39,15 +48,15 @@ public class NavBarServiceImpl implements NavBarService {
         param.put("userId",userId);
         param.put("categoryId",categoryId);
 //        父节点
-        List<NavBar> parentList = navBarMapper.findParentNode(param);
-        for (NavBar n:parentList
+        List<NavBarInfos> parentList = navBarMapper.findParentNode(param);
+        for (NavBarInfos n:parentList
              ) {
             NavBarVo parentNode = new NavBarVo();
             Map<String,Object> map = new HashMap<String, Object>();
             map.put("parentId",n.getId());
             map.put("userId",userId);
             map.put("categoryId",categoryId);
-            List<NavBar> childNode = navBarMapper.findChildNode(map);
+            List<NavBarInfos> childNode = navBarMapper.findChildNode(map);
             parentNode.setId(n.getId());
             parentNode.setHref(n.getHref());
             parentNode.setIcon(n.getIcon());
@@ -73,5 +82,19 @@ public class NavBarServiceImpl implements NavBarService {
 
     public void deleteNavCategoryById(Integer categoryId){
         navBarMapper.deleteNavCategoryById(categoryId);
+    }
+
+    public Boolean insertSNavCategory(NavBarCategory navBarCategory) {
+        navBarMapper.insertSNavCategory(navBarCategory);
+        User user = (User) SecurityUtils.getSubject().getSession().getAttribute("user");
+
+        RNavCategoryUser rNavCategoryUser = new RNavCategoryUser();
+        rNavCategoryUser.setUserId(user.getId());
+        rNavCategoryUser.setNavCategoryId(navBarCategory.getId());
+        return insertRNavCategoryUser(rNavCategoryUser);
+    }
+
+    public boolean insertRNavCategoryUser(RNavCategoryUser rNavCategoryUser) {
+        return navBarMapper.insertRNavCategoryUser(rNavCategoryUser)==1;
     }
 }

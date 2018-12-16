@@ -14,14 +14,13 @@
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin kit-layout-admin">
     <div class="layui-header">
-        <div class="layui-logo">KIT ADMIN</div>
+        <div class="layui-logo">后台管理</div>
         <div class="layui-logo kit-logo-mobile">K</div>
         <ul class="layui-nav layui-layout-left kit-nav" kit-one-level>
             <li class="layui-nav-item"><a href="javascript:;">控制台</a></li>
             <li class="layui-nav-item"><a href="javascript:;">商品管理</a></li>
         </ul>
         <ul class="layui-nav layui-layout-right kit-nav">
-            <li class="layui-nav-item"><a href="javascript:;" id="pay"><i class="fa fa-gratipay" aria-hidden="true"></i> 捐赠我</a></li>
             <li class="layui-nav-item">
                 <a href="javascript:;">
                     <img src="http://m.zhengjinfan.cn/images/0.jpg" class="layui-nav-img"> Van
@@ -31,7 +30,7 @@
                     <dd><a href="javascript:;">安全设置</a></dd>
                 </dl>
             </li>
-            <li class="layui-nav-item"><a href="javascript:;"><i class="fa fa-sign-out" aria-hidden="true"></i> 注销</a></li>
+            <li class="layui-nav-item"><a href="/logout"><i class="fa fa-sign-out" aria-hidden="true"></i> 注销</a></li>
         </ul>
     </div>
 
@@ -75,13 +74,13 @@
             type: 'iframe'
         }).init();
         $('#pay').on('click', function() {
-            layer.open({
-                title: false,
-                type: 1,
-                content: '<img src="/build/images/pay.png" />',
-                area: ['500px', '250px'],
-                shadeClose: true
-            });
+            // layer.open({
+            //     title: false,
+            //     type: 1,
+            //     content: '<img src="/build/images/pay.png" />',
+            //     area: ['500px', '250px'],
+            //     shadeClose: true
+            // });
         });
     });
 </script>

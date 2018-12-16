@@ -12,6 +12,7 @@
 
 <body style="width: 800px;height: 400px;margin-top: 10px">
 <form class="layui-form" action="">
+    <input type="hidden" name="id" id="id"/>
     <div class="layui-form-item">
         <label class="layui-form-label">分类名称</label>
         <div class="layui-input-block">

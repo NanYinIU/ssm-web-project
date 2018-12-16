@@ -5,10 +5,8 @@
 
 <mapper namespace="com.nanyin.mapper.NavBarMapper">
 
-    <select id="findNavBarByUserId" parameterType="map" resultType="com.nanyin.entity.navBar.NavBar">
-        select
-	    s.*
-        FROM
+    <sql id="selectNavBarSql">
+	    select  s.id,s.`name`,s.`href`,s.`parent_nav_id`,icon.`icon_unicode` icon,s.`is_deleted`,s.`ord`,s.`spread` from
 	    s_nav_bar s
         LEFT JOIN r_nav_user r on
 	    r.nav_id = s.id
@@ -16,46 +14,43 @@
 	    r.user_id = u.id
         left join s_nav_category sc on
 	    sc.id = r.category_id
+	    LEFT JOIN icon icon ON icon.`id`=s.`icon`
+    </sql>
+    <select id="findNavBarByUserId" parameterType="map" resultType="com.nanyin.entity.navBar.vo.NavBarInfos">
+        <include refid="selectNavBarSql"/>
         WHERE u.id=#{userId} and sc.id=#{categoryId} and s.is_deleted=0 ORDER BY s.ord;
     </select>
 
-    <select id="findParentNode" resultType="com.nanyin.entity.navBar.NavBar" parameterType="map">
-        select
-	    s.*
-        FROM
-	    s_nav_bar s
-        LEFT JOIN r_nav_user r on
-	    r.nav_id = s.id
-        left join `user` u ON
-	    r.user_id = u.id
-        left join s_nav_category sc on
-	    sc.id = r.category_id
+    <select id="findParentNode" resultType="com.nanyin.entity.navBar.vo.NavBarInfos" parameterType="map">
+        <include refid="selectNavBarSql"/>
         WHERE s.parent_nav_id is NULL and s.is_deleted=0 and u.id=#{userId} and sc.id=#{categoryId} ORDER BY s.ord;
     </select>
 
-    <select id="findChildNode" resultType="com.nanyin.entity.navBar.NavBar" parameterType="map">
-      select
-	    s.*
-        FROM
-	    s_nav_bar s
-        LEFT JOIN r_nav_user r on
-	    r.nav_id = s.id
-        left join `user` u ON
-	    r.user_id = u.id
-        left join s_nav_category sc on
-	    sc.id = r.category_id
+    <select id="findChildNode" resultType="com.nanyin.entity.navBar.vo.NavBarInfos" parameterType="map">
+        <include refid="selectNavBarSql"/>
         where s.parent_nav_id = #{parentId} and s.is_deleted=0 AND u.id=#{userId} and sc.id=#{categoryId} ORDER BY s.ord
     </select>
 
-    <select id="findCategoryByUserId" resultType="com.nanyin.entity.navBar.NavBarCategory" parameterType="integer">
+    <select id="findCategoryByUserId" resultType="com.nanyin.entity.navBar.vo.NavBarCategoryInfos" parameterType="integer">
         SELECT
-	    DISTINCT sc.*
+	    DISTINCT sc.`id`,sc.name,sc.`comment`,sc.`ord`,icon.`icon_unicode` icon
         FROM
 	    s_nav_category sc
         LEFT JOIN r_nav_category_user r on
-	    r.nav_category_id = sc.id
+	    r.nav_category_id = sc.id  LEFT JOIN icon icon ON icon.`id`=sc.`icon`
         WHERE
-	    r.user_id = #{userId};
+	    r.user_id = #{userId} ;
+    </select>
+
+    <select id="findOneLevelBarByUserId" resultType="com.nanyin.entity.navBar.vo.NavBarCategoryInfos" parameterType="integer">
+        SELECT
+	    DISTINCT sc.`id`,sc.name,sc.`comment`,sc.`ord`,icon.`icon_unicode` icon
+        FROM
+	    s_nav_category sc
+        LEFT JOIN r_nav_category_user r on
+	    r.nav_category_id = sc.id  LEFT JOIN icon icon ON icon.`id`=sc.`icon`  LEFT JOIN `r_nav_user` rnu ON rnu.`category_id`=sc.`id`
+        WHERE
+	    r.user_id = #{userId} and rnu.`category_id` IS NOT NULL;
     </select>
 
     <delete id="deleteOneLevelBarByUserId" parameterType="map" >

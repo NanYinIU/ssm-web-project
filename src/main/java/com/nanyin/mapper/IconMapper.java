@@ -1,6 +1,7 @@
 package com.nanyin.mapper;
 
 import com.nanyin.entity.icon.Icon;
+import com.nanyin.entity.icon.vo.IconCombo;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,6 +24,8 @@ public interface IconMapper {
     Integer deleteIcons(List<Integer> id);
 
     Integer deleteIcon(Integer id);
+
+    List<IconCombo> findIconCombo();
 
 }
 

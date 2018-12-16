@@ -59,4 +59,10 @@ public class IconServiceImpl implements IconService {
         }
         return iconMapper.deleteIcons(idList)==1;
     }
+
+    public Map<String, Object> findIconCombo() {
+        Map<String,Object> map = new HashMap<String, Object>();
+        map.put("list",iconMapper.findIconCombo());
+        return map;
+    }
 }

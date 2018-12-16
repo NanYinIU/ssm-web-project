@@ -20,8 +20,6 @@ import java.util.List;
 public class AdminController {
 
 
-
-
     @RequestMapping(value = "/main",method = RequestMethod.GET)
     public String main(){
         return "/WEB-INF/jsp/admin/main.jsp";

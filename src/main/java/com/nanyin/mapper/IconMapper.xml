@@ -21,7 +21,7 @@
     <!--</resultMap>-->
 
     <sql id="iconFieldWithId">
-        id,icon_name,icon_class,icon_unicode
+      SELECT id,icon_name,icon_class,icon_unicode FROM icon WHERE 1=1
     </sql>
 
     <sql id="iconField">
@@ -29,7 +29,7 @@
     </sql>
     <!-- 对icon表的增删改查 -->
     <select id="findIconIf" resultType="com.nanyin.entity.icon.Icon" parameterType="map">
-        SELECT <include refid="iconFieldWithId"/> FROM icon WHERE 1=1
+        <include refid="iconFieldWithId"/>
         <if test="iconName != null and iconName!=''">
             AND icon_name like CONCAT('%',#{iconName},'%') or icon_class like CONCAT('%',#{iconName},'%')
         </if>
@@ -65,6 +65,10 @@
         SELECT count(*) FROM icon
     </select>
 
+    <select id="findIconCombo" resultType="com.nanyin.entity.icon.vo.IconCombo">
+        SELECT id value,icon_name name FROM icon
+    </select>
+    
     <cache type="org.mybatis.caches.ehcache.LoggingEhcache" >
         <property name="timeToIdleSeconds" value="3600"/>
         <property name="timeToLiveSeconds" value="3600"/>

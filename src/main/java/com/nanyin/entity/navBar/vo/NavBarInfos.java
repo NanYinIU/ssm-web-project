@@ -1,16 +1,16 @@
-package com.nanyin.entity.navBar;
+package com.nanyin.entity.navBar.vo;
 
 /**
  * @Auther: NanYin
  * @Date: 11/20/18 20:31
  * @Description: 导航栏内容实体类
  */
-public class NavBar {
+public class NavBarInfos {
     public Integer id;
     public String name;
     public String href;
     public Integer parentNavId;
-    public Integer icon;
+    public String icon;
     public Integer isDeleted;
     public Integer ord;
     public Integer spread;
@@ -23,11 +23,11 @@ public class NavBar {
         this.spread = spread;
     }
 
-    public Integer getIcon() {
+    public String getIcon() {
         return icon;
     }
 
-    public void setIcon(Integer icon) {
+    public void setIcon(String icon) {
         this.icon = icon;
     }
 

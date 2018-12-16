@@ -15,7 +15,7 @@ public class NavBarVo {
     String href;
     String icon;
     Integer spread;
-    List<NavBar> children;
+    List<NavBarInfos> children;
 
     public Integer getId() {
         return id;
@@ -57,11 +57,11 @@ public class NavBarVo {
         this.spread = spread;
     }
 
-    public List<NavBar> getChildren() {
+    public List<NavBarInfos> getChildren() {
         return children;
     }
 
-    public void setChildren(List<NavBar> children) {
+    public void setChildren(List<NavBarInfos> children) {
         this.children = children;
     }
 }

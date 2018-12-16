@@ -1,6 +1,7 @@
 package com.nanyin.services;
 
 import com.nanyin.entity.icon.Icon;
+import com.nanyin.entity.icon.vo.IconCombo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,4 +28,6 @@ public interface IconService {
     Boolean deleteIcon(Integer id);
 
     boolean deleteIcons(String ids);
+
+    Map<String,Object> findIconCombo();
 }

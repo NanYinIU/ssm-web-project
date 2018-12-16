@@ -84,8 +84,8 @@
                     layer.close(index);
                     //向服务端发送删除指令
                     $.ajax({
-                        url:'/oneLevelBar/'+data.id,
-                        type:'POST',
+                        url:'/navbarCategory/'+data.id,
+                        type:'DELETE',
                         data:'{_method:"DELETE",id:"'+data.id+'"}',
                         dataType:'json',
                         success:function(){
@@ -94,25 +94,21 @@
                     })
                 });
             } else if (layEvent === 'edit') { //编辑
-
-                //同步更新缓存对应的值
-                obj.update({
-                    username: '123'
-                    , title: 'xxx'
+                layer.open({
+                    type: 2,
+                    area: ['820px', '400px'],
+                    content: ['/nav/modifyNavCategoryPage','no'],//这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                    success:function (layero, index) {
+                        var body = layui.layer.getChildFrame('body', index);
+                        if(data){
+                            // 取到弹出层里的元素，并把编辑的内容放进去
+                            body.find("#id").val(data.id);  //将选中的数据的id传到编辑页面的隐藏域，便于根据ID修改数据
+                            body.find("#name").val(data.name);  //将选中的数据的id传到编辑页面的隐藏域，便于根据ID修改数据
+                            body.find("#icon").val(data.icon);  //密码
+                            body.find("#comment").val(data.comment);  //登录时间
+                        }
+                    }
                 });
-            } else if (layEvent === 'add') { //编辑
-                //do something
-                //打开 iframe
-
-//                $.ajax({
-//                    url:'/oneLevelBar/'+data.id,
-//                    type:'POST',
-//                    data:'',
-//                    dataType:'json',
-//                    success:function(){
-//                        layer.alert('删除成功')
-//                    }
-//                })
                 //同步更新缓存对应的值
                 obj.update({
                     username: '123'

@@ -96,4 +96,8 @@ public class IconController {
         return iconService.deleteIcons(ids);
     }
 
+    @RequestMapping(value = "/iconCombo",method = RequestMethod.GET)
+    public @ResponseBody Map<String,Object> iconCombo(){
+        return iconService.findIconCombo();
+    }
 }
