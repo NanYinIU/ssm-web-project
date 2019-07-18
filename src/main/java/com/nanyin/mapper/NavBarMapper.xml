@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nanyin.mapper.NavBarMapper">
+
+    <sql id="selectNavBarSql">
+	    select  s.id,s.`name`,s.`href`,s.`parent_nav_id`,icon.`icon_unicode` icon,s.`is_deleted`,s.`ord`,s.`spread` from
+	    s_nav_bar s
+        LEFT JOIN r_nav_user r on
+	    r.nav_id = s.id
+        left join `user` u ON
+	    r.user_id = u.id
+        left join s_nav_category sc on
+	    sc.id = r.category_id
+	    LEFT JOIN icon icon ON icon.`id`=s.`icon`
+    </sql>
+    <select id="findNavBarByUserId" parameterType="map" resultType="com.nanyin.entity.navBar.vo.NavBarInfos">
+        <include refid="selectNavBarSql"/>
+        WHERE u.id=#{userId} and sc.id=#{categoryId} and s.is_deleted=0 ORDER BY s.ord;
+    </select>
+
+    <select id="findParentNode" resultType="com.nanyin.entity.navBar.vo.NavBarInfos" parameterType="map">
+        <include refid="selectNavBarSql"/>
+        WHERE s.parent_nav_id is NULL and s.is_deleted=0 and u.id=#{userId} and sc.id=#{categoryId} ORDER BY s.ord;
+    </select>
+
+    <select id="findChildNode" resultType="com.nanyin.entity.navBar.vo.NavBarInfos" parameterType="map">
+        <include refid="selectNavBarSql"/>
+        where s.parent_nav_id = #{parentId} and s.is_deleted=0 AND u.id=#{userId} and sc.id=#{categoryId} ORDER BY s.ord
+    </select>
+
+    <select id="findCategoryByUserId" resultType="com.nanyin.entity.navBar.vo.NavBarCategoryInfos" parameterType="integer">
+        SELECT
+	    DISTINCT sc.`id`,sc.name,sc.`comment`,sc.`ord`,icon.`icon_unicode` icon
+        FROM
+	    s_nav_category sc
+        LEFT JOIN r_nav_category_user r on
+	    r.nav_category_id = sc.id  LEFT JOIN icon icon ON icon.`id`=sc.`icon`
+        WHERE
+	    r.user_id = #{userId} ;
+    </select>
+
+    <select id="findOneLevelBarByUserId" resultType="com.nanyin.entity.navBar.vo.NavBarCategoryInfos" parameterType="integer">
+        SELECT
+	    DISTINCT sc.`id`,sc.name,sc.`comment`,sc.`ord`,icon.`icon_unicode` icon
+        FROM
+	    s_nav_category sc
+        LEFT JOIN r_nav_category_user r on
+	    r.nav_category_id = sc.id  LEFT JOIN icon icon ON icon.`id`=sc.`icon`  LEFT JOIN `r_nav_user` rnu ON rnu.`category_id`=sc.`id`
+        WHERE
+	    r.user_id = #{userId} and rnu.`category_id` IS NOT NULL;
+    </select>
+
+    <delete id="deleteOneLevelBarByUserId" parameterType="map" >
+        DELETE FROM r_nav_user r where r.category_id= #{categoryId} and r.user_id= #{userId};
+    </delete>
+
+    <select id="checkOneLevelBarIsUsed" parameterType="integer" resultType="integer">
+        SELECT COUNT(*) FROM r_nav_user r WHERE r.category_id=#{categoryId}
+    </select>
+    
+    <delete id="deleteNavCategoryById" parameterType="integer">
+        DELETE FROM s_nav_category WHERE id=#{categoryId}
+    </delete>
+
+    <insert id="insertSNavCategory" parameterType="com.nanyin.entity.navBar.NavBarCategory" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO s_nav_category (name,comment,icon,ord) VALUES (#{name},#{comment},#{icon},#{ord});
+    </insert>
+
+    <!--category的关联表-->
+    <insert id="insertRNavCategoryUser" parameterType="com.nanyin.entity.navBar.RNavCategoryUser" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO r_nav_category_user(nav_category_id,user_id) VALUES(#{navCategoryId},#{userId});
+    </insert>
+
+    <update id="updateNavCategoryById" parameterType="com.nanyin.entity.navBar.NavBarCategory" >
+        UPDATE s_nav_category SET name=#{name},comment=#{comment},icon=#{icon},ord=#{ord} WHERE id=#{id}
+    </update>
+
+    <!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache" >-->
+        <!--<property name="timeToIdleSeconds" value="3600"/>-->
+        <!--<property name="timeToLiveSeconds" value="3600"/>-->
+        <!--<property name="maxEntriesLocalHeap" value="1000"/>-->
+        <!--<property name="maxEntriesLocalDisk" value="10000000"/>-->
+        <!--<property name="memoryStoreEvictionPolicy" value="LRU"/>-->
+    <!--</cache>-->
+
+</mapper>

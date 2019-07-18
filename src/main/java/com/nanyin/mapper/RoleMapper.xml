@@ -4,50 +4,14 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.nanyin.mapper.RoleMapper">
-    <select id="selectRoles" parameterType="Map" resultType="com.nanyin.entity.Role">
-        SELECT r.role_id, r.role_name, r.`describe`
-        FROM db_shiro.S_role r
-        <if test="name!=null and name!=''">
-        WHERE r.role_name LIKE concat(concat('%',#{name}),'%')
-        </if>
-        LIMIT #{a},#{b}
+
+    <select id="getRoles" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT r.name FROM user u
+        LEFT JOIN
+        r_user_role ru ON u.id = ru.user_id
+        LEFT JOIN
+        role r ON r.id = ru.role_id
     </select>
-    <select id="Roles" parameterType="java.lang.Integer" resultType="com.nanyin.entity.Role">
-        SELECT r.role_id, r.role_name, r.`describe`
-        FROM db_shiro.S_role r
-    </select>
-    <select id="selectByRoleName" parameterType="java.lang.String" resultType="java.lang.Integer">
-    SELECT r.role_id
-    FROM db_shiro.S_role r
-    WHERE r.`describe`= #{describe}
-    </select>
-
-    <delete id="delectRole" parameterType="java.util.List">
-        DELETE FROM db_shiro.S_role WHERE role_id IN
-        <foreach collection="list" item="role_id" open="(" close=")" separator=",">
-            #{role_id.role_id}
-        </foreach>
-    </delete>
-
-    <update id="UpdateRole" parameterType="com.nanyin.entity.Role">
-            UPDATE db_shiro.S_role r
-            SET r.role_name = #{role_name}, r.describe = #{describe}
-            WHERE r.role_id = #{role_id}
-    </update>
-
-    <insert id="insertRole" parameterType="com.nanyin.entity.Role">
-            INSERT INTO db_shiro.S_role(role_name,`describe`)
-            VALUES(#{role_name},#{describe})
-    </insert>
-
-
-
-
-
-
-
-
-
 
     <cache type="org.mybatis.caches.ehcache.LoggingEhcache" >
         <property name="timeToIdleSeconds" value="3600"/>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nanyin.mapper.LogMapper">
+
+    <insert id="insertSelective" parameterType="com.nanyin.entity.Log">
+    INSERT INTO db_shiro.SystemLog
+    VALUES(#{id},#{description},#{method},#{logType},#{requestIp},#{params},#{createBy},#{createDate});
+    </insert>
+
+    <select id="select" parameterType="Map" resultType="com.nanyin.entity.Log">
+    SELECT * FROM db_shiro.SystemLog
+    LIMIT #{a},#{b}
+    </select>
+
+    <select id="selectAll" resultType="com.nanyin.entity.Log">
+        SELECT * FROM db_shiro.SystemLog
+    </select>
+
+    <cache type="org.mybatis.caches.ehcache.LoggingEhcache">
+        <property name="timeToIdleSeconds" value="3600"/>
+        <property name="timeToLiveSeconds" value="3600"/>
+        <property name="maxEntriesLocalHeap" value="1000"/>
+        <property name="maxEntriesLocalDisk" value="10000000"/>
+        <property name="memoryStoreEvictionPolicy" value="LRU"/>
+    </cache>
+
+</mapper>

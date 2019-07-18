@@ -1,45 +1,56 @@
 package com.nanyin.entity;
 
+import java.util.Date;
+
 /**
  * Created by NanYin on 2017-07-10 下午1:27.
  * 包名： com.nanyin.entity
  * 类描述：角色的实体类
  */
 public class Role {
-    private int role_id;
-    private String role_name;
-    private String describe;
+    private int id;
+    private String name;
+    private String ord;
+    private String comm;
+    private Date create_date;
 
-    public int getRole_id() {
-        return role_id;
+    public int getId() {
+        return id;
     }
 
-    public void setRole_id(int role_id) {
-        this.role_id = role_id;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getRole_name() {
-        return role_name;
+    public String getName() {
+        return name;
     }
 
-    public void setRole_name(String role_name) {
-        this.role_name = role_name;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getDescribe() {
-        return describe;
+    public String getOrd() {
+        return ord;
     }
 
-    public void setDescribe(String describe) {
-        this.describe = describe;
+    public void setOrd(String ord) {
+        this.ord = ord;
     }
 
-    @Override
-    public String toString() {
-        return "Role{" +
-                "role_id=" + role_id +
-                ", role_name='" + role_name + '\'' +
-                ", describe='" + describe + '\'' +
-                '}';
+    public String getComm() {
+        return comm;
+    }
+
+    public void setComm(String comm) {
+        this.comm = comm;
+    }
+
+    public Date getCreate_date() {
+        return create_date;
+    }
+
+    public void setCreate_date(Date create_date) {
+        this.create_date = create_date;
     }
 }

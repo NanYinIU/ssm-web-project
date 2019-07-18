@@ -55,7 +55,6 @@
         </property>
     </bean>
 
-
     <!--配置mapper 自动扫描mapper 记载到spring容器中-->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>

@@ -55,27 +55,33 @@
 
     <!-- 定义Session ID生成管理器 -->
     <bean id="sessionIdGenerator" class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator" />
+
     <!-- 配置Session DAO的操作处理 -->
     <bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">
-        <!-- 设置session缓存的名字，这个名字可以任意 -->
         <property name="activeSessionsCacheName" value="shiro-activeSessionCache"/>
-        <!-- 定义该Session DAO操作中所使用的ID生成器 -->
-        <property name="sessionIdGenerator" ref="sessionIdGenerator"/>
-    </bean>
-    <bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
-        <!-- 在Tomcat运行下默认使用的Cookie的名字为JSESSIONID --> <constructor-arg value="mldn-session-id"/>
-        <!-- 保证该系统不会受到跨域的脚本操作供给 -->
-        <property name="httpOnly" value="true"/>
-        <!-- 定义Cookie的过期时间，单位为秒，如果设置为-1表示浏览器关闭，则Cookie消失 -->
-        <property name="maxAge" value="-1"/>
     </bean>
 
+    <bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <!-- 在Tomcat运行下默认使用的Cookie的名字为JSESSIONID -->
+        <!--<constructor-arg value="mldn-session-id"/>-->
+        <!-- 保证该系统不会受到跨域的脚本操作供给 -->
+        <!--<property name="httpOnly" value="true"/>-->
+        <!--&lt;!&ndash; 定义Cookie的过期时间，单位为秒，如果设置为-1表示浏览器关闭，则Cookie消失 &ndash;&gt;-->
+        <!--<property name="maxAge" value="-1"/>-->
+        <constructor-arg name="name" value="meta.session.id"/>
+
+    </bean>
+
+    <!--<bean id="simpleCookie" class="org.apache.shiro.web.servlet.SimpleCookie">-->
+        <!--<constructor-arg name="name" value="shiro.sesssion"/>-->
+        <!--<property name="path" value="/"/>-->
+    <!--</bean>-->
 
     <!-- 定义会话管理器的操作 -->
     <bean id="sessionManager"
           class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
         <!-- 定义的是全局的session会话超时时间，此操作会覆盖web.xml文件中的超时时间配置 一个小时 -->
-        <property name="globalSessionTimeout" value="3600000"/>
+        <property name="globalSessionTimeout" value="36000000"/>
         <!-- 删除所有无效的Session对象，此时的session被保存在了内存里面 -->
         <property name="deleteInvalidSessions" value="true"/>
         <!-- 定义要使用的无效的Session定时调度器 -->
@@ -118,10 +124,17 @@
         <!-- Shiro连接约束配置,即过滤链的定义 -->
         <property name="filterChainDefinitions">
             <value>
-
                 /login= anon
-                /static/** = anon
-                <!--/mes/** = authc-->
+                /toLogin= anon
+                /js/** = anon
+                /css/** = anon
+                /data/** = anon
+                /layui/** = anon
+                /images/** = anon
+                /plugins/** = anon
+                /jquery/** = anon
+                /build/** = anon
+                /extend/** = anon
                 /logout = logout
                 /** = user
             </value>

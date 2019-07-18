@@ -1,5 +1,5 @@
 # ssm-web-project
-# 项目介绍
+# 项目介绍(正在重构，代码乱，暂时不要下载和查看)
 基于spring,springMVC,mybatis，shiro开发的权限管理系统
 #### 后端技术:
 技术 | 名称 | 官网
