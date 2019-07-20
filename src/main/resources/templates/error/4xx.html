@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+
+    <title>Bottom navbar example for Bootstrap</title>
+
+    <!-- 使用webjars -->
+    <link th:href="@{webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet">
+    <script th:src="@{webjars/bootstrap/4.3.1/js/bootstrap.js}" ></script>
+</head>
+
+<body>
+<div class="container">
+    <div class="jumbotron mt-3">
+        <h1> 4xx NOT FOUND </h1>
+        <p class="lead">地址访问不到</p>
+        <a class="btn btn-lg btn-primary" th:href="@{/index(language='zh-CN')}" th:if="${session.language}=='zh-CN'" role="button">返回主页 &raquo;</a>
+        <a class="btn btn-lg btn-primary" th:href="@{/index(language='en-US')}" th:if="${session.language}=='en-US'" role="button">RETURN HOME PAGE &raquo;</a>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script th:src="@{webjars/jquery/3.4.1/jquery.min.js}" ></script>
+<script th:src="@{webjars/jquery/3.4.1/jquery.slim.min.js}" ></script>
+<!--<script src="assets/js/vendor/popper.min.js"></script>-->
+</body>
+</html>

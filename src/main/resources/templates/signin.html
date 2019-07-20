@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Signin Template · Bootstrap</title>
+
+  <!-- 使用webjars -->
+  <link href="webjars/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+  <script src="webjars/bootstrap/4.3.1/js/bootstrap.min.js" ></script>
+
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+  </style>
+  <!-- Custom styles for this template -->
+  <link href="assets/css/signin.css" rel="stylesheet">
+</head>
+<body class="text-center">
+<div th:insert="~{components/navbar :: navbar-02}"></div>
+<form class="form-signin" th:action="@{/login}" th:method="post">
+  <img class="mb-4" src="assets/img/brand/bootstrap-solid.svg" alt="" width="72" height="72">
+  <h4 class="h4 font-weight-normal" style="color: red"  th:if="${msg}=='USERNAME_OR_PASSWORD_WRONG'"> [[#{username_or_password_wrong}]] </h4>
+  <h4 class="h4 font-weight-normal" style="color: red"  th:if="${msg}=='USER_HAS_BEEN_BLOCKED'"> [[#{user_has_been_blocked}]] </h4>
+  <h1 class="h3 mb-3 font-weight-normal"> [[#{please_sign_in}]]</h1>
+  <label for="username" class="sr-only">[[#{email_address}]]</label>
+  <input type="text" name="username" id="username" class="form-control" th:placeholder="#{email_address}" required autofocus>
+  <label for="password" class="sr-only">[[#{password}]]</label>
+  <input type="password" name="password" id="password" class="form-control" th:placeholder="#{password}" required>
+  <div class="checkbox mb-3">
+    <label>
+      <input type="checkbox" value="remember-me"> [[#{remember_me}]]
+    </label>
+  </div>
+  <button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{sign_in}"></button>
+  <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
+  <input th:type="hidden"  name="language" th:value="${language}">
+</form>
+</body>
+</html>

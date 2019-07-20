@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>navbar</title>
+</head>
+<body>
+    <div th:fragment="navbar-01">
+        <a th:text="${session.language}"></a>
+        <nav class="navbar navbar-light fixed-top bg-white flex-md-nowrap p-0 shadow">
+            <a class="navbar-brand navbar-dark col-sm-3 col-md-2 mr-0 " href="#"> [[#{product}]] [[#{version}]]</a>
+            <input class="form-control form-control-dark w-100" type="text" th:placeholder="#{search}" aria-label="Search">
+
+            <ul class="navbar-nav px-3">
+                <li class="nav-item text-nowrap">
+                    <a class="nav-link "  th:href="@{/index(language='zh-CN')}" th:if="${session.language}=='en-US'">[[#{simplified_chinese}]]</a>
+                </li>
+                <li class="nav-item text-nowrap">
+                    <a class="nav-link "  th:href="@{/index(language='en-US')}" th:if="${session.language}=='zh-CN'">[[#{english}]]</a>
+                </li>
+            </ul>
+
+            <div class="dropdown show pr-3" >
+                <a href="#" class="nav-link pr-0 leading-none " data-toggle="dropdown" id="dropdownMenuLink" aria-expanded="false">
+                    <!--<span class="text-default ">[[${session.username}]]</span>-->
+                    <span class="avatar pr-2  " style="background-image: url('./assets/img/brand/bootstrap-social-logo.png')"></span>
+                </a>
+
+                <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow "
+                     aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item disabled" href="#"> <i class="fa fa-user"></i> &nbsp; [[${session.username}]]</a>
+                    <a class="dropdown-item" href="#"> <i class="fa fa-info-circle"></i> &nbsp; 用户信息</a>
+                    <a class="dropdown-item" th:href="@{/logout}" ><i class="fa fa-sign-out"></i> &nbsp; logout </a>
+                </div>
+            </div>
+
+
+            <!--<ul class="navbar-nav px-3">-->
+                <!--<li class="nav-item text-nowrap">-->
+                    <!--<a class="nav-link" href="#">[[#{sign_out}]]</a>-->
+                <!--</li>-->
+            <!--</ul>-->
+
+        </nav>
+
+    </div>
+    <div th:fragment="navbar-02">
+        <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+            <a class="navbar-brand col-sm1 col-md-1 mr-0" href="#"> [[#{product}]] [[#{version}]]</a>
+            <ul class="nav nav-pills">
+                <li class="nav-item ">
+                    <a class="nav-link "  th:href="@{/signin(language='zh-CN')}" th:if="${language}=='en-US'">[[#{simplified_chinese}]]</a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link "  th:href="@{/signin(language='en-US')}" th:if="${language}=='zh-CN'">[[#{english}]]</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</body>
+</html>
