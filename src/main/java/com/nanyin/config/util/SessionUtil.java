@@ -17,4 +17,10 @@ public class SessionUtil {
         session.setAttribute(key, value);
         return session;
     }
+
+    public static Object getAttribute(Object key){
+        Session session = getSession();
+        return session.getAttribute(key);
+    }
+
 }

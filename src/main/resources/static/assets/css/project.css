@@ -1,0 +1,130 @@
+.container {
+    width: 100%;
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 0.25rem;
+}
+
+@media (min-width: 576px) {
+    .container {
+        max-width: 540px;
+    }
+}
+
+@media (min-width: 768px) {
+    .container {
+        max-width: 720px;
+    }
+}
+
+@media (min-width: 992px) {
+    .container {
+        max-width: 960px;
+    }
+}
+
+@media (min-width: 1280px) {
+    .container {
+        max-width: 1200px;
+    }
+}
+
+.container-fluid {
+    width: 100%;
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.row {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -0.75rem;
+    margin-left: -0.75rem;
+}
+
+.card-aside {
+    -ms-flex-direction: row;
+    flex-direction: row;
+}
+
+.card-aside-column {
+    min-width: 5rem;
+    width: 30%;
+    -ms-flex: 0 0 30%;
+    flex: 0 0 30%;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    background: no-repeat center/cover;
+}
+
+.card-value {
+    font-size: 2.5rem;
+    line-height: 3.4rem;
+    height: 3.4rem;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    font-weight: 400;
+}
+
+.card-value i {
+    vertical-align: middle;
+}
+
+.row-cards > .col,
+.row-cards > [class*='col-'] {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+
+}
+
+.row-deck > .col,
+.row-deck > [class*='col-'] {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: stretch;
+    align-items: stretch;
+}
+
+.row-deck > .col .card,
+.row-deck > [class*='col-'] .card {
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+}
+
+
+.card {
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    position: relative;
+    margin-bottom: 1.5rem;
+    width: 100%;
+}
+
+.card .card {
+    box-shadow: none;
+}
+
+@media print {
+    .card {
+        box-shadow: none;
+        border: none;
+    }
+}
+
+.card-body {
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    margin: 0;
+    padding: 1.5rem 1.5rem;
+    position: relative;
+}
+

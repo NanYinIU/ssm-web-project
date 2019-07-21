@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class UserController {
 
+//    登陆注册部分开始 -------------------------------------------------------
+
     @GetMapping("/signin")
     public String signin(String language, Model model, HttpServletRequest request){
         if(language == null){
@@ -57,9 +59,7 @@ public class UserController {
             UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(username,password);
             try{
                 subject.login(usernamePasswordToken);
-                Session session = SessionUtil.getSession();
-                session.setAttribute("username", username);
-                session.setAttribute("language",language);
+                SessionUtil.setAttribute("username", username).setAttribute("language",language);
                 return "redirect:/index?language="+language;
             }catch (UserIsBlockException u){
                 model.addAttribute("msg", MessageEnum.USER_HAS_BEEN_BLOCKED.toString());
@@ -77,9 +77,11 @@ public class UserController {
     @GetMapping("/logout")
     public String logout(){
         Subject subject = SecurityUtils.getSubject();
-        String language = (String) SessionUtil.getSession().getAttribute("language");
+        String language = (String) SessionUtil.getAttribute("language");
         subject.logout();
         return "redirect:/signin?language="+language;
     }
+
+    //    登陆注册部分结束 -------------------------------------------------------
 
 }

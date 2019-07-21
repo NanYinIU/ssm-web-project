@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>project</title>
+    <script th:src="@{webjars/jquery/3.4.1/jquery.slim.min.js}"></script>
+    <link th:href="@{webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet">
+    <script th:src="@{webjars/bootstrap/4.3.1/js/bootstrap.js}" ></script>
+    <link th:href="@{/assets/css/project.css}" rel="stylesheet">
+    <link th:href="@{/assets/css/navbar.css}" rel="stylesheet">
+    <link th:href="@{/assets/css/sidebar.css}" rel="stylesheet">
+    <link th:href="@{webjars/font-awesome/5.9.0/css/all.min-jsf.css}" rel="stylesheet">
+    <script th:src="@{webjars/font-awesome/5.9.0/js/all.js}"></script>
+</head>
+<body>
+<div th:insert="~{components/navbar :: navbar-01}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:insert="~{components/sidebar :: sidebar}"></div>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+            <div class="page-header">
+                <h1 class="page-title">
+                    Dashboard
+                </h1>
+            </div>
+            <div class="row row-cards">
+                <div class="col-6 col-sm-4 col-lg-2">
+                    <div class="card">
+                        <div class="card-body p-3 text-center">
+                            <div class="text-right text-green">
+                                6%
+                                <i class="fe fe-chevron-up"></i>
+                            </div>
+                            <div class="h1 m-0">43</div>
+                            <div class="text-muted mb-4">New Tickets</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-4 col-lg-2">
+                    <div class="card">
+                        <div class="card-body p-3 text-center">
+                            <div class="text-right text-red">
+                                -3%
+                                <i class="fe fe-chevron-down"></i>
+                            </div>
+                            <div class="h1 m-0">17</div>
+                            <div class="text-muted mb-4">Closed Today</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-4 col-lg-2">
+                    <div class="card">
+                        <div class="card-body p-3 text-center">
+                            <div class="text-right text-green">
+                                9%
+                                <i class="fe fe-chevron-up"></i>
+                            </div>
+                            <div class="h1 m-0">7</div>
+                            <div class="text-muted mb-4">New Replies</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-4 col-lg-2">
+                    <div class="card">
+                        <div class="card-body p-3 text-center">
+                            <div class="text-right text-green">
+                                3%
+                                <i class="fe fe-chevron-up"></i>
+                            </div>
+                            <div class="h1 m-0">27.3K</div>
+                            <div class="text-muted mb-4">Followers</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-4 col-lg-2">
+                    <div class="card">
+                        <div class="card-body p-3 text-center">
+                            <div class="text-right text-red">
+                                -2%
+                                <i class="fe fe-chevron-down"></i>
+                            </div>
+                            <div class="h1 m-0">$95</div>
+                            <div class="text-muted mb-4">Daily Earnings</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-4 col-lg-2">
+                    <div class="card">
+                        <div class="card-body p-3 text-center">
+                            <div class="text-right text-red">
+                                -1%
+                                <i class="fe fe-chevron-down"></i>
+                            </div>
+                            <div class="h1 m-0">621</div>
+                            <div class="text-muted mb-4">Products</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-light mb-2  mx-1" >
+                <!--<a class="navbar-brand" href="#">Navbar</a>-->
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <form class="form-inline my-2 my-lg-0">
+                        <div class="form-group mr-5">
+                            <label for="projectStatus" class="mr-1"> [[#{project_status}]] : </label>
+                            <select class="form-control" id="projectStatus" th:each="ps:${projectStatus}">
+                                <option id="0"> [[#{not_selected}]] </option>
+                                <option th:id="${ps.id}"> [[${ps.name}]] </option>
+                            </select>
+                        </div>
+                        <div class="form-group mr-5">
+                            <label for="projectLevel" class="mr-1" >[[#{project_level}]] : </label>
+                            <select class="form-control" id="projectLevel" th:each="pl:${projectLevel}">
+                                <option id="0"> [[#{not_selected}]] </option>
+                                <option th:id="${pl.id}"> [[${pl.name}]] </option>
+                            </select>
+                        </div>
+                        <div class="form-group mr-5">
+                            <label for="projectType" class="mr-1">[[#{project_level}]] : </label>
+                            <select class="form-control" id="projectType" th:each="pt:${projectType}">
+                                <option id="0"> [[#{not_selected}]] </option>
+                                <option th:id="${pt.id}"> [[${pt.name}]] </option>
+                            </select>
+                        </div>
+                        <label for="project_search" class="mr-1"> 关键字搜索 : </label>
+                        <input class="form-control mr-sm-2" id="project_search" type="search" th:placeholder="#{search}" aria-label="Search">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit" th:text="#{search}"></button>
+                    </form>
+                </div>
+            </nav>
+
+            <div class="row row-cards">
+                <div class="col-lg-6">
+                    <div class="card card-aside">
+                        <a href="#" class="card-aside-column" style="background-image: url(./assets/img/brand/bootstrap-social-logo.png)"></a>
+                        <div class="card-body d-flex flex-column">
+                            <h4><a href="#">And this </a></h4>
+                            <div class="text-muted">Look, my liege! </div>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <div class="d-flex align-items-center pt-5 mt-auto">
+                                <div class="avatar avatar-md mr-3" style="background-image: url(./assets/img/brand/bootstrap-social-logo.png)"></div>
+                                <div>
+                                    <a href="./profile.html" class="text-default">Rose Bradley</a>
+                                    <small class="d-block text-muted">3 days ago</small>
+                                </div>
+
+                                <div class="ml-auto text-muted">
+                                    <a href="javascript:void(0)" class="icon d-none d-md-inline-block ml-3"><i class="fe fe-heart mr-1"></i></a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card card-aside">
+                        <a href="#" class="card-aside-column" style="background-image: url(./assets/img/brand/bootstrap-social-logo.png)"></a>
+                        <div class="card-body d-flex flex-column">
+                            <h4><a href="#">And this </a></h4>
+                            <div class="text-muted">Look, my liege! </div>
+                            <div class="d-flex align-items-center pt-5 mt-auto">
+                                <div class="avatar avatar-md mr-3" style="background-image: url(./assets/img/brand/bootstrap-social-logo.png)"></div>
+                                <div>
+                                    <a href="./profile.html" class="text-default">Rose Bradley</a>
+                                    <small class="d-block text-muted">3 days ago</small>
+                                </div>
+                                <div class="ml-auto text-muted">
+                                    <a href="javascript:void(0)" class="icon d-none d-md-inline-block ml-3"><i class="fe fe-heart mr-1"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+
+</div>
+</body>
+</html>
