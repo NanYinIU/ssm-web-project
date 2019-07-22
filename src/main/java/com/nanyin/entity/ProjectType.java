@@ -1,16 +1,17 @@
 package com.nanyin.entity;
 
-import javax.persistence.*;
-import java.io.Serializable;
-import java.util.Date;
+import lombok.Data;
 
+import javax.persistence.*;
+import java.util.Date;
+@Data
 @Entity
-@Table(name = "s_user_status")
-public class Status implements Serializable {
-    @Id
-    @Column(columnDefinition = "INT(11)")
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private Integer id;
+@Table(name = "s_project_type")
+public class ProjectType {
+@Id
+@Column(columnDefinition = "INT(11)")
+@GeneratedValue(strategy= GenerationType.AUTO)
+private Integer id;
     @Column(length = 64)
     private String name;
     @Column(length = 1024)
@@ -23,5 +24,4 @@ public class Status implements Serializable {
     private Date gemCreate;
     @Temporal(value=TemporalType.TIMESTAMP)
     private Date gemModify;
-
 }

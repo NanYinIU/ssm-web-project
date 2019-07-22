@@ -3,10 +3,11 @@ package com.nanyin.controller;
 import com.nanyin.config.exceptions.UserIsBlockException;
 import com.nanyin.config.util.SessionUtil;
 import com.nanyin.enumEntity.MessageEnum;
+import com.nanyin.services.ResourceServices;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,9 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class UserController {
+
+    @Autowired
+    ResourceServices resourceServices;
 
 //    登陆注册部分开始 -------------------------------------------------------
 
@@ -43,6 +47,7 @@ public class UserController {
         if(language == null){
             language = (String) SessionUtil.getSession().getAttribute("language");
         }
+        SessionUtil.setAttribute("sidebar",resourceServices.getSidebarInfoWapper()) ;
         SessionUtil.setAttribute("language",language);
         return "index";
     }

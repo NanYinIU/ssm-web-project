@@ -32,8 +32,8 @@ public class ShiroWebRealm extends AuthorizingRealm {
             throw new NoUserAccountException();
         }
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
-        simpleAuthorizationInfo.addRoles(user.getRoles());
-        simpleAuthorizationInfo.addStringPermissions(user.getAuths());
+        simpleAuthorizationInfo.addRoles(null);
+        simpleAuthorizationInfo.addStringPermissions(null);
         return simpleAuthorizationInfo;
     }
 

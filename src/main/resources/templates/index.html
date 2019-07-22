@@ -9,8 +9,6 @@
     <!-- 使用webjars -->
     <link th:href="@{webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet">
     <script th:src="@{webjars/bootstrap/4.3.1/js/bootstrap.js}" ></script>
-    <link th:href="@{/assets/css/navbar.css}" rel="stylesheet">
-    <link th:href="@{/assets/css/sidebar.css}" rel="stylesheet">
     <link th:href="@{webjars/font-awesome/5.9.0/css/all.min-jsf.css}" rel="stylesheet">
     <script th:src="@{webjars/font-awesome/5.9.0/js/all.js}"></script>
     <style>
@@ -35,7 +33,7 @@
 <div class="container-fluid">
     <div class="row">
         <div th:insert="~{components/sidebar :: sidebar}"></div>
-
+        <!--<a th:text="${session.navbar}"></a>-->
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h1 class="h2">Dashboard</h1>

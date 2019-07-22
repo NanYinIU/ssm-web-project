@@ -1,16 +1,15 @@
 package com.nanyin.services;
 
-import com.nanyin.entity.wrapper.Standard;
+import com.nanyin.entity.wrapper.StandardWrapper;
 
 import java.util.List;
-import java.util.Map;
 
 public interface ProjectServices {
-     List<Standard> getStandardProjectStatus();
+     List<StandardWrapper> getStandardProjectStatus();
 
-     List<Standard> getStandardProjectLevel();
+     List<StandardWrapper> getStandardProjectLevel();
 
-     List<Standard> getStandardProjectType();
+     List<StandardWrapper> getStandardProjectType();
 
 
 }

@@ -1,18 +1,15 @@
 package com.nanyin.services.impl;
 
 import com.nanyin.entity.User;
-import com.nanyin.mapper.UserMapper;
 import com.nanyin.services.UserServices;
-import org.apache.ibatis.annotations.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserServicesImpl implements UserServices {
-    @Autowired
-    UserMapper userMapper;
+
     @Override
     public User getUserFromUserName(String name) {
-        return userMapper.getUserFromUserName(name);
+        return null;
     }
 }
