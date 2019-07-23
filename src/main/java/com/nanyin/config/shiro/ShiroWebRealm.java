@@ -28,7 +28,13 @@ import java.util.List;
 public class ShiroWebRealm extends AuthorizingRealm {
     @Autowired
     UserServices userServices;
-    // 授权
+    /**
+     * 授权
+     * @Author nanyin
+     * @Date 09:09 2019-07-23
+     * @param principalCollection 1
+     * @return org.apache.shiro.authz.AuthorizationInfo
+     **/
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         String username = (String) principalCollection.getPrimaryPrincipal();
@@ -51,7 +57,13 @@ public class ShiroWebRealm extends AuthorizingRealm {
         return simpleAuthorizationInfo;
     }
 
-    // 身份认证
+    /**
+     * 身份认证
+     * @Author nanyin
+     * @Date 09:08 2019-07-23
+     * @param authenticationToken 1
+     * @return org.apache.shiro.authc.AuthenticationInfo
+     **/
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         String username = (String) authenticationToken.getPrincipal();
@@ -69,8 +81,7 @@ public class ShiroWebRealm extends AuthorizingRealm {
             throw new UserIsBlockException();
         }
         ByteSource byteSource = ByteSource.Util.bytes(user.getSalt());
-        SimpleAuthenticationInfo simpleAuthenticationInfo = new SimpleAuthenticationInfo(username,user.getPassword(),byteSource,"");
-        return simpleAuthenticationInfo;
+        return new SimpleAuthenticationInfo(username,user.getPassword(),byteSource,"");
     }
 
     public ShiroWebRealm(CredentialsMatcher matcher) {

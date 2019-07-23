@@ -1,0 +1,41 @@
+/*html,*/
+/*body {*/
+    /*height: 100%;*/
+/*}*/
+
+body {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    background-color: #f5f5f5;
+}
+.page {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -ms-flex-pack: center;
+    justify-content: center;
+    min-height: 100%;
+}
+
+.page-content {
+    margin: .75rem 0;
+}
+
+@media (min-width: 768px) {
+    .page-content {
+        margin: 1.5rem 0;
+    }
+}
+
+.display-1 i,
+.display-2 i,
+.display-3 i,
+.display-4 i {
+    vertical-align: baseline;
+    font-size: 0.815em;
+}

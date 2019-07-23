@@ -7,6 +7,8 @@ import com.nanyin.services.ResourceServices;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.util.SavedRequest;
+import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,25 +49,31 @@ public class UserController {
         if(language == null){
             language = (String) SessionUtil.getSession().getAttribute("language");
         }
-        SessionUtil.setAttribute("sidebar",resourceServices.getSidebarInfoWapper()) ;
         SessionUtil.setAttribute("language",language);
         return "index";
     }
 
     @PostMapping("/login")
-    public String login(String username,String password,String language,Model model){
+    public String login(String username,String password,String language,Model model,HttpServletRequest request){
         // shiro验证
         Subject subject = SecurityUtils.getSubject();
         model.addAttribute("language",language);
         if(username == null ){
             return "signin";
         }
+        SavedRequest savedRequest= WebUtils.getSavedRequest(request);
+
         if(!subject.isAuthenticated()){
             UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(username,password);
             try{
                 subject.login(usernamePasswordToken);
                 SessionUtil.setAttribute("username", username).setAttribute("language",language);
-                return "redirect:/index?language="+language;
+                SessionUtil.setAttribute("sidebar",resourceServices.getSidebarInfoWapper()) ;
+                if(null!=savedRequest){
+                    return "redirect:" + savedRequest.getRequestUrl();
+                }else{
+                    return "redirect:/index?language="+language;
+                }
             }catch (UserIsBlockException u){
                 model.addAttribute("msg", MessageEnum.USER_HAS_BEEN_BLOCKED.toString());
                 usernamePasswordToken.clear();
@@ -75,7 +83,11 @@ public class UserController {
                 return "signin";
             }
         }else{
-            return "redirect:/index?language="+language;
+            if(null!=savedRequest){
+                return "redirect:" + savedRequest.getRequestUrl().substring(8);
+            }else{
+                return "redirect:/index?language="+language;
+            }
         }
     }
 
