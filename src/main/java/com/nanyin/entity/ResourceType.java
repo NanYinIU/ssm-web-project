@@ -22,7 +22,7 @@ public class ResourceType {
     @Column(name = "is_deleted",columnDefinition = "TINYINT(4)")
     private Boolean isDeleted;
     @Temporal(value=TemporalType.TIMESTAMP)
-    private Date gemCreate;
+    private Date gmtCreate;
     @Temporal(value=TemporalType.TIMESTAMP)
-    private Date gemModify;
+    private Date gmtModify;
 }

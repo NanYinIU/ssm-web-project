@@ -2,6 +2,8 @@ package com.nanyin.config.shiro;
 
 import com.nanyin.config.exceptions.NoUserAccountException;
 import com.nanyin.config.exceptions.UserIsBlockException;
+import com.nanyin.entity.Auth;
+import com.nanyin.entity.Role;
 import com.nanyin.entity.User;
 import com.nanyin.enumEntity.StatusEnum;
 import com.nanyin.services.UserServices;
@@ -20,6 +22,9 @@ import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ShiroWebRealm extends AuthorizingRealm {
     @Autowired
     UserServices userServices;
@@ -32,8 +37,17 @@ public class ShiroWebRealm extends AuthorizingRealm {
             throw new NoUserAccountException();
         }
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
-        simpleAuthorizationInfo.addRoles(null);
-        simpleAuthorizationInfo.addStringPermissions(null);
+        List<String> roles = new ArrayList<>();
+        for (Role r:user.getRoles()
+             ) {
+            roles.add(r.getName());
+        }
+        List<String> auths = new ArrayList<>();
+        for(Auth a:user.getAuths()){
+            auths.add(a.getName());
+        }
+        simpleAuthorizationInfo.addRoles(roles);
+        simpleAuthorizationInfo.addStringPermissions(auths);
         return simpleAuthorizationInfo;
     }
 
@@ -41,12 +55,17 @@ public class ShiroWebRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         String username = (String) authenticationToken.getPrincipal();
-        User user = userServices.getUserFromUserName(username);
+        User user = null;
+        try{
+            user = userServices.getUserFromUserName(username);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         if(user == null ){
             throw new NoUserAccountException();
         }
         //非正常状态
-        if(!user.getStatus().equals(StatusEnum.NORMAL.getId())){
+        if(!user.getStatus().getId().equals(StatusEnum.NORMAL.getId())){
             throw new UserIsBlockException();
         }
         ByteSource byteSource = ByteSource.Util.bytes(user.getSalt());

@@ -17,7 +17,7 @@ public class User implements Serializable {
     private Integer id;
     @Column(length = 64)
     private String name;
-    @Transient
+//    @Transient
     @Column(length = 64)
     private String password;
     @Column(length = 64)
@@ -44,10 +44,10 @@ public class User implements Serializable {
     private Short isDeleted;
 
     @Temporal(value=TemporalType.TIMESTAMP)
-    private Date gemCreate;
+    private Date gmtCreate;
 
     @Temporal(value=TemporalType.TIMESTAMP)
-    private Date gemModify;
+    private Date gmtModify;
 
     @ManyToMany(mappedBy = "users")
     private List<Role> roles;

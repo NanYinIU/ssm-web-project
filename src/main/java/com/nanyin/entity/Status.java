@@ -1,9 +1,12 @@
 package com.nanyin.entity;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
+@Data
 @Entity
 @Table(name = "s_user_status")
 public class Status implements Serializable {
@@ -20,8 +23,8 @@ public class Status implements Serializable {
     @Column(name = "is_deleted",columnDefinition = "TINYINT(4)")
     private Boolean isDeleted;
     @Temporal(value=TemporalType.TIMESTAMP)
-    private Date gemCreate;
+    private Date gmtCreate;
     @Temporal(value=TemporalType.TIMESTAMP)
-    private Date gemModify;
+    private Date gmtModify;
 
 }

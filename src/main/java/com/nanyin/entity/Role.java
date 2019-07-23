@@ -23,12 +23,14 @@ public class Role {
     @Column(name = "is_deleted",columnDefinition = "TINYINT(4)")
     private Boolean isDeleted;
     @Temporal(value=TemporalType.TIMESTAMP)
-    private Date gemCreate;
+    private Date gmtCreate;
     @Temporal(value=TemporalType.TIMESTAMP)
-    private Date gemModify;
+    private Date gmtModify;
 
     @ManyToMany
-    @JoinTable(name = "r_user_role",joinColumns = {@JoinColumn(name = "role_id")})
+    @JoinTable(name = "r_user_role",
+            joinColumns = {@JoinColumn(name = "role_id")},
+            inverseJoinColumns = {@JoinColumn(name = "users_id")})
     private List<User> users;
 
 }

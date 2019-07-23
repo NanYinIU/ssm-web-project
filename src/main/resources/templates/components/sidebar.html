@@ -12,7 +12,7 @@
             <ul class="nav flex-column" th:each="item:${session.sidebar}">
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{${item.url}+'?language='+${session.language}}">
-                        <i th:class="${item.iconComment}"  ></i> &nbsp;
+                        <i th:class="${item.icon.comment}"  ></i> &nbsp;
                         [[${item.name}]] <span class="sr-only">(current)</span>
                     </a>
                 </li>

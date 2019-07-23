@@ -23,17 +23,19 @@ public class Auth {
     @Column(name = "is_deleted",columnDefinition = "TINYINT(4)")
     private Boolean isDeleted;
     @Temporal(value=TemporalType.TIMESTAMP)
-    private Date gemCreate;
+    private Date gmtCreate;
     @Temporal(value=TemporalType.TIMESTAMP)
-    private Date gemModify;
+    private Date gmtModify;
 
     @ManyToMany
     @JoinTable(name = "r_user_auth",
-            joinColumns = {@JoinColumn(name = "auth_id")})
+            joinColumns = {@JoinColumn(name = "auth_id")},
+            inverseJoinColumns = @JoinColumn(name = "users_id"))
     private List<User> users;
 
     @ManyToMany
     @JoinTable(name = "r_resource_auth",
-            joinColumns = {@JoinColumn(name = "auth_id")})
+            joinColumns = {@JoinColumn(name = "auth_id")},
+            inverseJoinColumns = @JoinColumn(name = "resources_id"))
     private List<Resource> resources;
 }

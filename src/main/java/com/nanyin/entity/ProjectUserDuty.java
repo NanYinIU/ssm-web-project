@@ -23,12 +23,13 @@ public class ProjectUserDuty {
     @Column(name = "is_deleted",columnDefinition = "TINYINT(4)")
     private Boolean isDeleted;
     @Temporal(value= TemporalType.TIMESTAMP)
-    private Date gemCreate;
+    private Date gmtCreate;
     @Temporal(value=TemporalType.TIMESTAMP)
-    private Date gemModify;
+    private Date gmtModify;
 
     @ManyToMany
     @JoinTable(name = "r_project_user",
-            joinColumns = {@JoinColumn(name = "duty_id")})
+            joinColumns = {@JoinColumn(name = "duty_id")},
+            inverseJoinColumns = @JoinColumn(name = "users_id"))
     private List<User> users;
 }
