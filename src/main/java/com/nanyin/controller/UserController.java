@@ -4,6 +4,7 @@ import com.nanyin.config.exceptions.UserIsBlockException;
 import com.nanyin.config.util.SessionUtil;
 import com.nanyin.enumEntity.MessageEnum;
 import com.nanyin.services.ResourceServices;
+import com.nanyin.services.UserServices;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
@@ -23,6 +24,8 @@ public class UserController {
 
     @Autowired
     ResourceServices resourceServices;
+    @Autowired
+    UserServices userServices;
 
 //    登陆注册部分开始 -------------------------------------------------------
 

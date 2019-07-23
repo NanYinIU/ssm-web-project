@@ -5,6 +5,7 @@ import com.nanyin.entity.Resource;
 import com.nanyin.repository.ResourceRepository;
 import com.nanyin.services.ResourceServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +15,8 @@ public class ResourceServicesImpl implements ResourceServices {
 
     @Autowired
     ResourceRepository resourceRepository;
+
+    @Cacheable("getSidebarInfoWapper")
     @Override
     public List<Resource> getSidebarInfoWapper() {
         String username = (String) SessionUtil.getAttribute("username");

@@ -3,12 +3,13 @@ package com.nanyin.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
 @Entity
 @Table(name = "s_resource_icon")
-public class ResourceIcon {
+public class ResourceIcon implements Serializable {
     @Id
     @Column(columnDefinition = "INT(11)")
     @GeneratedValue(strategy= GenerationType.AUTO)

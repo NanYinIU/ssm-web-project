@@ -3,13 +3,14 @@ package com.nanyin.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 @Data
 @Entity
 @Table(name = "auth")
-public class Auth {
+public class Auth implements Serializable {
     @Id
     @Column(columnDefinition = "INT(11)")
     @GeneratedValue(strategy= GenerationType.AUTO)
