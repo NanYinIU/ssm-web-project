@@ -57,7 +57,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(String username,String password,String language,Model model,HttpServletRequest request){
+    public String login(String username,String password,String language,Boolean rememberMe,Model model,HttpServletRequest request){
         // shiro验证
         Subject subject = SecurityUtils.getSubject();
         model.addAttribute("language",language);
@@ -67,7 +67,7 @@ public class UserController {
         SavedRequest savedRequest= WebUtils.getSavedRequest(request);
 
         if(!subject.isAuthenticated()){
-            UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(username,password);
+            UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(username,password,rememberMe);
             try{
                 subject.login(usernamePasswordToken);
                 SessionUtil.setAttribute("username", username).setAttribute("language",language);
