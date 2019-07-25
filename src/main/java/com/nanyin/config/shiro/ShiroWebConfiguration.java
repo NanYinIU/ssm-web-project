@@ -1,5 +1,6 @@
 package com.nanyin.config.shiro;
 
+import org.apache.catalina.security.SecurityUtil;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.codec.Base64;
 import org.apache.shiro.session.mgt.eis.MemorySessionDAO;
@@ -94,6 +95,7 @@ public class ShiroWebConfiguration {
     @Bean
     public CookieRememberMeManager rememberMeManager(){
         CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
+        cookieRememberMeManager.setCipherKey(Base64.encode("web".getBytes()));
         cookieRememberMeManager.setCookie(rememberMeCookie());
         return cookieRememberMeManager;
     }

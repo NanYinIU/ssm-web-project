@@ -87,6 +87,14 @@
           <element id="library" level="project" name="Maven: org.attoparser:attoparser:2.0.5.RELEASE" />
           <element id="library" level="project" name="Maven: org.unbescape:unbescape:1.1.6.RELEASE" />
           <element id="library" level="project" name="Maven: org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.4.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-core:5.1.8.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-jcl:5.1.8.RELEASE" />
+          <element id="library" level="project" name="Maven: com.alibaba:druid-spring-boot-starter:1.1.16" />
+          <element id="library" level="project" name="Maven: com.alibaba:druid:1.1.16" />
+          <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.26" />
+          <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot-autoconfigure:2.1.6.RELEASE" />
+          <element id="library" level="project" name="Maven: mysql:mysql-connector-java:5.1.47" />
+          <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot:2.1.6.RELEASE" />
           <element id="library" level="project" name="Maven: org.apache.shiro:shiro-spring:1.4.0" />
           <element id="library" level="project" name="Maven: org.apache.shiro:shiro-core:1.4.0" />
           <element id="library" level="project" name="Maven: org.apache.shiro:shiro-lang:1.4.0" />
@@ -100,18 +108,12 @@
           <element id="library" level="project" name="Maven: commons-collections:commons-collections:3.2.2" />
           <element id="library" level="project" name="Maven: org.apache.shiro:shiro-event:1.4.0" />
           <element id="library" level="project" name="Maven: org.apache.shiro:shiro-web:1.4.0" />
-          <element id="library" level="project" name="Maven: com.alibaba:druid-spring-boot-starter:1.1.16" />
-          <element id="library" level="project" name="Maven: com.alibaba:druid:1.1.16" />
-          <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.26" />
-          <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot-autoconfigure:2.1.6.RELEASE" />
-          <element id="library" level="project" name="Maven: mysql:mysql-connector-java:5.1.47" />
-          <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot:2.1.6.RELEASE" />
-          <element id="library" level="project" name="Maven: org.springframework:spring-core:5.1.8.RELEASE" />
-          <element id="library" level="project" name="Maven: org.springframework:spring-jcl:5.1.8.RELEASE" />
+          <element id="library" level="project" name="Maven: com.alibaba:fastjson:1.2.56" />
           <element id="library" level="project" name="Maven: org.webjars:jquery:3.4.1" />
           <element id="library" level="project" name="Maven: org.webjars:bootstrap:4.3.1" />
-          <element id="library" level="project" name="Maven: org.webjars:popper.js:1.15.0" />
           <element id="library" level="project" name="Maven: org.webjars:font-awesome:5.9.0" />
+          <element id="library" level="project" name="Maven: org.webjars.npm:bootstrap-table:1.15.2" />
+          <element id="library" level="project" name="Maven: org.webjars:popper.js:1.15.0" />
         </element>
       </element>
       <element id="directory" name="META-INF">

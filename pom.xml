@@ -51,9 +51,9 @@
       </dependency>
 
       <dependency>
-          <groupId>org.apache.shiro</groupId>
-          <artifactId>shiro-spring</artifactId>
-          <version>1.4.0</version>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-test</artifactId>
+          <scope>test</scope>
       </dependency>
 
       <dependency>
@@ -83,18 +83,25 @@
           <artifactId>lombok</artifactId>
           <optional>true</optional>
       </dependency>
+
       <dependency>
-          <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-starter-test</artifactId>
-          <scope>test</scope>
+          <groupId>org.apache.shiro</groupId>
+          <artifactId>shiro-spring</artifactId>
+          <version>1.4.0</version>
       </dependency>
 
+      <dependency>
+          <groupId>com.alibaba</groupId>
+          <artifactId>fastjson</artifactId>
+          <version>1.2.56</version>
+      </dependency>
+
+    <!-- webjars -->
       <dependency>
           <groupId>org.webjars</groupId>
           <artifactId>jquery</artifactId>
           <version>3.4.1</version>
       </dependency>
-    <!-- webjars -->
       <dependency>
           <groupId>org.webjars</groupId>
           <artifactId>bootstrap</artifactId>
@@ -103,16 +110,25 @@
 
       <dependency>
           <groupId>org.webjars</groupId>
-          <artifactId>popper.js</artifactId>
-          <version>1.15.0</version>
+          <artifactId>font-awesome</artifactId>
+          <version>5.9.0</version>
+      </dependency>
+
+      <dependency>
+          <groupId>org.webjars.npm</groupId>
+          <artifactId>bootstrap-table</artifactId>
+          <version>1.15.2</version>
       </dependency>
 
       <dependency>
           <groupId>org.webjars</groupId>
-          <artifactId>font-awesome</artifactId>
-          <version>5.9.0</version>
+          <artifactId>popper.js</artifactId>
+          <version>1.15.0</version>
       </dependency>
+
   </dependencies>
+
+
 
   <build>
     <finalName>com.NanYin</finalName>

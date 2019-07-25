@@ -6,8 +6,8 @@
   <title>Signin Template · Bootstrap</title>
 
   <!-- 使用webjars -->
-  <link href="webjars/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
-  <script src="webjars/bootstrap/4.3.1/js/bootstrap.min.js" ></script>
+  <link href="/webjars/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+  <script src="/webjars/bootstrap/4.3.1/js/bootstrap.min.js" ></script>
 
   <style>
     .bd-placeholder-img {
@@ -37,7 +37,7 @@
   <input type="password" name="password" id="password" class="form-control" th:placeholder="#{password}" required>
   <div class="checkbox mb-3">
     <label>
-      <input type="checkbox" name="rememberMe" value="rememberMe"> [[#{remember_me}]]
+      <input type="checkbox" name="rememberMe" value="true"> [[#{remember_me}]]
     </label>
   </div>
   <button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{sign_in}"></button>

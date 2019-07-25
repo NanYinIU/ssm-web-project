@@ -10,7 +10,8 @@ public class test1 {
         Object salt = "1";//盐值
         int hashIterations = 1024;//加密1024次
         Object result = new SimpleHash(hashAlgorithmName,crdentials,salt,hashIterations);
-        System.out.println(result);
+        System.out.println("web".getBytes());
     }
+
 
 }
