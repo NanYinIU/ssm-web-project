@@ -44,7 +44,7 @@ public class Auth implements Serializable {
     private Set<User> users = new HashSet<>();
 
     @JSONField(serialize = false)
-    @ManyToMany(mappedBy = "auths", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "auths")
     private Set<Resource> resources;
 
 

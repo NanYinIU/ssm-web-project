@@ -82,6 +82,16 @@ $(document).ready(function () {
 
 });
 
+// boostrap-table自定义数据格式
+var responseHandler  = function (rec) {
+    rec = JSON.parse(rec);
+    console.log(rec);
+    return {
+        "total": rec.data.total,//总页数
+        "rows": rec.data.rows   //数据
+    };
+}
+
 function standardArrayFormatter(value, row, index) {
     var _return="";
     if (value != null || value != undefined) {
@@ -98,17 +108,17 @@ function standardArrayFormatter(value, row, index) {
 function actionFormatter(value, row, index) {
     var id = value;
     var result = "";
-    result += "<a class='btn btn-primary btn-sm tip-top' id='detail' href='#' role='button' data-toggle='modal' onclick='checkModal("+row.id+")' title='查看' >" +
+    result += "<a class='btn btn-primary btn-sm tip-top' id='detail' href='#' role='button' data-toggle='modal' onclick='showCheckModal("+row.id+")' title='查看' >" +
         "<i class='fas fa-search'></i></a> &nbsp;";
-    result += "<a class='btn btn-primary btn-sm tip-top' id='modify' href='#' role='button'  title='修改' data-toggle='modal' onclick='showModal(" + row.id + ")' data-url='/user/user/'+row.id  >" +
+    result += "<a class='btn btn-primary btn-sm tip-top' id='modify' href='#' role='button'  title='修改' data-toggle='modal' onclick='showModifyModal(" + row.id + ")' data-url='/user/user/'+row.id  >" +
         "<i class='fas fa-edit'></i></a> &nbsp;";
-    result += "<a class='btn btn-primary btn-sm tip-top' id='delete' href='#' role='button'  data-toggle='modal' onclick='warnModal()' title='删除' ><i" +
+    result += "<a class='btn btn-primary btn-sm tip-top' id='delete' href='#' role='button'  data-toggle='modal' onclick='warnModal("+row.id+")' title='删除' ><i" +
         " class='fas fa-trash'></i></a> &nbsp;";
     return result;
 }
 
 // 查看模态框
-var checkModal = function (id) {
+var showCheckModal = function (id) {
     var url = "/user/user/" + id;
     $.ajax({
         type: "GET",
@@ -141,7 +151,7 @@ function showAddOrModifyModal(){
 }
 
 // 修改模态框
-var showModal = function (id) {
+var showModifyModal = function (id) {
     var url = "/user/user/" + id;
     $.ajax({
         type: "GET",
@@ -170,7 +180,8 @@ var showModal = function (id) {
 }
 
 // 删除模态框
-var warnModal = function(){
+var warnModal = function(id){
+    $("#userId").val(id);
     $("#warnModal").modal('show')
 }
 
@@ -211,17 +222,19 @@ var modifySave = function(){
 }
 
 // 添加动作
-var addSave = function(){
+var showAddModal = function(){
     showAddOrModifyModal();
 }
 
-// boostrap-table自定义数据格式
-var responseHandler  = function (rec) {
-
-    rec = JSON.parse(rec);
-    console.log(rec);
-    return {
-        "total": rec.data.total,//总页数
-        "rows": rec.data.rows   //数据
-    };
+var deleteUser = function () {
+    var id = $("#userId").val();
+    var url = "/user/user/" + id;
+    $.ajax({
+        type: "DELETE",
+        url: url,
+        dataType: 'json',
+        success:function (e) {
+            $("#warnModal").modal("hide")
+        }
+    })
 }

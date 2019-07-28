@@ -36,7 +36,7 @@ public class Role implements Serializable {
     private Date gmtModify;
 
     @JSONField(serialize = false)
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany()
     @JoinTable(name = "r_user_role",
             joinColumns = {@JoinColumn(name = "role_id")},
             inverseJoinColumns = {@JoinColumn(name = "users_id")})

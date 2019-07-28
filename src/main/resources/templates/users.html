@@ -38,7 +38,7 @@
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
             <div id="toolbar">
-                <button id="add-user" class="btn btn-primary" onclick="addSave()">
+                <button id="add-user" class="btn btn-primary" onclick="showAddModal()">
                      添加
                 </button>
             </div>
@@ -171,7 +171,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary">确认</button>
+                <button type="button" class="btn btn-primary" onclick="deleteUser()">确认</button>
             </div>
         </div>
     </div>

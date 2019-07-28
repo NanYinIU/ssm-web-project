@@ -61,7 +61,7 @@ public class Project implements Serializable {
     private Date gmtModify;
 
     @JSONField(serialize = false)
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany()
     @JoinTable(name = "r_project_user",joinColumns =
             {@JoinColumn(name = "project_id")},
             inverseJoinColumns = @JoinColumn(name = "users_id"))

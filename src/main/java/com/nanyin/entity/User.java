@@ -44,15 +44,15 @@ public class User implements Serializable {
     @Column(columnDefinition = "TINYINT(4)")
     private Short age;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne()
     @JoinColumn(name="sex_id",columnDefinition = "INT(11)")
     private Sex sex;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne()
     @JoinColumn(columnDefinition = "INT(11)",name = "unit_id")
     private Unit unit;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne()
     @JoinColumn(columnDefinition = "INT(11)",name = "status_id")
     private Status status;
 
@@ -67,20 +67,20 @@ public class User implements Serializable {
     @Temporal(value=TemporalType.TIMESTAMP)
     private Date gmtModify;
 
-    @ManyToMany(mappedBy = "users",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "users",fetch = FetchType.EAGER)
     private Set<Role> roles;
 
-    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "r_user_auth",
             joinColumns = {@JoinColumn(name = "users_id")},
             inverseJoinColumns = @JoinColumn(name = "auth_id"))
     @NotFound(action = NotFoundAction.IGNORE)
     private Set<Auth> auths;
 
-    @ManyToMany(mappedBy = "users",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "users",fetch = FetchType.EAGER)
     private Set<Project> projects;
 
-    @ManyToMany(mappedBy = "users",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "users",fetch = FetchType.EAGER)
     private Set<ProjectUserDuty> projectUserDuties;
 
     public User (int id){

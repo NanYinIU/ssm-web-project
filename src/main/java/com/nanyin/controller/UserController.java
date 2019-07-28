@@ -220,7 +220,6 @@ public class UserController {
             result = Result.resultInstance(e);
         }
         return JSON.toJSONString(result);
-
     }
 
     // 用户管理 结束
