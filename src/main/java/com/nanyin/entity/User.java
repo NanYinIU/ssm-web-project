@@ -2,10 +2,7 @@ package com.nanyin.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.*;
 
 import javax.persistence.*;
@@ -19,15 +16,19 @@ import java.util.Objects;
 import java.util.Set;
 
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name="user")
 public class User implements Serializable {
 
     private static final long serialVersionUID = -7912979476697449896L;
+
     @Id
     @Column(columnDefinition = "INT(11)")
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
     @Column(length = 64)
     private String name;
@@ -66,18 +67,24 @@ public class User implements Serializable {
     @Temporal(value=TemporalType.TIMESTAMP)
     private Date gmtModify;
 
-    @ManyToMany(mappedBy = "users",fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "users",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private Set<Role> roles;
 
-    @ManyToMany(mappedBy = "users",fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @JoinTable(name = "r_user_auth",
+            joinColumns = {@JoinColumn(name = "users_id")},
+            inverseJoinColumns = @JoinColumn(name = "auth_id"))
     @NotFound(action = NotFoundAction.IGNORE)
     private Set<Auth> auths;
 
-    @ManyToMany(mappedBy = "users",fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "users",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private Set<Project> projects;
 
-    @ManyToMany(mappedBy = "users",fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "users",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private Set<ProjectUserDuty> projectUserDuties;
 
+    public User (int id){
+        this.id = id;
+    }
 
 }

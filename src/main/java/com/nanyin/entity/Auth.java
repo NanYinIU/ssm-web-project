@@ -11,12 +11,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-//@Data
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Entity
 @Table(name = "auth")
 public class Auth implements Serializable {
@@ -24,7 +23,7 @@ public class Auth implements Serializable {
     private static final long serialVersionUID = 4541485813650085417L;
     @Id
     @Column(columnDefinition = "INT(11)")
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
     @Column(length = 64)
     private String name;
@@ -40,15 +39,12 @@ public class Auth implements Serializable {
     private Date gmtModify;
 
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL,mappedBy = "auths")
     @JSONField(serialize = false)
-    @JoinTable(name = "r_user_auth",
-            joinColumns = {@JoinColumn(name = "auth_id")},
-            inverseJoinColumns = @JoinColumn(name = "users_id"))
     private Set<User> users = new HashSet<>();
 
     @JSONField(serialize = false)
-    @ManyToMany(mappedBy = "auths")
+    @ManyToMany(mappedBy = "auths", cascade = CascadeType.ALL)
     private Set<Resource> resources;
 
 

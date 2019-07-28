@@ -35,8 +35,16 @@
 <div class="container-fluid">
     <div class="row">
         <div th:insert="~{components/sidebar :: sidebar}"></div>
+
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-            <table id="table"></table>
+            <div id="toolbar">
+                <button id="add-user" class="btn btn-primary" onclick="addSave()">
+                     添加
+                </button>
+            </div>
+            <table id="table"
+                   data-toolbar="#toolbar"
+                   data-pagination="true"></table>
         </main>
     </div>
 </div>
@@ -83,7 +91,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" onclick="addOrModifySave()">保存</button>
+                <button type="button" class="btn btn-primary" th:onclick="modifySave()">保存</button>
             </div>
         </div>
     </div>
@@ -168,5 +176,6 @@
         </div>
     </div>
 </div>
+
 </body>
 </html>

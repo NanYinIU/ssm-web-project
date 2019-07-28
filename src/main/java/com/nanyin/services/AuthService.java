@@ -5,5 +5,5 @@ import com.nanyin.entity.Auth;
 import java.util.List;
 
 public interface AuthService {
-    List<Auth> findNotDeletedAuth();
+    List<Auth> findNotDeletedAuth() throws Exception;
 }

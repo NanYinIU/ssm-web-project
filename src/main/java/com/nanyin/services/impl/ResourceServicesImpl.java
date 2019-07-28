@@ -19,7 +19,7 @@ public class ResourceServicesImpl implements ResourceServices {
 
 
     @Override
-    public List<Resource> getSidebarInfoWapper() {
+    public List<Resource> getSidebarInfoWapper() throws Exception {
         String username = (String) SessionUtil.getAttribute("username");
         return resourceRepository.findByAuths_Users_NameAndType_IdOrderByOrdAsc(username,1);
     }

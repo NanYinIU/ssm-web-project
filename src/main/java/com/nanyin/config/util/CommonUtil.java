@@ -1,5 +1,6 @@
 package com.nanyin.config.util;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
@@ -9,7 +10,11 @@ import static org.springframework.data.domain.Sort.by;
 
 public class CommonUtil {
 
-    public static Sort cending(String direction,String... propertis) {
+    private static Sort cending(String direction,String... propertis) {
        return new Sort(Sort.Direction.fromString(direction),propertis);
+    }
+
+    public static PageRequest pageRequest(Integer offset, Integer limit, String order, String... properties){
+        return new PageRequest((offset/limit),limit, CommonUtil.cending(order,properties));
     }
 }

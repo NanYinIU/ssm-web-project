@@ -16,9 +16,10 @@ public class UnitServiceImpl implements UnitService {
     @Autowired
     UnitRepository unitRepository;
 
-    @Cacheable("findNotDeletedUnit")
+    @Cacheable(value = "unit")
     @Override
-    public List<Unit> findNotDeletedUnit() {
+    public List<Unit> findNotDeletedUnit() throws Exception {
         return unitRepository.findAllByIsDeletedOrderByOrd(DeletedStatusEnum.IS_NOT_DELETED.isJudge());
     }
+
 }

@@ -27,19 +27,19 @@ public class ProjectServicesImpl implements ProjectServices {
 
     @Override
     @Cacheable("getStandardProjectStatus")
-    public  Set<ProjectStatus> getStandardProjectStatus() {
+    public  Set<ProjectStatus> getStandardProjectStatus() throws Exception {
         return projectStatusRepository.findByOrderByOrdAsc();
     }
 
     @Override
     @Cacheable("getStandardProjectLevel")
-    public Set<ProjectLevel> getStandardProjectLevel() {
+    public Set<ProjectLevel> getStandardProjectLevel()throws Exception {
         return projectLevelRepository.findByOrderByOrdAsc();
     }
 
     @Override
     @Cacheable("getStandardProjectType")
-    public Set<ProjectType> getStandardProjectType() {
+    public Set<ProjectType> getStandardProjectType() throws Exception {
         return projectTypeRepository.findByOrderByOrdAsc();
     }
 }

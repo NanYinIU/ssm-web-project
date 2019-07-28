@@ -35,7 +35,7 @@ public class ShiroWebRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         String username = (String) principalCollection.getPrimaryPrincipal();
-        User user = userServices.getUserFromUserName(username);
+        User user = getUser(username);
         if(user == null){
             throw new NoUserAccountException();
         }
@@ -64,12 +64,7 @@ public class ShiroWebRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         String username = (String) authenticationToken.getPrincipal();
-        User user = null;
-        try{
-            user = userServices.getUserFromUserName(username);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        User user = getUser(username);
         if(user == null ){
             throw new NoUserAccountException();
         }
@@ -83,6 +78,16 @@ public class ShiroWebRealm extends AuthorizingRealm {
 
     public ShiroWebRealm(CredentialsMatcher matcher) {
         super(matcher);
+    }
+
+    private User getUser(String username){
+        User user = null;
+        try{
+            user = userServices.getUserFromUserName(username);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return user;
     }
 
 }

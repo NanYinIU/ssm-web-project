@@ -1,18 +1,26 @@
 package com.nanyin.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "unit")
 public class Unit implements Serializable {
     private static final long serialVersionUID = 7358059864252304298L;
     @Id
     @Column(columnDefinition = "INT(11)")
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
     @Column(length = 64)
     private String name;

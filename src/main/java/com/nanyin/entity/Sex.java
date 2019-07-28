@@ -1,19 +1,22 @@
 package com.nanyin.entity;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "s_user_sex")
 public class Sex implements Serializable {
     private static final long serialVersionUID = -450912372259672214L;
     @Id
     @Column(columnDefinition = "INT(11)")
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
     @Column(length = 64)
     private String name;

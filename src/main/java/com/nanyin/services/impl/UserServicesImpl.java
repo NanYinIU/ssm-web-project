@@ -14,10 +14,9 @@ import com.nanyin.services.UserServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -38,37 +37,65 @@ public class UserServicesImpl implements UserServices {
     }
 
 
+//    @Cacheable(value = "users",key = "#")
     @Override
-    public List<User> findAllByIsDeleted(Integer offset, Integer limit, String order) {
-        return userRepository.findAllByIsDeleted(new PageRequest(offset,limit, CommonUtil.cending(order,"id")),(short)0);
+    public List<User> findAllByIsDeleted(Integer offset, Integer limit, String order) throws Exception {
+        return userRepository.findAllByIsDeleted(CommonUtil.pageRequest(offset,limit,order,"id"),(short)0);
     }
 
     @Cacheable(value = "user",key = "#id")
     @Override
-    public User findUserById(Integer id) {
+    public User findUserById(Integer id) throws Exception {
         return userRepository.findUsersById(id);
     }
 
 
     @Override
-    @CacheEvict(value="user", key="#id")
-    public User updateUser(Integer id, String name, String email, int sex, int status, int[] auth) {
+    @Caching(evict = {
+            @CacheEvict(value="user", key="#id"),
+//            @CacheEvict(value = "users",key = "#")
+    })
+    public User updateUser(Integer id, String name, String email, int sex, int status, int[] auth) throws Exception {
         User u = userRepository.findUsersById(id);
+//        User u = new User(id);
+        u = setUserAttributes(u,name,email,sex,status,auth);
+        return userRepository.save(u);
+    }
+
+    @Override
+    public int countAllByIsDeleted() throws Exception {
+        return userRepository.countAllByIsDeleted((short)0);
+    }
+
+    @Override
+    public User addUser(String name, String email, int sex, int status, int[] auth) throws Exception {
+        User u = new User();
+        u = setUserAttributes(u,name,email,sex,status,auth);
+        // 其他默认属性
+        u.setIsDeleted((short)0);
+        u.setSalt("1");
+        return userRepository.save(u);
+    }
+
+    @Override
+    public void deleteUser(Integer id) throws Exception {
+        userRepository.deleteById(id);
+    }
+
+    private User setUserAttributes(User u, String name, String email, int sex, int status, int[] auth){
         u.setName(name);
         u.setEmail(email);
         Sex s = sexRepository.getOne(sex);
         u.setSex(s);
         Status sta = statusRepository.getOne(status);
         u.setStatus(sta);
-        Set<User> users = new HashSet<>();
-        users.add(u);
-        Set<Auth> allByIdContains = authRepository.findDistinctByIdIn(auth);
-        u.getAuths().addAll(allByIdContains);
-        allByIdContains.forEach(i -> i.setUsers(users));
-        return userRepository.save(u);
+        Set<Auth> allByIdContains = new HashSet<>();
+        if(auth !=null){
+            allByIdContains =  authRepository.findDistinctByIdIn(auth);
+            u.setAuths(allByIdContains);
+        }
+        return u;
     }
-
-
     /*
      * 以下-------用户相关信息--------
      *
@@ -77,17 +104,17 @@ public class UserServicesImpl implements UserServices {
     @Autowired
     SexRepository sexRepository;
 
-    @Cacheable("findNotDeletedUserSex")
+    @Cacheable(value = "user-sex")
     @Override
-    public List<Sex> findNotDeletedUserSex() {
+    public List<Sex> findNotDeletedUserSex() throws Exception {
         return sexRepository.findAllByIsDeletedOrderByOrd(DeletedStatusEnum.IS_NOT_DELETED.isJudge());
     }
     @Autowired
     StatusRepository statusRepository;
 
-    @Cacheable(value="findNotDeletedUserStatus")
+    @Cacheable(value="user-status")
     @Override
-    public List<Status> findNotDeletedUserStatus() {
+    public List<Status> findNotDeletedUserStatus()  throws Exception {
         return statusRepository.findAllByIsDeletedOrderByOrd(DeletedStatusEnum.IS_NOT_DELETED.isJudge());
     }
 

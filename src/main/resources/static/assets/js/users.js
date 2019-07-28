@@ -15,6 +15,7 @@ $(document).ready(function () {
         pageSize: 10,                        //每页的记录行数
         pageList: [10, 20, 50],                //可供选择的每页行数
         sidePagination: "server",
+        sortable:"true",
         // dataButtonsToolbar:".buttons-toolbar",
         columns: [
             {
@@ -58,7 +59,8 @@ $(document).ready(function () {
             var id = row.ID;
             // EditViewById(id, 'view');
 
-        }
+        },
+        responseHandler: responseHandler
         // queryParams: function(params){
         //     var queryData = {};    //如果没有额外的查询参数的话就新建一个空对象，如果有的话就先装你的查询参数
         //     //然后增加这两个
@@ -67,6 +69,16 @@ $(document).ready(function () {
         //     return queryData;    //这个就是向服务端传递的参数对象
         // }
     });
+
+    //每次清空表单信息，因为是修改添加公用的表单
+    $('#addOrModifyModal').on('hidden.bs.modal', function (e) {
+        $("#userId").val("");
+        $('#sex').selectpicker("val", "");
+        $('#status').selectpicker("val", "");
+        $('#auth').selectpicker("val", "");
+        $('#name').val("");
+        $('#email').val("");
+    })
 
 });
 
@@ -95,6 +107,7 @@ function actionFormatter(value, row, index) {
     return result;
 }
 
+// 查看模态框
 var checkModal = function (id) {
     var url = "/user/user/" + id;
     $.ajax({
@@ -102,7 +115,7 @@ var checkModal = function (id) {
         url: url,
         dataType: 'json',
         success: function (res) {
-            var data = res.rows;
+            var data = JSON.parse(res);
             var authArr = new Array() ;
             for (var i = 0; i < data.auths.length; i++) {
                 authArr[i] = data.auths[i].name;
@@ -123,6 +136,11 @@ var checkModal = function (id) {
     });
 }
 
+function showAddOrModifyModal(){
+    $('#addOrModifyModal').modal('show');
+}
+
+// 修改模态框
 var showModal = function (id) {
     var url = "/user/user/" + id;
     $.ajax({
@@ -130,19 +148,20 @@ var showModal = function (id) {
         url: url,
         dataType: 'json',
         success: function (res) {
-            var data = res.rows;
+            res = JSON.parse(res);
+            var data = res.data;
             // 修改菜单
-            $('#sex').selectpicker("val", data.sex.name);
-            $('#status').selectpicker("val", data.status.name);
+            $('#sex').selectpicker("val", data.sex?data.sex.name:"");
+            $('#status').selectpicker("val", data.status?data.status.name:"");
             var authStr = new Array() ;
             for (var i = 0; i < data.auths.length; i++) {
                 authStr[i] = data.auths[i].name;
             }
             $('#auth').selectpicker("val", authStr);
             $("#userId").val(data.id);
-            $('#addOrModifyModal #name').val(data.name);
-            $('#addOrModifyModal #email').val(data.email);
-            $('#addOrModifyModal').modal('show');
+            $('#name').val(data.name);
+            $('#email').val(data.email);
+            showAddOrModifyModal();
         },
         error: function (request, status, error) {
             console.log("ajax call went wrong:" + request.responseText);
@@ -150,23 +169,24 @@ var showModal = function (id) {
     });
 }
 
+// 删除模态框
 var warnModal = function(){
     $("#warnModal").modal('show')
 }
 
-$('#addOrModifyModal').on('hidden.bs.modal', function (e) {
-    // do something...
-   console.log(".....")
-})
-
-var addOrModifySave = function(){
+// 【修改/添加】动作
+var modifySave = function(){
     var id = $("#userId").val();
-    var url = "/user/user/" + id;
-
+    var type = "POST";
+    var url = "/user/user/";
+    if(id !== ""){
+        //如果id不为空，说明时修改
+        type="PUT";
+        url = "/user/user/" + id;
+    }
     // 数据
     var name = $("#name").val();
     var email = $("#email").val();
-
     var sex = $("#sex").find("option:selected").attr('id');
     var status = $("#status").find("option:selected").attr('id');
     // var auth = $("#auth").find("option:selected").attr('id');
@@ -176,7 +196,7 @@ var addOrModifySave = function(){
     }
     var data = {'name':name,'email':email,'sex':sex,'status':status,'auth':auth};
     $.ajax({
-        type: "put",
+        type: type,
         url: url,
         dataType: 'json',
         data: data,
@@ -188,4 +208,20 @@ var addOrModifySave = function(){
         }
     });
     $("#addOrModifyModal").modal("hide")
+}
+
+// 添加动作
+var addSave = function(){
+    showAddOrModifyModal();
+}
+
+// boostrap-table自定义数据格式
+var responseHandler  = function (rec) {
+
+    rec = JSON.parse(rec);
+    console.log(rec);
+    return {
+        "total": rec.data.total,//总页数
+        "rows": rec.data.rows   //数据
+    };
 }

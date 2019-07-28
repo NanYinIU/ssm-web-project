@@ -18,9 +18,13 @@ public class ProjectController {
     @RequiresPermissions({"admin"})
     @GetMapping("/projects")
     public String projects(Model model){
-        model.addAttribute("projectStatus",projectServices.getStandardProjectStatus());
-        model.addAttribute("projectLevel",projectServices.getStandardProjectLevel());
-        model.addAttribute("projectType",projectServices.getStandardProjectType());
+        try {
+            model.addAttribute("projectStatus",projectServices.getStandardProjectStatus());
+            model.addAttribute("projectLevel",projectServices.getStandardProjectLevel());
+            model.addAttribute("projectType",projectServices.getStandardProjectType());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         return "projects";
     }
 

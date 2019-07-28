@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Set;
 
 public interface ProjectServices {
-     Set<ProjectStatus> getStandardProjectStatus();
+     Set<ProjectStatus> getStandardProjectStatus() throws Exception;
 
-     Set<ProjectLevel> getStandardProjectLevel();
+     Set<ProjectLevel> getStandardProjectLevel() throws Exception;
 
-     Set<ProjectType> getStandardProjectType();
+     Set<ProjectType> getStandardProjectType() throws Exception;
 
 
 }

@@ -31,6 +31,8 @@ public interface UserRepository extends JpaRepository<User,Integer> {
 
     User findUsersById(Integer id);
 
+    int countAllByIsDeleted(short isDeleted);
+
     @Override
     User saveAndFlush(User user);
 

@@ -69,3 +69,21 @@ INSERT INTO `r_user_auth` ( `users_id`, `auth_id`)
 VALUES
 	( 1, 1);
 
+
+INSERT INTO `resource` (`id`, `comment`, `gmt_create`, `gmt_modify`, `is_deleted`, `name`, `ord`, `url`, `icon_id`, `type_id`)
+VALUES
+(3, NULL, NULL, NULL, 0, '用户管理', 3, '/user', 2, 1);
+
+INSERT INTO `s_user_status` (`id`, `comment`, `gmt_create`, `gmt_modify`, `is_deleted`, `name`, `ord`)
+VALUES
+(2, NULL, NULL, NULL, 0, '禁止登陆', 2);
+
+
+INSERT INTO `s_user_sex` (`id`, `comment`, `gmt_create`, `gmt_modify`, `is_deleted`, `name`, `ord`)
+VALUES
+(2, NULL, NULL, NULL, 0, '女', NULL);
+
+INSERT INTO `r_resource_auth` (`auth_id`, `resources_id`)
+VALUES
+(1, 3);
+

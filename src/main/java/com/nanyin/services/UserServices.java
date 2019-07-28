@@ -8,21 +8,26 @@ import java.util.List;
 
 public interface UserServices {
 
-    User getUserFromUserName(String name);
+    User getUserFromUserName(String name) throws Exception;
 
 
-    List<User> findAllByIsDeleted(Integer offset,Integer limit,String order);
+    List<User> findAllByIsDeleted(Integer offset,Integer limit,String order) throws Exception;
 
-    User findUserById(Integer id);
+    User findUserById(Integer id) throws Exception;
 
-    User updateUser(Integer id,String name,String email,int sex,int status, int[] auth);
+    User updateUser(Integer id,String name,String email,int sex,int status, int[] auth) throws Exception;
 
     /*
      * 下面是用户表的标准属性信息
      **/
 
-    List<Sex> findNotDeletedUserSex();
+    List<Sex> findNotDeletedUserSex() throws Exception;
 
-    List<Status> findNotDeletedUserStatus();
+    List<Status> findNotDeletedUserStatus() throws Exception;
 
+    int countAllByIsDeleted() throws Exception;
+
+    User addUser(String name, String email, int sex, int status, int[] auth) throws Exception;
+
+    void deleteUser(Integer id) throws Exception;
 }
