@@ -40,15 +40,14 @@ public class Auth implements Serializable {
     private Date gmtModify;
 
 
-//    @org.springframework.data.annotation.Transient
     @ManyToMany(cascade = CascadeType.ALL)
-//    @JSONField(serialize = false)
+    @JSONField(serialize = false)
     @JoinTable(name = "r_user_auth",
             joinColumns = {@JoinColumn(name = "auth_id")},
             inverseJoinColumns = @JoinColumn(name = "users_id"))
     private Set<User> users = new HashSet<>();
 
-
+    @JSONField(serialize = false)
     @ManyToMany(mappedBy = "auths")
     private Set<Resource> resources;
 

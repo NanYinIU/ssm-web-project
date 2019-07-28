@@ -32,7 +32,6 @@ public class Role implements Serializable {
     @Temporal(value=TemporalType.TIMESTAMP)
     private Date gmtModify;
 
-//    @Transient
     @JSONField(serialize = false)
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "r_user_role",

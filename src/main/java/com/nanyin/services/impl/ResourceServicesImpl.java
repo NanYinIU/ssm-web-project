@@ -17,7 +17,7 @@ public class ResourceServicesImpl implements ResourceServices {
     @Autowired
     ResourceRepository resourceRepository;
 
-//    @Cacheable("getSidebarInfoWapper")
+
     @Override
     public List<Resource> getSidebarInfoWapper() {
         String username = (String) SessionUtil.getAttribute("username");

@@ -17,7 +17,6 @@
   <name>ssm-web-project</name>
 
   <dependencies>
-
       <!--  starters 开始-->
 
       <dependency>
@@ -71,12 +70,12 @@
           <version>5.1.47</version>
       </dependency>
 
-      <dependency>
-          <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-devtools</artifactId>
-          <scope>runtime</scope>
-          <optional>true</optional>
-      </dependency>
+      <!--<dependency>-->
+          <!--<groupId>org.springframework.boot</groupId>-->
+          <!--<artifactId>spring-boot-devtools</artifactId>-->
+          <!--<scope>runtime</scope>-->
+          <!--<optional>true</optional>-->
+      <!--</dependency>-->
 
       <dependency>
           <groupId>org.projectlombok</groupId>

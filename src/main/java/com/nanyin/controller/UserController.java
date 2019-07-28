@@ -3,6 +3,7 @@ package com.nanyin.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.nanyin.config.exceptions.NoUserAccountException;
 import com.nanyin.config.exceptions.UserIsBlockException;
+import com.nanyin.config.redis.RedisService;
 import com.nanyin.config.util.SessionUtil;
 import com.nanyin.entity.*;
 import com.nanyin.entity.dto.UserDto;
@@ -34,6 +35,8 @@ public class UserController {
     ResourceServices resourceServices;
     @Autowired
     UserServices userServices;
+    @Autowired
+    RedisService redisService;
 
 //    登陆注册部分开始 -------------------------------------------------------
 

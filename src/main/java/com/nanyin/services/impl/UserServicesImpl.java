@@ -12,6 +12,7 @@ import com.nanyin.repository.StatusRepository;
 import com.nanyin.repository.UserRepository;
 import com.nanyin.services.UserServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -42,7 +43,7 @@ public class UserServicesImpl implements UserServices {
         return userRepository.findAllByIsDeleted(new PageRequest(offset,limit, CommonUtil.cending(order,"id")),(short)0);
     }
 
-//    @Cacheable("findUserById")
+    @Cacheable(value = "user",key = "#id")
     @Override
     public User findUserById(Integer id) {
         return userRepository.findUsersById(id);
@@ -50,6 +51,7 @@ public class UserServicesImpl implements UserServices {
 
 
     @Override
+    @CacheEvict(value="user", key="#id")
     public User updateUser(Integer id, String name, String email, int sex, int status, int[] auth) {
         User u = userRepository.findUsersById(id);
         u.setName(name);
@@ -83,7 +85,7 @@ public class UserServicesImpl implements UserServices {
     @Autowired
     StatusRepository statusRepository;
 
-    @Cacheable("findNotDeletedUserStatus")
+    @Cacheable(value="findNotDeletedUserStatus")
     @Override
     public List<Status> findNotDeletedUserStatus() {
         return statusRepository.findAllByIsDeletedOrderByOrd(DeletedStatusEnum.IS_NOT_DELETED.isJudge());

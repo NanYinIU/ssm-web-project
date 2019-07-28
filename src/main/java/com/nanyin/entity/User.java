@@ -66,17 +66,17 @@ public class User implements Serializable {
     @Temporal(value=TemporalType.TIMESTAMP)
     private Date gmtModify;
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany(mappedBy = "users",fetch = FetchType.EAGER)
     private Set<Role> roles;
 
     @ManyToMany(mappedBy = "users",fetch = FetchType.EAGER)
     @NotFound(action = NotFoundAction.IGNORE)
     private Set<Auth> auths;
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany(mappedBy = "users",fetch = FetchType.EAGER)
     private Set<Project> projects;
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany(mappedBy = "users",fetch = FetchType.EAGER)
     private Set<ProjectUserDuty> projectUserDuties;
 
 
