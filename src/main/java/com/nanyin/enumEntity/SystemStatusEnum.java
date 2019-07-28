@@ -1,8 +1,6 @@
 package com.nanyin.enumEntity;
 
-import lombok.Data;
-
-public enum StatusEnum {
+public enum SystemStatusEnum {
     /*
      * 正常状态 为 1
      * normal status is 1
@@ -19,7 +17,7 @@ public enum StatusEnum {
 
     private Integer id;
 
-    StatusEnum(Integer id) {
+    SystemStatusEnum(Integer id) {
         this.id = id;
     }
 

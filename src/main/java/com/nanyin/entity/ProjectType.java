@@ -9,10 +9,11 @@ import java.util.Date;
 @Entity
 @Table(name = "s_project_type")
 public class ProjectType implements Serializable {
-@Id
-@Column(columnDefinition = "INT(11)")
-@GeneratedValue(strategy= GenerationType.AUTO)
-private Integer id;
+    private static final long serialVersionUID = -8866225307710726408L;
+    @Id
+    @Column(columnDefinition = "INT(11)")
+    @GeneratedValue(strategy= GenerationType.AUTO)
+    private Integer id;
     @Column(length = 64)
     private String name;
     @Column(length = 1024)

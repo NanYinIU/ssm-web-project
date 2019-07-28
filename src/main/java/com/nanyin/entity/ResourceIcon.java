@@ -10,6 +10,7 @@ import java.util.Date;
 @Entity
 @Table(name = "s_resource_icon")
 public class ResourceIcon implements Serializable {
+    private static final long serialVersionUID = 7511944388442813343L;
     @Id
     @Column(columnDefinition = "INT(11)")
     @GeneratedValue(strategy= GenerationType.AUTO)

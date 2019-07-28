@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Set;
 
 @Component
 public interface UserRepository extends JpaRepository<User,Integer> {
@@ -20,10 +21,18 @@ public interface UserRepository extends JpaRepository<User,Integer> {
      **/
     User findUserByName(String name);
 
-    @Query("select new com.nanyin.entity.dto.UserDto(" +
-            "u.id,u.name,u.email,u.age,u.sex,u.unit,u.status,u.gmtCreate,u.gmtModify" +
-            ") from User u where u.isDeleted=0 ")
-    List<UserDto> findAllUsersButNotDeleted(Pageable pageable);
+//    @Query("select new com.nanyin.entity.dto.UserDto(" +
+//            "u.id,u.name,u.email,u.age,u.sex,u.unit,u.status,u.gmtCreate,u.gmtModify,u.roles,u.auths," +
+//            "u.projects,u.projectUserDuties" +
+//            ") from User u where u.isDeleted=0 ")
+//    Set<UserDto> findAllUsersButNotDeleted(Pageable pageable);
+
+    List<User> findAllByIsDeleted(Pageable pageable,short isDeleted);
+
+    User findUsersById(Integer id);
+
+    @Override
+    User saveAndFlush(User user);
 
 }
 

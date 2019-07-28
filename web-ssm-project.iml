@@ -177,5 +177,6 @@
     <orderEntry type="library" name="Maven: org.webjars:font-awesome:5.9.0" level="project" />
     <orderEntry type="library" name="Maven: org.webjars.npm:bootstrap-table:1.15.2" level="project" />
     <orderEntry type="library" name="Maven: org.webjars:popper.js:1.15.0" level="project" />
+    <orderEntry type="library" name="Maven: org.webjars:bootstrap-select:1.13.8" level="project" />
   </component>
 </module>

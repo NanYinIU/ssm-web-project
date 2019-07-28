@@ -10,6 +10,7 @@ import java.util.Date;
 @Entity
 @Table(name = "s_user_sex")
 public class Sex implements Serializable {
+    private static final long serialVersionUID = -450912372259672214L;
     @Id
     @Column(columnDefinition = "INT(11)")
     @GeneratedValue(strategy= GenerationType.AUTO)

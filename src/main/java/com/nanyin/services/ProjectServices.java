@@ -5,13 +5,14 @@ import com.nanyin.entity.ProjectStatus;
 import com.nanyin.entity.ProjectType;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ProjectServices {
-     List<ProjectStatus> getStandardProjectStatus();
+     Set<ProjectStatus> getStandardProjectStatus();
 
-     List<ProjectLevel> getStandardProjectLevel();
+     Set<ProjectLevel> getStandardProjectLevel();
 
-     List<ProjectType> getStandardProjectType();
+     Set<ProjectType> getStandardProjectType();
 
 
 }

@@ -9,6 +9,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class ResourceServicesImpl implements ResourceServices {
@@ -16,7 +17,7 @@ public class ResourceServicesImpl implements ResourceServices {
     @Autowired
     ResourceRepository resourceRepository;
 
-    @Cacheable("getSidebarInfoWapper")
+//    @Cacheable("getSidebarInfoWapper")
     @Override
     public List<Resource> getSidebarInfoWapper() {
         String username = (String) SessionUtil.getAttribute("username");

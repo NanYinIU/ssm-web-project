@@ -1,16 +1,20 @@
 package com.nanyin.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
 @Table(name = "role")
 public class Role implements Serializable {
+    private static final long serialVersionUID = 8538788781327321942L;
     @Id
     @Column(columnDefinition = "INT(11)")
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -28,6 +32,8 @@ public class Role implements Serializable {
     @Temporal(value=TemporalType.TIMESTAMP)
     private Date gmtModify;
 
+//    @Transient
+    @JSONField(serialize = false)
     @ManyToMany
     @JoinTable(name = "r_user_role",
             joinColumns = {@JoinColumn(name = "role_id")},

@@ -1,5 +1,7 @@
 package com.nanyin.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -7,6 +9,7 @@ import java.util.Date;
 @Entity
 @Table(name = "unit")
 public class Unit implements Serializable {
+    private static final long serialVersionUID = 7358059864252304298L;
     @Id
     @Column(columnDefinition = "INT(11)")
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -14,9 +17,11 @@ public class Unit implements Serializable {
     @Column(length = 64)
     private String name;
 
+//    @JSONField(serialize=false)
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "parent_id")
     private Unit parentId;
+
     @Column(length = 11)
     private String code;
 

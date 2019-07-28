@@ -10,6 +10,7 @@ import java.util.Date;
 @Entity
 @Table(name = "s_project_status")
 public class ProjectStatus implements Serializable {
+    private static final long serialVersionUID = 6334887949207934312L;
     @Id
     @Column(columnDefinition = "INT(11)")
     @GeneratedValue(strategy= GenerationType.AUTO)

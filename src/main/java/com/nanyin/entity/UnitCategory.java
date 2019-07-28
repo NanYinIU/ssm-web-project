@@ -10,6 +10,7 @@ import java.util.Date;
 @Entity
 @Table(name = "s_unit_category")
 public class UnitCategory implements Serializable {
+    private static final long serialVersionUID = 4605177010744033641L;
     @Id
     @Column(columnDefinition = "INT(11)")
     @GeneratedValue(strategy= GenerationType.AUTO)

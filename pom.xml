@@ -126,6 +126,12 @@
           <version>1.15.0</version>
       </dependency>
 
+      <dependency>
+          <groupId>org.webjars</groupId>
+          <artifactId>bootstrap-select</artifactId>
+          <version>1.13.8</version>
+      </dependency>
+
   </dependencies>
 
 

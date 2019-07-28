@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.nio.charset.Charset;
@@ -27,5 +28,10 @@ public class WebConfiguration implements WebMvcConfigurer {
         config.setCharset(Charset.forName("utf-8"));
         converter.setFastJsonConfig(config);
         converters.add(0, converter);
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        
     }
 }

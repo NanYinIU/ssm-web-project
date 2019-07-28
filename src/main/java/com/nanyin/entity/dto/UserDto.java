@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.persistence.Id;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -12,11 +13,11 @@ import java.util.List;
 @AllArgsConstructor
 public class UserDto {
 
-    private Integer id;
+    private int id;
     private String name;
     private String email;
 
-    private Short age;
+    private short age;
 
     private Sex sex;
 
@@ -24,18 +25,16 @@ public class UserDto {
 
     private Status status;
 
-
     private Date gmtCreate;
 
     private Date gmtModify;
 
-//    private List<Role> roles;
+    private Collection<Role> roles;
 //
-//    private List<Auth> auths;
+    private Collection<Auth> auths;
 //
-//    private List<Project> projects;
+    private Collection<Project> projects;
 //
-//    private List<ProjectUserDuty> projectUserDuties;
-
+    private Collection<ProjectUserDuty> projectUserDuties;
 
 }

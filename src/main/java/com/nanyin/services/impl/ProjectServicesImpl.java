@@ -13,6 +13,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class ProjectServicesImpl implements ProjectServices {
@@ -26,19 +27,19 @@ public class ProjectServicesImpl implements ProjectServices {
 
     @Override
     @Cacheable("getStandardProjectStatus")
-    public  List<ProjectStatus> getStandardProjectStatus() {
+    public  Set<ProjectStatus> getStandardProjectStatus() {
         return projectStatusRepository.findByOrderByOrdAsc();
     }
 
     @Override
     @Cacheable("getStandardProjectLevel")
-    public List<ProjectLevel> getStandardProjectLevel() {
+    public Set<ProjectLevel> getStandardProjectLevel() {
         return projectLevelRepository.findByOrderByOrdAsc();
     }
 
     @Override
     @Cacheable("getStandardProjectType")
-    public List<ProjectType> getStandardProjectType() {
+    public Set<ProjectType> getStandardProjectType() {
         return projectTypeRepository.findByOrderByOrdAsc();
     }
 }

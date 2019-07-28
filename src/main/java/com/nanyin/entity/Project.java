@@ -1,16 +1,20 @@
 package com.nanyin.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
 @Table(name = "project")
 public class Project implements Serializable {
+    private static final long serialVersionUID = -5380603783848286331L;
     @Id
     @Column(columnDefinition = "INT(11)")
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -53,6 +57,7 @@ public class Project implements Serializable {
     @Temporal(value=TemporalType.TIMESTAMP)
     private Date gmtModify;
 
+    @JSONField(serialize = false)
     @ManyToMany()
     @JoinTable(name = "r_project_user",joinColumns =
             {@JoinColumn(name = "project_id")},

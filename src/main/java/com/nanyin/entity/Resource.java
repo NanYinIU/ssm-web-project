@@ -6,6 +6,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 @Data
 @Entity
@@ -40,5 +42,6 @@ public class Resource implements Serializable {
     private ResourceType type;
 
     @ManyToMany(mappedBy = "resources")
-    private List<Auth> auths;
+    private Set<Auth> auths;
+
 }

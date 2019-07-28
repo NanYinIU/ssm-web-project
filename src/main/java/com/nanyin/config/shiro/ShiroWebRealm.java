@@ -5,25 +5,22 @@ import com.nanyin.config.exceptions.UserIsBlockException;
 import com.nanyin.entity.Auth;
 import com.nanyin.entity.Role;
 import com.nanyin.entity.User;
-import com.nanyin.enumEntity.StatusEnum;
+import com.nanyin.enumEntity.SystemStatusEnum;
 import com.nanyin.services.UserServices;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
-import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
-import org.apache.shiro.crypto.hash.Md5Hash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ShiroWebRealm extends AuthorizingRealm {
     @Autowired
@@ -43,12 +40,12 @@ public class ShiroWebRealm extends AuthorizingRealm {
             throw new NoUserAccountException();
         }
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
-        List<String> roles = new ArrayList<>();
+        Set<String> roles = new HashSet<>();
         for (Role r:user.getRoles()
              ) {
             roles.add(r.getName());
         }
-        List<String> auths = new ArrayList<>();
+        Set<String> auths = new HashSet<>();
         for(Auth a:user.getAuths()){
             auths.add(a.getName());
         }
@@ -77,7 +74,7 @@ public class ShiroWebRealm extends AuthorizingRealm {
             throw new NoUserAccountException();
         }
         //非正常状态
-        if(!user.getStatus().getId().equals(StatusEnum.NORMAL.getId())){
+        if(!user.getStatus().getId().equals(SystemStatusEnum.NORMAL.getId())){
             throw new UserIsBlockException();
         }
         ByteSource byteSource = ByteSource.Util.bytes(user.getSalt());

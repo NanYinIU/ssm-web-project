@@ -7,20 +7,31 @@
     <script th:src="@{/webjars/popper.js/1.15.0/umd/popper.js}"></script>
     <script th:src="@{/webjars/popper.js/1.15.0/umd/popper-utils.js}"></script>
     <link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet">
-    <script th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.js}" ></script>
+    <script th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.js}"></script>
     <link th:href="@{/webjars/font-awesome/5.9.0/css/all.min-jsf.css}" rel="stylesheet">
     <script th:src="@{/webjars/font-awesome/5.9.0/js/all.js}"></script>
     <link th:href="@{/webjars/bootstrap-table/1.15.2/dist/bootstrap-table.css}" rel="stylesheet">
     <script th:src="@{/webjars/bootstrap-table/1.15.2/dist/bootstrap-table.js}"></script>
 
+    <link th:href="@{/webjars/bootstrap-select/1.13.8/css/bootstrap-select.css}" rel="stylesheet">
+    <script th:src="@{/webjars/bootstrap-select/1.13.8/js/bootstrap-select.js}"></script>
+
     <script th:src="@{/assets/js/users.js}"></script>
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
 </head>
 <body>
-<script th:if="${session.language}=='en-US'" th:src="@{/webjars/bootstrap-table/1.15.2/dist/locale/bootstrap-table-en-US.js}"></script>
-<script th:if="${session.language}=='zh-CN'" th:src="@{/webjars/bootstrap-table/1.15.2/dist/locale/bootstrap-table-zh-CN.js}"></script>
+<script th:if="${session.language}=='en-US'"
+        th:src="@{/webjars/bootstrap-table/1.15.2/dist/locale/bootstrap-table-en-US.js}"></script>
+<script th:if="${session.language}=='zh-CN'"
+        th:src="@{/webjars/bootstrap-table/1.15.2/dist/locale/bootstrap-table-zh-CN.js}"></script>
 
 <div th:insert="~{components/navbar :: navbar-01}"></div>
-
+<input th:type="hidden" id="userId" />
+<input th:type="hidden" id="auth1">
 <div class="container-fluid">
     <div class="row">
         <div th:insert="~{components/sidebar :: sidebar}"></div>
@@ -29,6 +40,133 @@
         </main>
     </div>
 </div>
+<!--修改模态框-->
+<div class="modal fade" id="addOrModifyModal" tabindex="-1" role="dialog" aria-labelledby="addOrModifyLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addOrModifyModalLabel">编辑页面</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fas fa-times-circle"></i></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addOrModify">
+                    <div class="form-group">
+                        <label for="name">用户名</label>
+                        <input type="text" class="form-control" id="name" placeholder="姓名">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">email</label>
+                        <input type="text" class="form-control" id="email" placeholder="Paessword">
+                    </div>
+                    <div class="form-group">
+                        <label th:for="sex">sex</label>
+                        <select class="form-control selectpicker" th:id="sex" th:title="请选择.."  >
+                            <option th:each="item:${sex}" th:id="${item.id}" th:text="${item.name}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label th:for="status">状态</label>
+                        <select class="form-control selectpicker" th:id="status" th:title="请选择..">
+                            <option  th:each="item:${status}" th:id="${item.id}" th:text="${item.name}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group" >
+                        <label th:for="auth">权限</label>
+                        <select class="form-control selectpicker" th:id="auth" multiple th:title="请选择..">
+                            <option th:each="item:${auth}" th:id="${item.id}" th:text="${item.name}"></option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="addOrModifySave()">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!--查看模态框-->
+<div class="modal fade" id="checkModal" tabindex="-1" role="dialog" aria-labelledby="checkLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="checkModalLabel">查看页面</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fas fa-times-circle"></i></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm">
+                            姓名 ：
+                        </div>
+                        <div class="col-sm">
+                            <span id="check-name"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm">
+                            Email ：
+                        </div>
+                        <div class="col-sm">
+                            <span id="check-email"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm">
+                            性别 ：
+                        </div>
+                        <div class="col-sm">
+                            <span id="check-sex"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm">
+                            状态 ：
+                        </div>
+                        <div class="col-sm">
+                            <span id="check-status"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm">
+                            权限 ：
+                        </div>
+                        <div class="col-sm">
+                            <span id="check-auth"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--删除模态框-->
+<div class="modal" id="warnModal" tabindex="-1" role="dialog" aria-labelledby="warnLabel">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="warnModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fas fa-times-circle"></i></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><i class="fas fa-exclamation-triangle"></i> &nbsp; 确认删除？</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
