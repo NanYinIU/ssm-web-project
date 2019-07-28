@@ -17,6 +17,6 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Cacheable("findNotDeletedAuth")
     public List<Auth> findNotDeletedAuth() {
-        return authRepository.findDistinctByIsDeletedOrderByOrd(DeletedStatusEnum.IS_NOT_DELETED.isJudge());
+        return authRepository.findByIsDeletedOrderByOrd(DeletedStatusEnum.IS_NOT_DELETED.isJudge());
     }
 }

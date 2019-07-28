@@ -4,15 +4,14 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @Entity
 @Table(name = "resource")
 public class Resource implements Serializable {
+
+    private static final long serialVersionUID = 4850603363229927336L;
     @Id
     @Column(columnDefinition = "INT(11)")
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -41,7 +40,11 @@ public class Resource implements Serializable {
     @JoinColumn(columnDefinition = "INT(11)",name = "type_id")
     private ResourceType type;
 
-    @ManyToMany(mappedBy = "resources")
-    private Set<Auth> auths;
+    @ManyToMany(cascade = CascadeType.ALL)
+//    @JSONField(serialize = false)
+    @JoinTable(name = "r_resource_auth",
+            joinColumns = {@JoinColumn(name = "resources_id")},
+            inverseJoinColumns = @JoinColumn(name = "auth_id"))
+    private Set<Auth> auths = new HashSet<>();
 
 }

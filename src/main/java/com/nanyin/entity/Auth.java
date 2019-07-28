@@ -7,6 +7,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -15,6 +16,7 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Entity
 @Table(name = "auth")
 public class Auth implements Serializable {
@@ -38,19 +40,17 @@ public class Auth implements Serializable {
     private Date gmtModify;
 
 
-    @org.springframework.data.annotation.Transient
-    @ManyToMany
-    @JSONField(serialize = false)
+//    @org.springframework.data.annotation.Transient
+    @ManyToMany(cascade = CascadeType.ALL)
+//    @JSONField(serialize = false)
     @JoinTable(name = "r_user_auth",
             joinColumns = {@JoinColumn(name = "auth_id")},
             inverseJoinColumns = @JoinColumn(name = "users_id"))
-    private List<User> users;
+    private Set<User> users = new HashSet<>();
 
-    @ManyToMany
-    @JSONField(serialize = false)
-    @JoinTable(name = "r_resource_auth",
-            joinColumns = {@JoinColumn(name = "auth_id")},
-            inverseJoinColumns = @JoinColumn(name = "resources_id"))
-    private List<Resource> resources;
+
+    @ManyToMany(mappedBy = "auths")
+    private Set<Resource> resources;
+
 
 }

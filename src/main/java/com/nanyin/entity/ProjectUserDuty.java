@@ -33,7 +33,7 @@ public class ProjectUserDuty implements Serializable {
     private Date gmtModify;
 
     @JSONField(serialize = false)
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "r_project_user",
             joinColumns = {@JoinColumn(name = "duty_id")},
             inverseJoinColumns = @JoinColumn(name = "users_id"))

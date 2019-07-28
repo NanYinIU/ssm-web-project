@@ -58,7 +58,7 @@ public class UserServicesImpl implements UserServices {
         u.setSex(s);
         Status sta = statusRepository.getOne(status);
         u.setStatus(sta);
-        List<User> users = new ArrayList<>();
+        Set<User> users = new HashSet<>();
         users.add(u);
         Set<Auth> allByIdContains = authRepository.findDistinctByIdIn(auth);
         u.getAuths().addAll(allByIdContains);

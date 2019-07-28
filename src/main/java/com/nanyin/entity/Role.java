@@ -34,7 +34,7 @@ public class Role implements Serializable {
 
 //    @Transient
     @JSONField(serialize = false)
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "r_user_role",
             joinColumns = {@JoinColumn(name = "role_id")},
             inverseJoinColumns = {@JoinColumn(name = "users_id")})

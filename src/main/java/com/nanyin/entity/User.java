@@ -6,11 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -69,6 +70,7 @@ public class User implements Serializable {
     private Set<Role> roles;
 
     @ManyToMany(mappedBy = "users",fetch = FetchType.EAGER)
+    @NotFound(action = NotFoundAction.IGNORE)
     private Set<Auth> auths;
 
     @ManyToMany(mappedBy = "users")

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 public interface AuthRepository extends JpaRepository<Auth,Integer> {
-    List<Auth> findDistinctByIsDeletedOrderByOrd(Boolean isDeleted);
+    List<Auth> findByIsDeletedOrderByOrd(Boolean isDeleted);
 
     Set<Auth> findDistinctByIdIn(int[] arr);
 }
