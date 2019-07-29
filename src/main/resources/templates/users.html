@@ -16,6 +16,9 @@
     <link th:href="@{/webjars/bootstrap-select/1.13.8/css/bootstrap-select.css}" rel="stylesheet">
     <script th:src="@{/webjars/bootstrap-select/1.13.8/js/bootstrap-select.js}"></script>
 
+    <link th:href="@{/webjars/bootstrap-sweetalert/1.0.1/dist/sweetalert.css}" rel="stylesheet">
+    <script th:src="@{/webjars/bootstrap-sweetalert/1.0.1/dist/sweetalert.js}"></script>
+
     <script th:src="@{/assets/js/users.js}"></script>
     <script>
         $(document).ready(function () {
@@ -40,6 +43,9 @@
             <div id="toolbar">
                 <button id="add-user" class="btn btn-primary" onclick="showAddModal()">
                      添加
+                </button>
+                <button id="showAlter" class="btn btn-danger" onclick="showAlter()">
+                    测试alter
                 </button>
             </div>
             <table id="table"

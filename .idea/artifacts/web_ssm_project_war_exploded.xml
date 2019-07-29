@@ -115,6 +115,7 @@
           <element id="library" level="project" name="Maven: org.webjars.npm:bootstrap-table:1.15.2" />
           <element id="library" level="project" name="Maven: org.webjars:popper.js:1.15.0" />
           <element id="library" level="project" name="Maven: org.webjars:bootstrap-select:1.13.8" />
+          <element id="library" level="project" name="Maven: org.webjars.bower:bootstrap-sweetalert:1.0.1" />
         </element>
       </element>
       <element id="directory" name="META-INF">

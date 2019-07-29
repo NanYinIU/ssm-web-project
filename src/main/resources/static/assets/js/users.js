@@ -1,8 +1,5 @@
 $(document).ready(function () {
-    $(".tip-top").tooltip({placement: 'top'});
-    $(".tip-right").tooltip({placement: 'right'});
-    $(".tip-bottom").tooltip({placement: 'bottom'});
-    $(".tip-left").tooltip({placement: 'left'});
+
     $('#table').bootstrapTable({
         url: '/user/users',
         method: 'get',
@@ -73,6 +70,7 @@ $(document).ready(function () {
     //每次清空表单信息，因为是修改添加公用的表单
     $('#addOrModifyModal').on('hidden.bs.modal', function (e) {
         $("#userId").val("");
+        // 使用bootstrap-select 插件
         $('#sex').selectpicker("val", "");
         $('#status').selectpicker("val", "");
         $('#auth').selectpicker("val", "");
@@ -117,7 +115,7 @@ function actionFormatter(value, row, index) {
     return result;
 }
 
-// 查看模态框
+// 打开查看模态框
 var showCheckModal = function (id) {
     var url = "/user/user/" + id;
     $.ajax({
@@ -125,7 +123,7 @@ var showCheckModal = function (id) {
         url: url,
         dataType: 'json',
         success: function (res) {
-            var data = JSON.parse(res);
+            var data = JSON.parse(res).data;
             var authArr = new Array() ;
             for (var i = 0; i < data.auths.length; i++) {
                 authArr[i] = data.auths[i].name;
@@ -150,7 +148,7 @@ function showAddOrModifyModal(){
     $('#addOrModifyModal').modal('show');
 }
 
-// 修改模态框
+// 打开修改模态框
 var showModifyModal = function (id) {
     var url = "/user/user/" + id;
     $.ajax({
@@ -179,10 +177,10 @@ var showModifyModal = function (id) {
     });
 }
 
-// 删除模态框
+// 打开删除模态框
 var warnModal = function(id){
     $("#userId").val(id);
-    $("#warnModal").modal('show')
+    deleteUser();
 }
 
 // 【修改/添加】动作
@@ -190,7 +188,9 @@ var modifySave = function(){
     var id = $("#userId").val();
     var type = "POST";
     var url = "/user/user/";
+    var isAddAction = true;
     if(id !== ""){
+        isAddAction = false;
         //如果id不为空，说明时修改
         type="PUT";
         url = "/user/user/" + id;
@@ -212,13 +212,38 @@ var modifySave = function(){
         dataType: 'json',
         data: data,
         success: function (res) {
-            // var data = res.rows;
+            var data = JSON.parse(res);
+            if(data.code === 0){
+                $("#addOrModifyModal").modal("hide");
+                if(isAddAction){
+                    swal({
+                        title:"Success!",
+                        text:"添加成功！Added successfully!",
+                        type: "success",
+                        confirmButtonClass: "btn-primary",
+                        confirmButtonText: "确认",
+                    },function(){
+                        $("#table").bootstrapTable('refresh');
+                    })
+                }else{
+                    swal({
+                        title:"Success!",
+                        text:"修改成功！Modifyed successfully!",
+                        type: "success",
+                        confirmButtonClass: "btn-primary",
+                        confirmButtonText: "确认",
+                    },function(){
+                        $("#table").bootstrapTable('refresh');
+                    })
+                }
+            }else{
+                swal("保存失败，请重试!","Save failed, please try again!");
+            }
         },
         error: function (request, status, error) {
-            console.log("ajax call went wrong:" + request.responseText);
+            swal("请求出错，请重试!","Request error, please try again!");
         }
     });
-    $("#addOrModifyModal").modal("hide")
 }
 
 // 添加动作
@@ -227,14 +252,55 @@ var showAddModal = function(){
 }
 
 var deleteUser = function () {
-    var id = $("#userId").val();
-    var url = "/user/user/" + id;
-    $.ajax({
-        type: "DELETE",
-        url: url,
-        dataType: 'json',
-        success:function (e) {
-            $("#warnModal").modal("hide")
-        }
+    swal({
+        title: "是否删除用户？",
+        text: "Whether to delete the user ？",
+        type: "warning",
+        showCancelButton: true,
+        cancelButtonText:'取消',
+        closeOnConfirm: false,
+        confirmButtonText: "确认",
+        confirmButtonClass: "btn-danger",
+        showLoaderOnConfirm: true
+    }, function () {
+        setTimeout(function () {
+            var id = $("#userId").val();
+            var url = "/user/user/" + id;
+            $.ajax({
+                type: "DELETE",
+                url: url,
+                dataType: 'json',
+                success:function (e) {
+                    var data = JSON.parse(e);
+                    if(data.code === 0){
+                        swal({
+                            title:"Success!",
+                            text:"删除成功！Deleted successfully!",
+                            type: "success",
+                            confirmButtonClass: "btn-primary",
+                            confirmButtonText: "确认",
+                        },function(){
+                            $("#table").bootstrapTable('refresh');
+                        })
+                    }else{
+                        swal("删除失败，请重试!","Deleted failed, please try again!");
+                    }
+                },
+                error: function (request, status, error) {
+                    swal("请求出错，请重试!","Request error, please try again!");
+                }
+            })
+        }, 2000);
+    });
+}
+
+var showAlter = function () {
+    swal({
+        title:"Success!",
+        text:"添加成功！Added successfully!",
+        confirmButtonClass: "btn-primary",
+        confirmButtonText: "确认！confirm!",
+    },function(){
+        swal("Deleted!", "Your imaginary file has been deleted.", "success");
     })
 }

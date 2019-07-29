@@ -56,7 +56,6 @@ public class User implements Serializable {
     @JoinColumn(columnDefinition = "INT(11)",name = "status_id")
     private Status status;
 
-//    @Type(type = "org.hibernate.type.NumericBooleanType")
     @Column(name = "is_deleted",columnDefinition = "TINYINT(1)",nullable =
     false)
     private Short isDeleted;
@@ -70,6 +69,12 @@ public class User implements Serializable {
     @ManyToMany(mappedBy = "users",fetch = FetchType.EAGER)
     private Set<Role> roles;
 
+    /**
+     * manytomany 通过用户设置角色，所以用户user
+     *  为主表，添加JoinTable注解，auth表需要添加mapby
+     *  不能添加 cascade(CascadeType.ALL)，删除的时候会对从表auth
+     *  同样进行删除。
+     **/
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "r_user_auth",
             joinColumns = {@JoinColumn(name = "users_id")},
