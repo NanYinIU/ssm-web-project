@@ -11,7 +11,7 @@ public interface UserServices {
     User getUserFromUserName(String name) throws Exception;
 
 
-    List<User> findAllByIsDeleted(Integer offset,Integer limit,String order) throws Exception;
+    List<User> findAllByIsDeleted(Integer offset, Integer limit, String order, String search) throws Exception;
 
     User findUserById(Integer id) throws Exception;
 
@@ -25,7 +25,7 @@ public interface UserServices {
 
     List<Status> findNotDeletedUserStatus() throws Exception;
 
-    int countAllByIsDeleted() throws Exception;
+    int countAllByIsDeleted(String search) throws Exception;
 
     User addUser(String name, String email, int sex, int status, int[] auth) throws Exception;
 

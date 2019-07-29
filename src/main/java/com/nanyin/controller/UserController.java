@@ -153,12 +153,12 @@ public class UserController {
 
     @GetMapping("/user/users")
     @ResponseBody
-    public String users(Integer offset, Integer limit, String order) {
+    public String users(Integer offset, Integer limit, String order,String search) {
         Result result = null;
         try{
             List<User> allUsersButNotDeleted = userServices.
-                    findAllByIsDeleted(offset, limit, order);
-            Map resultMap = ResultMap.generateInstance(userServices.countAllByIsDeleted(), allUsersButNotDeleted);
+                    findAllByIsDeleted(offset, limit, order,search);
+            Map resultMap = ResultMap.generateInstance(userServices.countAllByIsDeleted(search), allUsersButNotDeleted);
             result = Result.resultInstance(resultMap);
         }catch (Exception e){
             result = Result.resultInstance(e);

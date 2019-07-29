@@ -27,11 +27,15 @@ public interface UserRepository extends JpaRepository<User,Integer> {
 //            ") from User u where u.isDeleted=0 ")
 //    Set<UserDto> findAllUsersButNotDeleted(Pageable pageable);
 
+    List<User> findAllByIsDeletedAndNameLike(Pageable pageable,short isDeleted,String search);
+
     List<User> findAllByIsDeleted(Pageable pageable,short isDeleted);
 
     User findUsersById(Integer id);
 
     int countAllByIsDeleted(short isDeleted);
+
+    int countAllByIsDeletedAndNameLike(short isDeleted,String search);
 
     @Override
     User saveAndFlush(User user);

@@ -12,7 +12,12 @@ $(document).ready(function () {
         pageSize: 10,                        //每页的记录行数
         pageList: [10, 20, 50],                //可供选择的每页行数
         sidePagination: "server",
-        sortable:"true",
+        sortStable:true,
+        // 开启search按钮 去掉字符串前后空格
+        showSearchButton:true,
+        showSearchClearButton:true,
+        trimOnSearch: true,
+        search:true,
         // dataButtonsToolbar:".buttons-toolbar",
         columns: [
             {

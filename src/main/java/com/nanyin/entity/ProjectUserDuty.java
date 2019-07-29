@@ -36,9 +36,6 @@ public class ProjectUserDuty implements Serializable {
     private Date gmtModify;
 
     @JSONField(serialize = false)
-    @ManyToMany()
-    @JoinTable(name = "r_project_user",
-            joinColumns = {@JoinColumn(name = "duty_id")},
-            inverseJoinColumns = @JoinColumn(name = "users_id"))
+    @ManyToMany(mappedBy = "projectUserDuties",fetch = FetchType.EAGER)
     private List<User> users;
 }

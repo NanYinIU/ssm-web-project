@@ -85,7 +85,11 @@ public class User implements Serializable {
     @ManyToMany(mappedBy = "users",fetch = FetchType.EAGER)
     private Set<Project> projects;
 
-    @ManyToMany(mappedBy = "users",fetch = FetchType.EAGER)
+    
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "r_project_user",
+            joinColumns = {@JoinColumn(name = "users_id")},
+            inverseJoinColumns = @JoinColumn(name = "duty_id"))
     private Set<ProjectUserDuty> projectUserDuties;
 
     public User (int id){

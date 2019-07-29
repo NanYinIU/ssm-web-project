@@ -39,8 +39,11 @@ public class UserServicesImpl implements UserServices {
 
 //    @Cacheable(value = "users",key = "#")
     @Override
-    public List<User> findAllByIsDeleted(Integer offset, Integer limit, String order) throws Exception {
-        return userRepository.findAllByIsDeleted(CommonUtil.pageRequest(offset,limit,order,"id"),(short)0);
+    public List<User> findAllByIsDeleted(Integer offset, Integer limit, String order, String search) throws Exception {
+        if(search == null || "".equals(search)){
+            return userRepository.findAllByIsDeleted(CommonUtil.pageRequest(offset,limit,order,"id"),(short)0);
+        }
+        return userRepository.findAllByIsDeletedAndNameLike(CommonUtil.pageRequest(offset,limit,order,"id"),(short)0,"%"+search+"%");
     }
 
     @Cacheable(value = "user",key = "#id")
@@ -63,8 +66,11 @@ public class UserServicesImpl implements UserServices {
     }
 
     @Override
-    public int countAllByIsDeleted() throws Exception {
-        return userRepository.countAllByIsDeleted((short)0);
+    public int countAllByIsDeleted(String search) throws Exception {
+        if(search == null || "".equals(search)){
+            return userRepository.countAllByIsDeleted((short)0);
+        }
+        return userRepository.countAllByIsDeletedAndNameLike((short)0,"%"+search+"%");
     }
 
     @Override
