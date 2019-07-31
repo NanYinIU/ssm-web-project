@@ -9,6 +9,8 @@ import javax.persistence.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -26,6 +28,7 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = -7912979476697449896L;
 
+
     @Id
     @Column(columnDefinition = "INT(11)")
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -33,11 +36,15 @@ public class User implements Serializable {
     @Column(length = 64)
     private String name;
 
+    @Size(min = 3,max = 63,message ="{user_password_length}" )
     @JSONField(serialize=false)
     @Column(length = 64)
     private String password;
+
+    @Email(message = "{user_email_format}")
     @Column(length = 64)
     private String email;
+
     @Column(length = 64)
     private String salt;
 

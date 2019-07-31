@@ -1,5 +1,30 @@
-$(document).ready(function () {
+jQuery.validator.setDefaults({
+    debug: true,
+    success: "valid"
+});
 
+$(document).ready(function () {
+    // validate
+    $("#addOrModify").validate({
+        errorClass: "invalid",
+        errorElement: "em",
+        // wrapper: "li",
+        rules: {
+            name: "required",
+            email: {
+                required: true,
+                email: true
+            },
+
+        },
+        messages: {
+            name: "Please specify your name",
+            email: {
+                required: "We need your email address to contact you",
+                email: "Your email address must be in the format of name@domain.com"
+            },
+        }
+    });
     $('#table').bootstrapTable({
         url: '/user/users',
         method: 'get',
@@ -190,6 +215,12 @@ var warnModal = function(id){
 
 // 【修改/添加】动作
 var modifySave = function(){
+    var flag = $("#addOrModify").valid();
+    if(!flag){
+        //没有通过验证
+        return;
+    }
+
     var id = $("#userId").val();
     var type = "POST";
     var url = "/user/user/";
@@ -309,3 +340,4 @@ var showAlter = function () {
         swal("Deleted!", "Your imaginary file has been deleted.", "success");
     })
 }
+
