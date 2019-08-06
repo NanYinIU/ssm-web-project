@@ -27,7 +27,9 @@
         $(document).ready(function () {
             $('[data-toggle="tooltip"]').tooltip();
         });
+
     </script>
+
 </head>
 <body>
 <script th:if="${session.language}=='en-US'"
@@ -57,6 +59,15 @@
         </main>
     </div>
 </div>
+<style>
+    em {
+        display: none;
+        width: 100%;
+        margin-top: .25rem;
+        font-size: 80%;
+        color: #dc3545;
+    }
+</style>
 <!--修改模态框-->
 <div class="modal fade" id="addOrModifyModal" tabindex="-1" role="dialog" aria-labelledby="addOrModifyLabel"
      aria-hidden="true">
@@ -70,30 +81,30 @@
             </div>
             <div class="modal-body">
                 <form id="addOrModify">
-                    <div class="form-group">
+                    <div class="form-group ">
                         <label for="name"><i class="far fa-user"></i> 用户名</label>
-                        <input type="text" class="form-control" id="name" name="name" placeholder="姓名" required>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="姓名" >
                     </div>
                     <div class="form-group">
                         <label for="email"><i class="fas fa-envelope-square"></i> email</label>
-                        <input type="email" class="form-control" id="email" name="email" placeholder="email" required>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="email" >
                     </div>
                     <div class="form-group">
                         <label th:for="sex
 "><i class="fas fa-genderless"></i> sex</label>
-                        <select class="form-control selectpicker" th:id="sex" th:name="sex"  required >
+                        <select class="form-control selectpicker" th:id="sex" th:name="sex" data-actions-box="true"  >
                             <option th:each="item:${sex}" th:id="${item.id}" th:text="${item.name}"></option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label th:for="status"><i class="fas fa-parking"></i> 状态</label>
-                        <select class="form-control selectpicker" th:id="status" th:name="status" required>
+                        <select class="form-control selectpicker" th:id="status" th:name="status" data-actions-box="true" >
                             <option  th:each="item:${status}" th:id="${item.id}" th:text="${item.name}"></option>
                         </select>
                     </div>
                     <div class="form-group" >
                         <label th:for="auth"><i class="fas fa-shield-alt"></i> 权限</label>
-                        <select class="form-control selectpicker" th:id="auth" th:name="auth" multiple  required>
+                        <select class="form-control selectpicker" id="auth" name="auth" multiple data-actions-box="true"  >
                             <option th:each="item:${auth}" th:id="${item.id}" th:text="${item.name}"></option>
                         </select>
                     </div>

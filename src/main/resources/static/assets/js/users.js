@@ -1,20 +1,23 @@
-jQuery.validator.setDefaults({
-    debug: true,
-    success: "valid"
-});
 
 $(document).ready(function () {
     // validate
     $("#addOrModify").validate({
-        errorClass: "invalid",
-        errorElement: "em",
-        // wrapper: "li",
+        errorClass: "is-invalid",
+        success:"valid",
+        ignore: [],
+        validClass:"is-valid",
+        // errorElement: "div",
+        errorElement : 'em',
+        // errorClass : 'help-block',
         rules: {
             name: "required",
             email: {
                 required: true,
                 email: true
             },
+            auth:{
+                required: true
+            }
 
         },
         messages: {
@@ -23,6 +26,9 @@ $(document).ready(function () {
                 required: "We need your email address to contact you",
                 email: "Your email address must be in the format of name@domain.com"
             },
+            auth: {
+                required: "We need your email address to contact you",
+            }
         }
     });
     $('#table').bootstrapTable({
