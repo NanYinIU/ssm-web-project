@@ -17,17 +17,23 @@ $(document).ready(function () {
             },
             auth:{
                 required: true
+            },
+            sex:{
+                required:true
             }
 
         },
         messages: {
-            name: "Please specify your name",
+            name: "名称必填",
             email: {
-                required: "We need your email address to contact you",
+                required: "邮箱字段必填",
                 email: "Your email address must be in the format of name@domain.com"
             },
             auth: {
-                required: "We need your email address to contact you",
+                required: "字段必填",
+            },
+            sex:{
+                required: "字段必填",
             }
         }
     });
@@ -102,19 +108,24 @@ $(document).ready(function () {
         //     return queryData;    //这个就是向服务端传递的参数对象
         // }
     });
-
+    // 首次加载需要进行清空
+    hiddenAddOrModifyMessage();
     //每次清空表单信息，因为是修改添加公用的表单
     $('#addOrModifyModal').on('hidden.bs.modal', function (e) {
-        $("#userId").val("");
-        // 使用bootstrap-select 插件
-        $('#sex').selectpicker("val", "");
-        $('#status').selectpicker("val", "");
-        $('#auth').selectpicker("val", "");
-        $('#name').val("");
-        $('#email').val("");
+        hiddenAddOrModifyMessage();
     })
 
 });
+
+function hiddenAddOrModifyMessage() {
+    $("#userId").val("");
+    // 使用bootstrap-select 插件
+    $('#sex').selectpicker("val", "");
+    $('#status').selectpicker("val", "");
+    $('#auth').selectpicker("val", "");
+    $('#name').val("");
+    $('#email').val("");
+}
 
 // boostrap-table自定义数据格式
 var responseHandler  = function (rec) {

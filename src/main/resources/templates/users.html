@@ -90,8 +90,7 @@
                         <input type="email" class="form-control" id="email" name="email" placeholder="email" >
                     </div>
                     <div class="form-group">
-                        <label th:for="sex
-"><i class="fas fa-genderless"></i> sex</label>
+                        <label th:for="sex"><i class="fas fa-genderless"></i> sex</label>
                         <select class="form-control selectpicker" th:id="sex" th:name="sex" data-actions-box="true"  >
                             <option th:each="item:${sex}" th:id="${item.id}" th:text="${item.name}"></option>
                         </select>
