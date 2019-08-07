@@ -8,11 +8,9 @@ import com.nanyin.repository.ProjectStatusRepository;
 import com.nanyin.repository.ProjectTypeRepository;
 import com.nanyin.services.ProjectServices;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Set;
 
 @Service

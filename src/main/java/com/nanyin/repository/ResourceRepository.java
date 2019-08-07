@@ -4,7 +4,6 @@ import com.nanyin.entity.Resource;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.Set;
 
 public interface ResourceRepository extends JpaRepository<Resource,Integer> {
     /**

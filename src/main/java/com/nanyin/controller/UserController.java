@@ -1,7 +1,6 @@
 package com.nanyin.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.nanyin.config.exceptions.NoUserAccountException;
 import com.nanyin.config.exceptions.UserIsBlockException;
 import com.nanyin.config.redis.RedisService;
@@ -9,13 +8,13 @@ import com.nanyin.config.util.Result;
 import com.nanyin.config.util.ResultMap;
 import com.nanyin.config.util.SessionUtil;
 import com.nanyin.entity.*;
-import com.nanyin.enumEntity.HttpMsgEnum;
 import com.nanyin.enumEntity.MessageEnum;
 import com.nanyin.services.AuthService;
 import com.nanyin.services.ResourceServices;
 import com.nanyin.services.UnitService;
 import com.nanyin.services.UserServices;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.util.SavedRequest;
@@ -28,7 +27,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -87,6 +85,14 @@ public class UserController {
         if (!subject.isAuthenticated()) {
             UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(username, password, rememberMe);
             try {
+                // 在登陆前如果想抛出自定义异常，需要在controller里面进行
+                User user = userServices.getUserFromUserName(username);
+                if(user == null){
+                    throw new NoUserAccountException();
+                }
+                if(user.getStatus().getId()!=1){
+                    throw new UserIsBlockException();
+                }
                 subject.login(usernamePasswordToken);
                 SessionUtil.setAttribute("username", username).setAttribute("language", language);
                 List<Resource> sidebarInfoWapper = resourceServices.getSidebarInfoWapper();
@@ -101,9 +107,12 @@ public class UserController {
                 usernamePasswordToken.clear();
                 return "signin";
             } catch (NoUserAccountException e) {
-                model.addAttribute("msg", MessageEnum.USERNAME_OR_PASSWORD_WRONG.toString());
+                model.addAttribute("msg", MessageEnum.NO_ACCOUNT.toString());
                 return "signin";
-            } catch (Exception ex) {
+            } catch (IncorrectCredentialsException in){
+                model.addAttribute("msg", MessageEnum.INCORRECT_LOGIN_INFORMATION.toString());
+                return "signin";
+            }catch (Exception ex) {
                 model.addAttribute("msg", MessageEnum.SYSTEM_ERROR.toString());
                 return "signin";
             }

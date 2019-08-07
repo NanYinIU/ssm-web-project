@@ -38,6 +38,12 @@ public class Result<T> implements Serializable {
         this.code = FAIL;
     }
 
+    public Result(String msg, int code, T data) {
+        this.msg = msg;
+        this.code = code;
+        this.data = data;
+    }
+
     public static Result resultInstance(){
         return new Result<>();
     }
@@ -56,6 +62,10 @@ public class Result<T> implements Serializable {
 
     public static Result resultInstance(Object data){
         return new Result<Object>(data);
+    }
+
+    public static Result resultInstance(int code,String message,Object data){
+        return  new Result<Object>(message,code,data);
     }
 
 

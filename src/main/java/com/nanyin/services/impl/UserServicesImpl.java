@@ -16,6 +16,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.HashSet;
 import java.util.List;
@@ -88,7 +89,7 @@ public class UserServicesImpl implements UserServices {
         userRepository.deleteById(id);
     }
 
-    private User setUserAttributes(User u, String name, String email, int sex, int status, int[] auth){
+    private @Validated User setUserAttributes(User u, String name, String email, int sex, int status, int[] auth){
         u.setName(name);
         u.setEmail(email);
         Sex s = sexRepository.getOne(sex);

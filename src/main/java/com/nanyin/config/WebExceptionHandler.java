@@ -1,35 +1,53 @@
 package com.nanyin.config;
 
+import com.alibaba.fastjson.JSON;
 import com.nanyin.config.exceptions.NoUserAccountException;
 import com.nanyin.config.exceptions.UserIsBlockException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+import com.nanyin.config.util.Result;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-@ControllerAdvice
+/**
+ * 统一异常处理
+ **/
+
+@RestControllerAdvice
 public class WebExceptionHandler {
-    @ExceptionHandler(value = UserIsBlockException.class)
-    public String handlerNoAuthException(HttpServletRequest request){
-        request.setAttribute("javax.servlet.error.status_code",402);
-        Map<String,Object> map = new HashMap<>();
-        map.put("code",401);
-        map.put("message_zh","用户已经被锁定，请联系管理员！");
-        map.put("message_en","The user has been locked, please contact the administrator!");
-        request.setAttribute("errData",map);
-        return "forward:/error";
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    /**
+     * 对hibernate validate进行统一的异常管理
+     * @Author nanyin
+     * @Date 20:06 2019-08-07
+     **/
+    @ResponseBody
+    @ExceptionHandler(value = {BindException.class, MethodArgumentNotValidException.class})
+    public String validationExceptionHandler(Exception exception) {
+        BindingResult bindResult = null;
+        if (exception instanceof BindException) {
+            bindResult = ((BindException) exception).getBindingResult();
+        } else if (exception instanceof MethodArgumentNotValidException) {
+            bindResult = ((MethodArgumentNotValidException) exception).getBindingResult();
+        }
+        String msg;
+        if (bindResult != null && bindResult.hasErrors()) {
+            msg = bindResult.getAllErrors().get(0).getDefaultMessage();
+            if (msg.contains("NumberFormatException")) {
+                msg = "参数类型错误！";
+            }
+        }else {
+            msg = "系统繁忙，请稍后重试...";
+        }
+        Result result = Result.resultInstance(-1,msg,bindResult);
+        return JSON.toJSONString(result);
     }
 
-    @ExceptionHandler(value = NoUserAccountException.class)
-    public String handlerNoUserException(HttpServletRequest request){
-        request.setAttribute("javax.servlet.error.status_code",404);
-        Map<String,Object> map = new HashMap<>();
-        map.put("code",402);
-        map.put("message_zh","系统中不存在这个用户，请联系管理员！");
-        map.put("message_en","There is no such user in the system, please contact the administrator!");
-        request.setAttribute("errData",map);
-        return "forward:/error";
-    }
 }

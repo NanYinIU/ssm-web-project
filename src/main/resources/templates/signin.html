@@ -28,9 +28,11 @@
 <div th:insert="~{components/navbar :: navbar-02}"></div>
 <form class="form-signin" th:action="@{/login}" th:method="post">
   <img class="mb-4" src="assets/img/brand/bootstrap-solid.svg" alt="" width="72" height="72">
-  <h4 class="h4 font-weight-normal" style="color: red"  th:if="${msg}=='USERNAME_OR_PASSWORD_WRONG'"> [[#{username_or_password_wrong}]] </h4>
+  <h4 class="h4 font-weight-normal" style="color: red"  th:if="${msg}=='NO_ACCOUNT'"> [[#{no_account}]] </h4>
   <h4 class="h4 font-weight-normal" style="color: red"  th:if="${msg}=='USER_HAS_BEEN_BLOCKED'"> [[#{user_has_been_blocked}]] </h4>
   <h4 class="h4 font-weight-normal" style="color: red"  th:if="${msg}=='SYSTEM_ERROR'"> [[#{system_error}]] </h4>
+  <h4 class="h4 font-weight-normal" style="color: red"  th:if="${msg}=='INCORRECT_LOGIN_INFORMATION'"> [[#{incorrect_login_information}]] </h4>
+
   <h1 class="h3 mb-3 font-weight-normal"> [[#{please_sign_in}]]</h1>
   <label for="username" class="sr-only">[[#{email_address}]]</label>
   <input type="text" name="username" id="username" class="form-control" th:placeholder="#{email_address}" required autofocus>
