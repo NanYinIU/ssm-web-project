@@ -8,6 +8,7 @@ import com.nanyin.config.util.Result;
 import com.nanyin.config.util.ResultMap;
 import com.nanyin.config.util.SessionUtil;
 import com.nanyin.entity.*;
+import com.nanyin.entity.dto.UserDto;
 import com.nanyin.enumEntity.MessageEnum;
 import com.nanyin.services.AuthService;
 import com.nanyin.services.ResourceServices;
@@ -203,15 +204,12 @@ public class UserController {
         return JSON.toJSONString(result);
     }
 
-    @PostMapping("/user/user")
+    @PostMapping(value = "/user/user",consumes = "application/json")
     @ResponseBody
-    public String addUser(String name, String email,
-                          @RequestParam(required = false) int sex,
-                          @RequestParam(required = false) int status,
-                          @RequestParam(value = "auth[]", required = false) int[] auth) {
+    public String addUser(@RequestBody UserDto user) {
         Result result = null;
         try{
-            result = Result.resultInstance(userServices.addUser(name, email, sex, status, auth));
+            result = Result.resultInstance(userServices.addUser(user));
         }catch (Exception e){
             result = Result.resultInstance(e);
         }

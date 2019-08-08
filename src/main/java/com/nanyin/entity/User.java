@@ -29,21 +29,27 @@ public class User implements Serializable {
     private static final long serialVersionUID = -7912979476697449896L;
 
 
+    @JSONField(name = "id")
     @Id
     @Column(columnDefinition = "INT(11)")
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
+
+    @JSONField(name = "name")
     @Column(length = 64)
     private String name;
 
     @Size(min = 3,max = 63,message ="{user_password_length}" )
-    @JSONField(serialize=false)
+//    @JSONField(serialize=false)
+    @JSONField(name = "password")
     @Column(length = 64)
     private String password;
 
+    @JSONField(name = "email")
     @Email(message = "{user_email_format}")
     @Column(length = 64)
     private String email;
+
 
     @Column(length = 64)
     private String salt;
@@ -52,14 +58,17 @@ public class User implements Serializable {
     private Short age;
 
     @OneToOne()
+    @JSONField(name = "sex")
     @JoinColumn(name="sex_id",columnDefinition = "INT(11)")
     private Sex sex;
 
     @OneToOne()
+    @JSONField(name = "unit")
     @JoinColumn(columnDefinition = "INT(11)",name = "unit_id")
     private Unit unit;
 
     @OneToOne()
+    @JSONField(name = "status")
     @JoinColumn(columnDefinition = "INT(11)",name = "status_id")
     private Status status;
 
@@ -73,6 +82,7 @@ public class User implements Serializable {
     @Temporal(value=TemporalType.TIMESTAMP)
     private Date gmtModify;
 
+    @JSONField(name = "roles")
     @ManyToMany(mappedBy = "users",fetch = FetchType.EAGER)
     private Set<Role> roles;
 
@@ -87,6 +97,7 @@ public class User implements Serializable {
             joinColumns = {@JoinColumn(name = "users_id")},
             inverseJoinColumns = @JoinColumn(name = "auth_id"))
     @NotFound(action = NotFoundAction.IGNORE)
+    @JSONField(name = "auths")
     private Set<Auth> auths;
 
     @ManyToMany(mappedBy = "users",fetch = FetchType.EAGER)

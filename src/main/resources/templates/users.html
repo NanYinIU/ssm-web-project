@@ -22,13 +22,9 @@
     <script th:src="@{/webjars/jquery-validation/1.19.0/jquery.validate.js}"></script>
     <script th:src="@{/webjars/jquery-validation/1.19.0/localization/messages_zh.js}"></script>
 
-    <script th:src="@{/assets/js/users.js}"></script>
-    <script>
-        $(document).ready(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        });
+    <script th:src="@{/assets/js/jquery.serializeJson.js}"></script>
 
-    </script>
+    <script th:src="@{/assets/js/users.js}"></script>
 
 </head>
 <body>
@@ -90,28 +86,36 @@
                         <input type="email" class="form-control" id="email" name="email" placeholder="email" >
                     </div>
                     <div class="form-group">
+                        <label for="password"><i class="fas fa-envelope-square"></i> password</label>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="password" >
+                    </div>
+                    <div class="form-group">
+                        <label for="age"><i class="fas fa-envelope-square"></i> age</label>
+                        <input type="text" class="form-control" id="age" name="age" placeholder="nianlin" >
+                    </div>
+                    <div class="form-group">
                         <label th:for="sex"><i class="fas fa-genderless"></i> sex</label>
-                        <select class="form-control selectpicker" th:id="sex" th:name="sex" data-actions-box="true"  >
-                            <option th:each="item:${sex}" th:id="${item.id}" th:text="${item.name}"></option>
+                        <select class="form-control selectpicker" th:id="sex" name="sex.id" data-actions-box="true"  >
+                            <option th:each="item:${sex}" th:id="${item.id}" th:text="${item.name}" th:value="${item.id}"></option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label th:for="status"><i class="fas fa-parking"></i> 状态</label>
-                        <select class="form-control selectpicker" th:id="status" th:name="status" data-actions-box="true" >
-                            <option  th:each="item:${status}" th:id="${item.id}" th:text="${item.name}"></option>
+                        <select class="form-control selectpicker" th:id="status" th:name="status.id" data-actions-box="true" >
+                            <option  th:each="item:${status}" th:id="${item.id}" th:text="${item.name}" th:value="${item.id}"></option>
                         </select>
                     </div>
                     <div class="form-group" >
                         <label th:for="auth"><i class="fas fa-shield-alt"></i> 权限</label>
-                        <select class="form-control selectpicker" id="auth" name="auth" multiple data-actions-box="true"  >
-                            <option th:each="item:${auth}" th:id="${item.id}" th:text="${item.name}"></option>
+                        <select class="form-control selectpicker" id="auth" th:name="auths" multiple data-actions-box="true"  >
+                            <option th:each="item:${auth}" th:id="${item.id}" th:text="${item.name}" th:value="${item.id}"></option>
                         </select>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" th:onclick="modifySave()">保存</button>
+                <button type="button" class="btn btn-primary" th:onclick="saveUser()">保存</button>
             </div>
         </div>
     </div>

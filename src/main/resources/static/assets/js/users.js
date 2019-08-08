@@ -1,13 +1,12 @@
-
 $(document).ready(function () {
     // validate
     $("#addOrModify").validate({
         errorClass: "is-invalid",
-        success:"valid",
+        success: "valid",
         ignore: [],
-        validClass:"is-valid",
+        validClass: "is-valid",
         // errorElement: "div",
-        errorElement : 'em',
+        errorElement: 'em',
         // errorClass : 'help-block',
         rules: {
             name: "required",
@@ -15,11 +14,14 @@ $(document).ready(function () {
                 required: true,
                 email: true
             },
-            auth:{
+            auth: {
                 required: true
             },
-            sex:{
-                required:true
+            status: {
+                required: true
+            },
+            sex: {
+                required: true
             }
 
         },
@@ -32,7 +34,10 @@ $(document).ready(function () {
             auth: {
                 required: "字段必填",
             },
-            sex:{
+            status: {
+                required: "字段必填",
+            },
+            sex: {
                 required: "字段必填",
             }
         }
@@ -49,12 +54,12 @@ $(document).ready(function () {
         pageSize: 10,                        //每页的记录行数
         pageList: [10, 20, 50],                //可供选择的每页行数
         sidePagination: "server",
-        sortStable:true,
+        sortStable: true,
         // 开启search按钮 去掉字符串前后空格
-        showSearchButton:true,
-        showSearchClearButton:true,
+        showSearchButton: true,
+        showSearchClearButton: true,
         trimOnSearch: true,
-        search:true,
+        search: true,
         // dataButtonsToolbar:".buttons-toolbar",
         columns: [
             {
@@ -128,7 +133,7 @@ function hiddenAddOrModifyMessage() {
 }
 
 // boostrap-table自定义数据格式
-var responseHandler  = function (rec) {
+var responseHandler = function (rec) {
     rec = JSON.parse(rec);
     console.log(rec);
     return {
@@ -138,7 +143,7 @@ var responseHandler  = function (rec) {
 }
 
 function standardArrayFormatter(value, row, index) {
-    var _return="";
+    var _return = "";
     if (value != null || value != undefined) {
         for (var i = 0; i < value.length; i++) {
             _return = _return + value[i].name + ",";
@@ -153,11 +158,11 @@ function standardArrayFormatter(value, row, index) {
 function actionFormatter(value, row, index) {
     var id = value;
     var result = "";
-    result += "<a class='btn btn-primary btn-sm tip-top' id='detail' href='#' role='button' data-toggle='modal' onclick='showCheckModal("+row.id+")' title='查看' >" +
+    result += "<a class='btn btn-primary btn-sm tip-top' id='detail' href='#' role='button' data-toggle='modal' onclick='showCheckModal(" + row.id + ")' title='查看' >" +
         "<i class='fas fa-search'></i></a> &nbsp;";
     result += "<a class='btn btn-primary btn-sm tip-top' id='modify' href='#' role='button'  title='修改' data-toggle='modal' onclick='showModifyModal(" + row.id + ")' data-url='/user/user/'+row.id  >" +
         "<i class='fas fa-edit'></i></a> &nbsp;";
-    result += "<a class='btn btn-primary btn-sm tip-top' id='delete' href='#' role='button'  data-toggle='modal' onclick='warnModal("+row.id+")' title='删除' ><i" +
+    result += "<a class='btn btn-primary btn-sm tip-top' id='delete' href='#' role='button'  data-toggle='modal' onclick='warnModal(" + row.id + ")' title='删除' ><i" +
         " class='fas fa-trash'></i></a> &nbsp;";
     return result;
 }
@@ -171,7 +176,7 @@ var showCheckModal = function (id) {
         dataType: 'json',
         success: function (res) {
             var data = JSON.parse(res).data;
-            var authArr = new Array() ;
+            var authArr = new Array();
             for (var i = 0; i < data.auths.length; i++) {
                 authArr[i] = data.auths[i].name;
             }
@@ -191,7 +196,7 @@ var showCheckModal = function (id) {
     });
 }
 
-function showAddOrModifyModal(){
+function showAddOrModifyModal() {
     $('#addOrModifyModal').modal('show');
 }
 
@@ -206,9 +211,9 @@ var showModifyModal = function (id) {
             res = JSON.parse(res);
             var data = res.data;
             // 修改菜单
-            $('#sex').selectpicker("val", data.sex?data.sex.name:"");
-            $('#status').selectpicker("val", data.status?data.status.name:"");
-            var authStr = new Array() ;
+            $('#sex').selectpicker("val", data.sex ? data.sex.name : "");
+            $('#status').selectpicker("val", data.status ? data.status.name : "");
+            var authStr = new Array();
             for (var i = 0; i < data.auths.length; i++) {
                 authStr[i] = data.auths[i].name;
             }
@@ -225,82 +230,110 @@ var showModifyModal = function (id) {
 }
 
 // 打开删除模态框
-var warnModal = function(id){
+var warnModal = function (id) {
     $("#userId").val(id);
     deleteUser();
 }
 
+$.fn.serializeObject = function()   {
+    var o = {};
+    var a = this.serializeArray();
+    $.each(a, function() {
+        var value = this.value;
+        var paths = this.name.split(".");
+        var len = paths.length;
+        var obj = o;
+        $.each(paths,function(i,e){
+            if(i == len-1){
+                if (obj[e]) {
+                    if (!obj[e].push) {
+                        obj[e] = [obj[e]];
+                    }
+                    obj[e].push(value || '');
+                } else {
+                    obj[e] = value || '';
+                }
+            }else{
+                if(!obj[e]){
+                    obj[e] = {};
+                }
+            }
+            obj = o[e];
+        });
+    });
+    return o;
+}
+
+
 // 【修改/添加】动作
-var modifySave = function(){
+var saveUser = function () {
     var flag = $("#addOrModify").valid();
-    if(!flag){
+    if (!flag) {
         //没有通过验证
         return;
     }
 
-    var id = $("#userId").val();
+    // var id = $("#userId").val();
     var type = "POST";
     var url = "/user/user/";
     var isAddAction = true;
-    if(id !== ""){
-        isAddAction = false;
-        //如果id不为空，说明时修改
-        type="PUT";
-        url = "/user/user/" + id;
-    }
+    // if (id !== "") {
+    //     isAddAction = false;
+    //     //如果id不为空，说明时修改
+    //     type = "PUT";
+    //     url = "/user/user/" + id;
+    // }
     // 数据
-    var name = $("#name").val();
-    var email = $("#email").val();
-    var sex = $("#sex").find("option:selected").attr('id');
-    var status = $("#status").find("option:selected").attr('id');
-    // var auth = $("#auth").find("option:selected").attr('id');
-    var auth = new Array();
-    for (var i = 0;i<$("#auth").find("option:selected").length;i++){
-        auth[i]=$("#auth").find("option:selected")[i].id;
-    }
-    var data = {'name':name,'email':email,'sex':sex,'status':status,'auth':auth};
+
+    var data = {};
+    var t = $('#addOrModify').serializeObject();
+
+    console.log(JSON.stringify(t))
+
+
     $.ajax({
         type: type,
         url: url,
         dataType: 'json',
-        data: data,
+        contentType:'application/json',
+        data: JSON.stringify(t),
         success: function (res) {
             var data = JSON.parse(res);
-            if(data.code === 0){
+            if (data.code === 0) {
                 $("#addOrModifyModal").modal("hide");
-                if(isAddAction){
+                if (isAddAction) {
                     swal({
-                        title:"Success!",
-                        text:"添加成功！Added successfully!",
+                        title: "Success!",
+                        text: "添加成功！Added successfully!",
                         type: "success",
                         confirmButtonClass: "btn-primary",
                         confirmButtonText: "确认",
-                    },function(){
+                    }, function () {
                         $("#table").bootstrapTable('refresh');
                     })
-                }else{
+                } else {
                     swal({
-                        title:"Success!",
-                        text:"修改成功！Modifyed successfully!",
+                        title: "Success!",
+                        text: "修改成功！Modifyed successfully!",
                         type: "success",
                         confirmButtonClass: "btn-primary",
                         confirmButtonText: "确认",
-                    },function(){
+                    }, function () {
                         $("#table").bootstrapTable('refresh');
                     })
                 }
-            }else{
-                swal("保存失败，请重试!","Save failed, please try again!");
+            } else {
+                swal("保存失败，请重试!", "Save failed, please try again!");
             }
         },
         error: function (request, status, error) {
-            swal("请求出错，请重试!","Request error, please try again!");
+            swal("请求出错，请重试!", "Request error, please try again!");
         }
     });
 }
 
 // 添加动作
-var showAddModal = function(){
+var showAddModal = function () {
     showAddOrModifyModal();
 }
 
@@ -310,7 +343,7 @@ var deleteUser = function () {
         text: "Whether to delete the user ？",
         type: "warning",
         showCancelButton: true,
-        cancelButtonText:'取消',
+        cancelButtonText: '取消',
         closeOnConfirm: false,
         confirmButtonText: "确认",
         confirmButtonClass: "btn-danger",
@@ -323,24 +356,24 @@ var deleteUser = function () {
                 type: "DELETE",
                 url: url,
                 dataType: 'json',
-                success:function (e) {
+                success: function (e) {
                     var data = JSON.parse(e);
-                    if(data.code === 0){
+                    if (data.code === 0) {
                         swal({
-                            title:"Success!",
-                            text:"删除成功！Deleted successfully!",
+                            title: "Success!",
+                            text: "删除成功！Deleted successfully!",
                             type: "success",
                             confirmButtonClass: "btn-primary",
                             confirmButtonText: "确认",
-                        },function(){
+                        }, function () {
                             $("#table").bootstrapTable('refresh');
                         })
-                    }else{
-                        swal("删除失败，请重试!","Deleted failed, please try again!");
+                    } else {
+                        swal("删除失败，请重试!", "Deleted failed, please try again!");
                     }
                 },
                 error: function (request, status, error) {
-                    swal("请求出错，请重试!","Request error, please try again!");
+                    swal("请求出错，请重试!", "Request error, please try again!");
                 }
             })
         }, 2000);
@@ -349,11 +382,11 @@ var deleteUser = function () {
 
 var showAlter = function () {
     swal({
-        title:"Success!",
-        text:"添加成功！Added successfully!",
+        title: "Success!",
+        text: "添加成功！Added successfully!",
         confirmButtonClass: "btn-primary",
         confirmButtonText: "确认！confirm!",
-    },function(){
+    }, function () {
         swal("Deleted!", "Your imaginary file has been deleted.", "success");
     })
 }

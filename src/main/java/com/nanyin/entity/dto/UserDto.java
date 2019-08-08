@@ -4,6 +4,7 @@ import com.nanyin.entity.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.util.Collection;
 import java.util.Date;
@@ -16,6 +17,7 @@ public class UserDto {
     private int id;
     private String name;
     private String email;
+    private String password;
 
     private short age;
 
@@ -29,12 +31,12 @@ public class UserDto {
 
     private Date gmtModify;
 
-    private Collection<Role> roles;
-//
-    private Collection<Auth> auths;
-//
-    private Collection<Project> projects;
-//
-    private Collection<ProjectUserDuty> projectUserDuties;
+    private int[] roles;
+
+    private int[] auths;
+
+    private int[] projects;
+
+    private int[] projectUserDuties;
 
 }

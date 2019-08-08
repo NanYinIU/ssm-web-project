@@ -5,6 +5,7 @@ import com.nanyin.entity.Auth;
 import com.nanyin.entity.Sex;
 import com.nanyin.entity.Status;
 import com.nanyin.entity.User;
+import com.nanyin.entity.dto.UserDto;
 import com.nanyin.enumEntity.DeletedStatusEnum;
 import com.nanyin.repository.AuthRepository;
 import com.nanyin.repository.SexRepository;
@@ -75,13 +76,25 @@ public class UserServicesImpl implements UserServices {
     }
 
     @Override
-    public User addUser(String name, String email, int sex, int status, int[] auth) throws Exception {
-        User u = new User();
-        u = setUserAttributes(u,name,email,sex,status,auth);
-        // 其他默认属性
-        u.setIsDeleted((short)0);
-        u.setSalt("1");
-        return userRepository.save(u);
+    public User addUser(UserDto user) throws Exception {
+        return conversionToUser(user);
+    }
+
+    private User conversionToUser(UserDto userDto){
+        User user = new User();
+        user.setName(userDto.getName());
+        user.setId(userDto.getId());
+        user.setPassword(userDto.getPassword());
+        user.setEmail(userDto.getEmail());
+        user.setAge(userDto.getAge());
+        user.setSex(userDto.getSex());
+        user.setUnit(userDto.getUnit());
+        user.setStatus(userDto.getStatus());
+        if(userDto.getAuths() != null){
+            Set<Auth> allByIdContains =  authRepository.findDistinctByIdIn((userDto.getAuths()));
+            user.setAuths(allByIdContains);
+        }
+        return user;
     }
 
     @Override

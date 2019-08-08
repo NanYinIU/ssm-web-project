@@ -3,6 +3,7 @@ package com.nanyin.services;
 import com.nanyin.entity.Sex;
 import com.nanyin.entity.Status;
 import com.nanyin.entity.User;
+import com.nanyin.entity.dto.UserDto;
 
 import java.util.List;
 
@@ -27,7 +28,7 @@ public interface UserServices {
 
     int countAllByIsDeleted(String search) throws Exception;
 
-    User addUser(String name, String email, int sex, int status, int[] auth) throws Exception;
+    User addUser(UserDto user) throws Exception;
 
     void deleteUser(Integer id) throws Exception;
 }
