@@ -2,19 +2,25 @@ $(document).ready(function () {
     // select
     $('select').select2({
         theme: 'bootstrap4',
-    });
-    $("select").change(function(){
-        $("#addOrModify").valid();
+    }).change(function(){
+        $("#add").valid();
     });
     // validate
-    $("#addOrModify").validate({
+    $("#add").validate({
         errorClass: "is-invalid",
         success: "valid",
         ignore: "",
         validClass: "is-valid",
-        // errorElement: "div",
         errorElement: 'em',
-        // errorClass : 'help-block',
+        errorPlacement: function(error, element) {
+            var elem = $(element);
+            if (elem.hasClass("select2-hidden-accessible")) {
+                element = elem.next();
+                error.insertAfter(element);
+            } else {
+                error.insertAfter(element);
+            }
+        },
         rules: {
             name: "required",
             email: {
@@ -24,7 +30,6 @@ $(document).ready(function () {
             auths: "required",
             status: "required",
             sex: "required"
-
         },
         messages: {
             name: "名称必填",
@@ -43,6 +48,7 @@ $(document).ready(function () {
             }
         },
     });
+
     $('#table').bootstrapTable({
         url: '/user/users',
         method: 'get',
@@ -114,24 +120,8 @@ $(document).ready(function () {
         //     return queryData;    //这个就是向服务端传递的参数对象
         // }
     });
-    // 首次加载需要进行清空
-    hiddenAddOrModifyMessage();
-    //每次清空表单信息，因为是修改添加公用的表单
-    $('#addOrModifyModal').on('hidden.bs.modal', function (e) {
-        hiddenAddOrModifyMessage();
-    })
 
 });
-
-function hiddenAddOrModifyMessage() {
-    $("#userId").val("");
-    // 使用bootstrap-select 插件
-    $("#sex").val("");
-    $("#status").val("");
-    $("#auth").val("");
-    $('#name').val("");
-    $('#email').val("");
-}
 
 // boostrap-table自定义数据格式
 var responseHandler = function (rec) {
@@ -197,8 +187,8 @@ var showCheckModal = function (id) {
     });
 }
 
-function showAddOrModifyModal() {
-    $('#addOrModifyModal').modal('show');
+function showAddModal() {
+    $('#addModal').modal('show');
 }
 
 // 打开修改模态框
@@ -211,18 +201,18 @@ var showModifyModal = function (id) {
         success: function (res) {
             res = JSON.parse(res);
             var data = res.data;
-            // 修改菜单
-            $('#sex').selectpicker("val", data.sex ? data.sex.name : "");
-            $('#status').selectpicker("val", data.status ? data.status.name : "");
+            // 修改菜单 先赋值
+            $("#modify-sex").select2("val", [data.sex.name]);
+            $("#modify-status").select2("val", [data.status.name]);
             var authStr = new Array();
             for (var i = 0; i < data.auths.length; i++) {
                 authStr[i] = data.auths[i].name;
             }
-            $('#auth').selectpicker("val", authStr);
+            $('#modify-auth').select2("val", authStr);
             $("#userId").val(data.id);
-            $('#name').val(data.name);
-            $('#email').val(data.email);
-            showAddOrModifyModal();
+            $('#modify-name').val(data.name);
+            $('#modify-email').val(data.email);
+            $("#modifyModal").modal('show');
         },
         error: function (request, status, error) {
             console.log("ajax call went wrong:" + request.responseText);
@@ -265,32 +255,18 @@ $.fn.serializeObject = function()   {
     return o;
 }
 
-
-// 【修改/添加】动作
-var saveUser = function () {
-    var flag = $("#addOrModify").valid();
+// 【修改】动作
+var addUser = function () {
+    var flag = $("#add").valid();
     if (!flag) {
         //没有通过验证
         return;
     }
-
-    // var id = $("#userId").val();
     var type = "POST";
     var url = "/user/user/";
     var isAddAction = true;
-    // if (id !== "") {
-    //     isAddAction = false;
-    //     //如果id不为空，说明时修改
-    //     type = "PUT";
-    //     url = "/user/user/" + id;
-    // }
     // 数据
-
-    var data = {};
-    var t = $('#addOrModify').serializeObject();
-
-    console.log(JSON.stringify(t))
-
+    var t = $('#add').serializeObject();
 
     $.ajax({
         type: type,
@@ -301,7 +277,7 @@ var saveUser = function () {
         success: function (res) {
             var data = JSON.parse(res);
             if (data.code === 0) {
-                $("#addOrModifyModal").modal("hide");
+                $("#addModal").modal("hide");
                 if (isAddAction) {
                     swal({
                         title: "Success!",
@@ -333,11 +309,7 @@ var saveUser = function () {
     });
 }
 
-// 添加动作
-var showAddModal = function () {
-    showAddOrModifyModal();
-}
-
+// 删除
 var deleteUser = function () {
     swal({
         title: "是否删除用户？",
@@ -381,14 +353,5 @@ var deleteUser = function () {
     });
 }
 
-var showAlter = function () {
-    swal({
-        title: "Success!",
-        text: "添加成功！Added successfully!",
-        confirmButtonClass: "btn-primary",
-        confirmButtonText: "确认！confirm!",
-    }, function () {
-        swal("Deleted!", "Your imaginary file has been deleted.", "success");
-    })
-}
+
 

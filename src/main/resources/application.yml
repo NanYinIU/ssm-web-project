@@ -1,0 +1,30 @@
+spring:
+    datasource:
+        driver-class-name: com.mysql.jdbc.Driver
+        druid:
+            initial-size: 5
+            max-active: 20
+            max-wait: 60000
+            stat-view-servlet:
+                login-password: admin
+                login-username: admin
+        password: 123456
+        url: jdbc:mysql://127.0.0.1:3306/web?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+        username: root
+    jpa:
+        database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+        show-sql: true
+#        创建数据库
+#        hibernate:
+#            ddl-auto: create
+#   国际化Resource目录设置
+    messages:
+        basename: i18n/message,i18n/validation
+#   redis配置
+    redis:
+        database: 0
+        host: localhost
+        port: 6379
+#   开发时禁用cache
+    thymeleaf:
+        cache: false

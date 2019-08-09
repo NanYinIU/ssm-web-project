@@ -48,9 +48,6 @@
                 <button id="add-user" class="btn btn-primary" onclick="showAddModal()">
                      添加
                 </button>
-                <button id="showAlter" class="btn btn-danger" onclick="showAlter()">
-                    测试alter
-                </button>
             </div>
             <table id="table"
                    data-toolbar="#toolbar"
@@ -67,19 +64,20 @@
         color: #dc3545;
     }
 </style>
-<!--修改模态框-->
-<div class="modal fade" id="addOrModifyModal" tabindex="-1" role="dialog" aria-labelledby="addOrModifyLabel"
+
+<!--添加模态框-->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addLabel"
      aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addOrModifyModalLabel">编辑页面</h5>
+                <h5 class="modal-title" id="addModalLabel">编辑页面</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true"><i class="fas fa-times-circle"></i></span>
                 </button>
             </div>
             <div class="modal-body">
-                <form id="addOrModify">
+                <form id="add">
                     <div class="form-group ">
                         <label for="name"><i class="far fa-user"></i> 用户名</label>
                         <input type="text" class="form-control" id="name" name="name" placeholder="姓名" >
@@ -111,7 +109,60 @@
                     <div class="form-group" >
                         <label th:for="auth"><i class="fas fa-shield-alt"></i> 权限</label>
                         <select class="form-control " id="auth" th:name="auths" multiple="multiple">
-                            <option th:each="auth:${auth}" th:text="${auth.name}" ></option>
+                            <option th:each="item:${auth}" th:text="${item.name}" ></option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" th:onclick="addUser()">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--修改模态框-->
+<div class="modal fade" id="modifyModal" tabindex="-1" role="dialog" aria-labelledby="modifyLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modifyModalLabel">编辑页面</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fas fa-times-circle"></i></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="modify">
+                    <div class="form-group ">
+                        <label for="name"><i class="far fa-user"></i> 用户名</label>
+                        <input type="text" class="form-control" id="modify-name" name="name" placeholder="姓名" >
+                    </div>
+                    <div class="form-group">
+                        <label for="email"><i class="fas fa-envelope-square"></i> email</label>
+                        <input type="email" class="form-control" id="modify-email" name="email" placeholder="email" >
+                    </div>
+                    <div class="form-group">
+                        <label for="age"><i class="fas fa-envelope-square"></i> age</label>
+                        <input type="text" class="form-control" id="modify-age" name="age" placeholder="nianlin" >
+                    </div>
+                    <div class="form-group">
+                        <label th:for="sex"><i class="fas fa-genderless"></i> sex</label>
+                        <select class="form-control " th:id="modify-sex" name="sex"  >
+                            <option th:each="sex:${sex}"  th:text="${sex.name}" ></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label th:for="status"><i class="fas fa-parking"></i> 状态</label>
+                        <select class="form-control " th:id="modify-status" th:name="status" >
+                            <option th:each="item:${status}" th:text="${item.name}" ></option>
+                        </select>
+                    </div>
+                    <div class="form-group" >
+                        <label th:for="auth"><i class="fas fa-shield-alt"></i> 权限</label>
+                        <select class="form-control " id="modify-auth" th:name="auths" multiple="multiple">
+                            <option th:each="item:${auth}" th:text="${item.name}" ></option>
                         </select>
                     </div>
                 </form>
