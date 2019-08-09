@@ -21,11 +21,11 @@ public class UserDto {
 
     private short age;
 
-    private Sex sex;
+    private int sex;
 
-    private Unit unit;
+    private int unit;
 
-    private Status status;
+    private int status;
 
     private Date gmtCreate;
 

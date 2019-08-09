@@ -117,6 +117,8 @@
           <element id="library" level="project" name="Maven: org.webjars:bootstrap-select:1.13.8" />
           <element id="library" level="project" name="Maven: org.webjars.bower:bootstrap-sweetalert:1.0.1" />
           <element id="library" level="project" name="Maven: org.webjars:jquery-validation:1.19.0" />
+          <element id="library" level="project" name="Maven: org.webjars:select2:4.0.8" />
+          <element id="library" level="project" name="Maven: org.webjars.npm:ttskch__select2-bootstrap4-theme:1.2.3" />
         </element>
       </element>
       <element id="directory" name="META-INF">

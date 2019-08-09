@@ -30,4 +30,5 @@ public class Sex implements Serializable {
     private Date gmtCreate;
     @Temporal(value=TemporalType.TIMESTAMP)
     private Date gmtModify;
+
 }

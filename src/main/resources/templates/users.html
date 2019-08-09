@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>用户管理</title>
+
     <script th:src="@{/webjars/jquery/3.4.1/jquery.js}"></script>
     <script th:src="@{/webjars/popper.js/1.15.0/umd/popper.js}"></script>
     <script th:src="@{/webjars/popper.js/1.15.0/umd/popper-utils.js}"></script>
@@ -13,8 +14,8 @@
     <link th:href="@{/webjars/bootstrap-table/1.15.2/dist/bootstrap-table.css}" rel="stylesheet">
     <script th:src="@{/webjars/bootstrap-table/1.15.2/dist/bootstrap-table.js}"></script>
 
-    <link th:href="@{/webjars/bootstrap-select/1.13.8/css/bootstrap-select.css}" rel="stylesheet">
-    <script th:src="@{/webjars/bootstrap-select/1.13.8/js/bootstrap-select.js}"></script>
+    <!--<link th:href="@{/webjars/bootstrap-select/1.13.8/css/bootstrap-select.css}" rel="stylesheet">-->
+    <!--<script th:src="@{/webjars/bootstrap-select/1.13.8/js/bootstrap-select.js}"></script>-->
 
     <link th:href="@{/webjars/bootstrap-sweetalert/1.0.1/dist/sweetalert.css}" rel="stylesheet">
     <script th:src="@{/webjars/bootstrap-sweetalert/1.0.1/dist/sweetalert.js}"></script>
@@ -22,8 +23,10 @@
     <script th:src="@{/webjars/jquery-validation/1.19.0/jquery.validate.js}"></script>
     <script th:src="@{/webjars/jquery-validation/1.19.0/localization/messages_zh.js}"></script>
 
-    <script th:src="@{/assets/js/jquery.serializeJson.js}"></script>
+    <link th:href="@{/webjars/select2/4.0.8/css/select2.css}" rel="stylesheet">
+    <script th:src="@{/webjars/select2/4.0.8/js/select2.full.js}"></script>
 
+    <link th:href="@{/webjars/ttskch__select2-bootstrap4-theme/1.2.3/dist/select2-bootstrap4.css}" rel="stylesheet">
     <script th:src="@{/assets/js/users.js}"></script>
 
 </head>
@@ -95,20 +98,20 @@
                     </div>
                     <div class="form-group">
                         <label th:for="sex"><i class="fas fa-genderless"></i> sex</label>
-                        <select class="form-control selectpicker" th:id="sex" name="sex.id" data-actions-box="true"  >
-                            <option th:each="item:${sex}" th:id="${item.id}" th:text="${item.name}" th:value="${item.id}"></option>
+                        <select class="form-control " th:id="sex" name="sex"  >
+                            <option th:each="sex:${sex}"  th:text="${sex.name}" ></option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label th:for="status"><i class="fas fa-parking"></i> 状态</label>
-                        <select class="form-control selectpicker" th:id="status" th:name="status.id" data-actions-box="true" >
-                            <option  th:each="item:${status}" th:id="${item.id}" th:text="${item.name}" th:value="${item.id}"></option>
+                        <select class="form-control " th:id="status" th:name="status" >
+                            <option th:each="status:${status}" th:text="${status.name}" ></option>
                         </select>
                     </div>
                     <div class="form-group" >
                         <label th:for="auth"><i class="fas fa-shield-alt"></i> 权限</label>
-                        <select class="form-control selectpicker" id="auth" th:name="auths" multiple data-actions-box="true"  >
-                            <option th:each="item:${auth}" th:id="${item.id}" th:text="${item.name}" th:value="${item.id}"></option>
+                        <select class="form-control " id="auth" th:name="auths" multiple="multiple">
+                            <option th:each="auth:${auth}" th:text="${auth.name}" ></option>
                         </select>
                     </div>
                 </form>

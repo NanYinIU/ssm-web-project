@@ -87,9 +87,9 @@ public class UserServicesImpl implements UserServices {
         user.setPassword(userDto.getPassword());
         user.setEmail(userDto.getEmail());
         user.setAge(userDto.getAge());
-        user.setSex(userDto.getSex());
-        user.setUnit(userDto.getUnit());
-        user.setStatus(userDto.getStatus());
+        user.setSex(sexRepository.getOne(userDto.getSex()));
+//        user.setUnit(u.getUnit());
+        user.setStatus(statusRepository.getOne(userDto.getStatus()));
         if(userDto.getAuths() != null){
             Set<Auth> allByIdContains =  authRepository.findDistinctByIdIn((userDto.getAuths()));
             user.setAuths(allByIdContains);

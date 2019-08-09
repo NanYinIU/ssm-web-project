@@ -1,9 +1,16 @@
 $(document).ready(function () {
+    // select
+    $('select').select2({
+        theme: 'bootstrap4',
+    });
+    $("select").change(function(){
+        $("#addOrModify").valid();
+    });
     // validate
     $("#addOrModify").validate({
         errorClass: "is-invalid",
         success: "valid",
-        ignore: [],
+        ignore: "",
         validClass: "is-valid",
         // errorElement: "div",
         errorElement: 'em',
@@ -14,15 +21,9 @@ $(document).ready(function () {
                 required: true,
                 email: true
             },
-            auth: {
-                required: true
-            },
-            status: {
-                required: true
-            },
-            sex: {
-                required: true
-            }
+            auths: "required",
+            status: "required",
+            sex: "required"
 
         },
         messages: {
@@ -31,7 +32,7 @@ $(document).ready(function () {
                 required: "邮箱字段必填",
                 email: "Your email address must be in the format of name@domain.com"
             },
-            auth: {
+            auths: {
                 required: "字段必填",
             },
             status: {
@@ -40,7 +41,7 @@ $(document).ready(function () {
             sex: {
                 required: "字段必填",
             }
-        }
+        },
     });
     $('#table').bootstrapTable({
         url: '/user/users',
@@ -125,9 +126,9 @@ $(document).ready(function () {
 function hiddenAddOrModifyMessage() {
     $("#userId").val("");
     // 使用bootstrap-select 插件
-    $('#sex').selectpicker("val", "");
-    $('#status').selectpicker("val", "");
-    $('#auth').selectpicker("val", "");
+    $("#sex").val("");
+    $("#status").val("");
+    $("#auth").val("");
     $('#name').val("");
     $('#email').val("");
 }

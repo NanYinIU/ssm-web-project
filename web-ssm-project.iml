@@ -179,5 +179,7 @@
     <orderEntry type="library" name="Maven: org.webjars:bootstrap-select:1.13.8" level="project" />
     <orderEntry type="library" name="Maven: org.webjars.bower:bootstrap-sweetalert:1.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.webjars:jquery-validation:1.19.0" level="project" />
+    <orderEntry type="library" name="Maven: org.webjars:select2:4.0.8" level="project" />
+    <orderEntry type="library" name="Maven: org.webjars.npm:ttskch__select2-bootstrap4-theme:1.2.3" level="project" />
   </component>
 </module>
