@@ -24,13 +24,14 @@
             <div class="dropdown show pr-3" >
                 <a href="#" class="nav-link pr-0 leading-none " data-toggle="dropdown" id="dropdownMenuLink" aria-expanded="false">
                     <!--<span class="text-default ">[[${session.username}]]</span>-->
-                    <span class="avatar pr-2  " style="background-image: url('./assets/img/brand/bootstrap-social-logo.png')"></span>
+                    <span class="avatar pr-2  " style="background-image: url('/assets/img/brand/bootstrap-social-logo.png')"></span>
                 </a>
 
                 <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow "
                      aria-labelledby="dropdownMenuLink">
                     <a class="dropdown-item disabled" href="#"> <i class="fa fa-user"></i> &nbsp; [[${session.username}]]</a>
                     <a class="dropdown-item" href="#"> <i class="fa fa-info-circle"></i> &nbsp; 用户信息</a>
+                    <a class="dropdown-item" href="#"> <i class="fa fa-info-circle"></i> &nbsp; 修改密码</a>
                     <a class="dropdown-item" th:href="@{/logout}" ><i class="fa fa-sign-out"></i> &nbsp; logout </a>
                 </div>
             </div>

@@ -1,52 +1,9 @@
 $(document).ready(function () {
-    // select
+    // select2 使用bootstrap css样式
     $('select').select2({
         theme: 'bootstrap4',
     }).change(function(){
         $("#add").valid();
-    });
-    // validate
-    $("#add").validate({
-        errorClass: "is-invalid",
-        success: "valid",
-        ignore: "",
-        validClass: "is-valid",
-        errorElement: 'em',
-        errorPlacement: function(error, element) {
-            var elem = $(element);
-            if (elem.hasClass("select2-hidden-accessible")) {
-                element = elem.next();
-                error.insertAfter(element);
-            } else {
-                error.insertAfter(element);
-            }
-        },
-        rules: {
-            name: "required",
-            email: {
-                required: true,
-                email: true
-            },
-            auths: "required",
-            status: "required",
-            sex: "required"
-        },
-        messages: {
-            name: "名称必填",
-            email: {
-                required: "邮箱字段必填",
-                email: "Your email address must be in the format of name@domain.com"
-            },
-            auths: {
-                required: "字段必填",
-            },
-            status: {
-                required: "字段必填",
-            },
-            sex: {
-                required: "字段必填",
-            }
-        },
     });
 
     $('#table').bootstrapTable({
@@ -66,9 +23,13 @@ $(document).ready(function () {
         showSearchButton: true,
         showSearchClearButton: true,
         trimOnSearch: true,
+        // checkboxHeader: true,
         search: true,
         // dataButtonsToolbar:".buttons-toolbar",
         columns: [
+            {
+                checkbox:true
+            },
             {
                 title: 'id',
                 align: 'center',
@@ -123,10 +84,23 @@ $(document).ready(function () {
 
 });
 
+// 重置密码
+var refreshPassword = function () {
+    var rows = $("#table").bootstrapTable('getSelections');
+    var ids = [];
+    rows.forEach(function (currentValue,index,arr) {
+        var id = currentValue.id
+        ids.push(id);
+    })
+    console.log(ids);
+    // 对选中用户id传入后台进行密码重置。
+
+}
+
 // boostrap-table自定义数据格式
 var responseHandler = function (rec) {
     rec = JSON.parse(rec);
-    console.log(rec);
+    // console.log(rec);
     return {
         "total": rec.data.total,//总页数
         "rows": rec.data.rows   //数据
@@ -226,34 +200,7 @@ var warnModal = function (id) {
     deleteUser();
 }
 
-$.fn.serializeObject = function()   {
-    var o = {};
-    var a = this.serializeArray();
-    $.each(a, function() {
-        var value = this.value;
-        var paths = this.name.split(".");
-        var len = paths.length;
-        var obj = o;
-        $.each(paths,function(i,e){
-            if(i == len-1){
-                if (obj[e]) {
-                    if (!obj[e].push) {
-                        obj[e] = [obj[e]];
-                    }
-                    obj[e].push(value || '');
-                } else {
-                    obj[e] = value || '';
-                }
-            }else{
-                if(!obj[e]){
-                    obj[e] = {};
-                }
-            }
-            obj = o[e];
-        });
-    });
-    return o;
-}
+
 
 // 【修改】动作
 var addUser = function () {

@@ -110,6 +110,10 @@ public class User implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "duty_id"))
     private Set<ProjectUserDuty> projectUserDuties;
 
+    @OneToOne
+    @JoinColumn(columnDefinition = "INT(11)",name = "person_id")
+    private Person person;
+
     public User (int id){
         this.id = id;
     }

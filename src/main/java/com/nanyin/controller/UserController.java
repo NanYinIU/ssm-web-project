@@ -1,12 +1,11 @@
 package com.nanyin.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Maps;
 import com.nanyin.config.exceptions.NoUserAccountException;
 import com.nanyin.config.exceptions.UserIsBlockException;
 import com.nanyin.config.redis.RedisService;
-import com.nanyin.config.util.Result;
-import com.nanyin.config.util.ResultMap;
-import com.nanyin.config.util.SessionUtil;
+import com.nanyin.config.util.*;
 import com.nanyin.entity.*;
 import com.nanyin.entity.dto.UserDto;
 import com.nanyin.enumEntity.MessageEnum;
@@ -28,6 +27,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -177,15 +177,17 @@ public class UserController {
     }
 
     @GetMapping("/user/user/{id}")
-    @ResponseBody
-    public String getUser(@PathVariable(name = "id") Integer id) {
+    public String getUser(@PathVariable(name = "id") Integer id,Model model) {
         Result result = null;
         try{
-            result = Result.resultInstance(userServices.findUserById(id));
+            HashMap<String, Object> data = Maps.newHashMap();
+            data.put("user",userServices.findUserById(id));
+            result = Result.resultInstance(data);
         }catch (Exception e){
             result = Result.resultInstance(e);
         }
-        return JSON.toJSONString(result);
+        model.addAttribute(result);
+        return "userInfo";
     }
 
 

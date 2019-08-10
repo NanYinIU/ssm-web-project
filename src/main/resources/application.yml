@@ -14,9 +14,10 @@ spring:
     jpa:
         database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
         show-sql: true
-#        创建数据库
+        hibernate:
+            ddl-auto: update
+    #        创建数据库
 #        hibernate:
-#            ddl-auto: create
 #   国际化Resource目录设置
     messages:
         basename: i18n/message,i18n/validation

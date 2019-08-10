@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>social form</title>
+</head>
+<body>
+    <div th:fragment="social-form">
+        <div>
+            // 循环所有的在 s_social_type 表里存在的社交方式全部展示出来。
+            <div class="form-group">
+                <label for="modify-age"><i class="fas fa-envelope-square"></i> 年龄</label>
+                <input type="text" class="form-control" id="modify-age" name="age" placeholder="年龄" >
+            </div>
+        </div>
+    </div>
+</body>
+</html>

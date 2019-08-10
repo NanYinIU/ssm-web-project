@@ -17,6 +17,27 @@
     user-select: none;
 }
 
+.avatar-lg {
+    width: 3rem;
+    height: 3rem;
+    line-height: 3rem;
+    font-size: 1.25rem;
+}
+
+.avatar-xl {
+    width: 4rem;
+    height: 4rem;
+    line-height: 4rem;
+    font-size: 1.75rem;
+}
+
+.avatar-xxl {
+    width: 5rem;
+    height: 5rem;
+    line-height: 5rem;
+    font-size: 2rem;
+}
+
 .text-default {
     color: #495057 !important;
 }
