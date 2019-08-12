@@ -4,6 +4,7 @@ import com.nanyin.entity.Sex;
 import com.nanyin.entity.Status;
 import com.nanyin.entity.User;
 import com.nanyin.entity.dto.UserDto;
+import com.nanyin.entity.dto.UserInfoDto;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public interface UserServices {
 
     User findUserById(Integer id) throws Exception;
 
-    User updateUser(Integer id,String name,String email,int sex,int status, int[] auth) throws Exception;
+    User updateUser(Integer id, UserInfoDto userInfoDto) throws Exception;
 
     /*
      * 下面是用户表的标准属性信息

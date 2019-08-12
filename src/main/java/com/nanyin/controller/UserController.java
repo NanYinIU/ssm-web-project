@@ -8,11 +8,9 @@ import com.nanyin.config.redis.RedisService;
 import com.nanyin.config.util.*;
 import com.nanyin.entity.*;
 import com.nanyin.entity.dto.UserDto;
+import com.nanyin.entity.dto.UserInfoDto;
 import com.nanyin.enumEntity.MessageEnum;
-import com.nanyin.services.AuthService;
-import com.nanyin.services.ResourceServices;
-import com.nanyin.services.UnitService;
-import com.nanyin.services.UserServices;
+import com.nanyin.services.*;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -42,6 +40,8 @@ public class UserController {
     UserServices userServices;
     @Autowired
     RedisService redisService;
+    @Autowired
+    SocialMediaServices socialMediaServices;
 
 //    登陆注册部分开始 -------------------------------------------------------
 
@@ -181,7 +181,9 @@ public class UserController {
         Result result = null;
         try{
             HashMap<String, Object> data = Maps.newHashMap();
+            data.put("sex",userServices.findNotDeletedUserSex());
             data.put("user",userServices.findUserById(id));
+            data.put("socialType",socialMediaServices.getSupportSocialType());
             result = Result.resultInstance(data);
         }catch (Exception e){
             result = Result.resultInstance(e);
@@ -193,12 +195,18 @@ public class UserController {
 
     @PutMapping("/user/user/{id}")
     @ResponseBody
-    public String putUser(@PathVariable(name = "id") Integer id, String name, String email,
-                              @RequestParam(required = false) int sex, @RequestParam(required = false) int status,
-                              @RequestParam(value = "auth[]", required = false) int[] auth) {
+    public String putUser(@PathVariable(name = "id") Integer id, @RequestBody UserInfoDto userInfoDto,HttpServletRequest request) {
         Result result = null;
         try{
-            result = Result.resultInstance(userServices.updateUser(id, name, email, sex, status, auth));
+            String[] socialMedia = {};
+            List<SocialType> supportSocialType = socialMediaServices.getSupportSocialType();
+            for (int i = 0; i < supportSocialType.size(); i++) {
+                String name = supportSocialType.get(i).getName();
+                socialMedia[i] = request.getParameter("modify-"+name);
+            }
+            userInfoDto.setSocialMedia(socialMedia);
+            userServices.updateUser(id,userInfoDto);
+            result = Result.resultInstance();
         }catch (Exception e){
             result = Result.resultInstance(e);
             result.setMsg("自定义");

@@ -1,11 +1,14 @@
 package com.nanyin.services.impl;
 
+import com.google.common.base.Objects;
+import com.google.common.base.Strings;
 import com.nanyin.config.util.CommonUtil;
 import com.nanyin.entity.Auth;
 import com.nanyin.entity.Sex;
 import com.nanyin.entity.Status;
 import com.nanyin.entity.User;
 import com.nanyin.entity.dto.UserDto;
+import com.nanyin.entity.dto.UserInfoDto;
 import com.nanyin.enumEntity.DeletedStatusEnum;
 import com.nanyin.repository.AuthRepository;
 import com.nanyin.repository.SexRepository;
@@ -21,7 +24,9 @@ import org.springframework.validation.annotation.Validated;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 
 @Service
 public class UserServicesImpl implements UserServices {
@@ -60,10 +65,9 @@ public class UserServicesImpl implements UserServices {
             @CacheEvict(value="user", key="#id"),
 //            @CacheEvict(value = "users",key = "#")
     })
-    public User updateUser(Integer id, String name, String email, int sex, int status, int[] auth) throws Exception {
+    public User updateUser(Integer id, UserInfoDto userInfoDto) throws Exception {
         User u = userRepository.findUsersById(id);
-//        User u = new User(id);
-        u = setUserAttributes(u,name,email,sex,status,auth);
+
         return userRepository.save(u);
     }
 
@@ -77,11 +81,10 @@ public class UserServicesImpl implements UserServices {
 
     @Override
     public User addUser(UserDto user) throws Exception {
-        return conversionToUser(user);
+        return transferToUser(new User(),user);
     }
 
-    private User conversionToUser(UserDto userDto){
-        User user = new User();
+    private User transferToUser(User user,UserDto userDto){
         user.setName(userDto.getName());
         user.setId(userDto.getId());
         user.setPassword(userDto.getPassword());
@@ -94,6 +97,15 @@ public class UserServicesImpl implements UserServices {
             Set<Auth> allByIdContains =  authRepository.findDistinctByIdIn((userDto.getAuths()));
             user.setAuths(allByIdContains);
         }
+        return user;
+    }
+
+    private User transferToUser(User user, UserInfoDto userInfoDto){
+        if(userInfoDto.getEmail() !=null){
+            user.setEmail(userInfoDto.getEmail());
+        }
+        user.setAge(userInfoDto.getAge());
+
         return user;
     }
 

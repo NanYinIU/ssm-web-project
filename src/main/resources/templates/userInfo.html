@@ -52,12 +52,12 @@
                                     <p class="text-muted my-1" th:text="'Email：'+${result.data.user.email}"></p>
                                     <ul class="list-inline mb-0 mt-2">
                                         <li class="list-inline-item" th:each="item:${result.data.user.person.socialMedia}">
-                                            <a th:href="@{${item.url}}" title="" data-toggle="tooltip" th:title="${item.name}"><i th:class="${item.socialType.icon.className}"></i></a>
+                                            <a th:href="@{${item.url}}" title="" data-toggle="tooltip" th:title="${item.name}"> <i th:class="${item.socialType.icon.className}"></i> [[${item.socialType.icon.name}]] </a>
                                         </li>
                                     </ul>
                                 </div>
                             </div>
-                            <div class="col-sm-12 mt-3"><button class="btn btn-outline-primary btn-sm btn-block" onclick="showModifyModal()">修改基本信息</button></div>
+                            <div class="col-sm-12 mt-3"><button class="btn btn-outline-primary btn-sm btn-block" th:onclick="'showModifyModal('+${result.data.user.id}+')'">修改基本信息</button></div>
                         </div>
                     </div>
                 </div>
@@ -99,7 +99,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modifyModalLabel">编辑页面</h5>
+                <h5 class="modal-title" id="modifyModalLabel">修改个人信息</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true"><i class="fas fa-times-circle"></i></span>
                 </button>
@@ -108,23 +108,45 @@
                 <form id="modify">
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label for="modify-name"><i class="far fa-user"></i> 用户名</label>
-                            <input type="text" class="form-control" id="modify-name" name="name" placeholder="姓名" >
+                            <label for="modify-name"><i class="far fa-user"></i> 姓名</label>
+                            <input type="text" class="form-control" id="modify-name" name="name" placeholder="姓名" th:value="${result.data.user.name}">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="modify-email"><i class="fas fa-envelope-square"></i> email</label>
-                            <input type="email" class="form-control" id="modify-email" name="email" placeholder="email" >
+                            <input type="email" class="form-control" id="modify-email" name="email" placeholder="email" th:value="${result.data.user.email}" >
                         </div>
                     </div>
-                    <div class="form-group ">
-                        <label for="modify-age"><i class="fas fa-envelope-square"></i> 年龄</label>
-                        <input type="text" class="form-control" id="modify-age" name="age" placeholder="年龄" >
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="modify-age"><i class="fas fa-envelope-square"></i> 年龄</label>
+                            <input type="text" class="form-control" id="modify-age" name="age" placeholder="年龄" th:value="${result.data.user.email}" >
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label th:for="sex"><i class="fas fa-genderless"></i> sex</label>
+                            <select class="form-control " th:id="modify-sex" name="sex" th:value="${result.data.user.sex.id}" >
+                                <option th:each="sex:${result.data.sex}"  th:text="${sex.name}" ></option>
+                            </select>
+                        </div>
                     </div>
+                    <!--person中的属性-->
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="modify-position"><i class="far fa-user"></i> 职位</label>
+                            <input type="text" class="form-control" id="modify-position" name="position" placeholder="职位" th:value="${result.data.user.person.position}">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="modify-address"><i class="fas fa-envelope-square"></i> address</label>
+                            <input type="email" class="form-control" id="modify-address" name="address" placeholder="address" th:value="${result.data.user.person.address}" >
+                        </div>
+                    </div>
+                    <!-- 社交媒体账号-->
+                    <div th:insert="~{components/user/social-form :: social-form}"></div>
+
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" th:onclick="saveUser()">保存</button>
+                <button type="button" class="btn btn-primary" th:onclick="'saveUser('+${result.data.user.id}+')'">保存</button>
             </div>
         </div>
     </div>

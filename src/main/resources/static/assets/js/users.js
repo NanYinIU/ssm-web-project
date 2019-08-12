@@ -5,7 +5,7 @@ $(document).ready(function () {
     }).change(function(){
         $("#add").valid();
     });
-
+    // 设置table属性
     $('#table').bootstrapTable({
         url: '/user/users',
         method: 'get',
@@ -81,7 +81,6 @@ $(document).ready(function () {
         //     return queryData;    //这个就是向服务端传递的参数对象
         // }
     });
-
 });
 
 // 重置密码
@@ -94,7 +93,7 @@ var refreshPassword = function () {
     })
     console.log(ids);
     // 对选中用户id传入后台进行密码重置。
-
+    // todo
 }
 
 // boostrap-table自定义数据格式
@@ -106,7 +105,7 @@ var responseHandler = function (rec) {
         "rows": rec.data.rows   //数据
     };
 }
-
+// 多选的table中的显示 以逗号隔开
 function standardArrayFormatter(value, row, index) {
     var _return = "";
     if (value != null || value != undefined) {
@@ -119,7 +118,7 @@ function standardArrayFormatter(value, row, index) {
     }
     return _return;
 }
-
+// table中的行里的按钮
 function actionFormatter(value, row, index) {
     var id = value;
     var result = "";
@@ -130,35 +129,6 @@ function actionFormatter(value, row, index) {
     result += "<a class='btn btn-primary btn-sm tip-top' id='delete' href='#' role='button'  data-toggle='modal' onclick='warnModal(" + row.id + ")' title='删除' ><i" +
         " class='fas fa-trash'></i></a> &nbsp;";
     return result;
-}
-
-// 打开查看模态框
-var showCheckModal = function (id) {
-    var url = "/user/user/" + id;
-    $.ajax({
-        type: "GET",
-        url: url,
-        dataType: 'json',
-        success: function (res) {
-            var data = JSON.parse(res).data;
-            var authArr = new Array();
-            for (var i = 0; i < data.auths.length; i++) {
-                authArr[i] = data.auths[i].name;
-            }
-            authStr = authArr.join(",");
-            // 查看页面
-            $("#check-name").html(data.name);
-            $("#check-email").html(data.email);
-            $("#check-sex").html(data.sex.name);
-            $("#check-status").html(data.status.name);
-            $("#check-auth").html(authStr);
-            $("#checkModal").modal('show')
-
-        },
-        error: function (request, status, error) {
-            console.log("ajax call went wrong:" + request.responseText);
-        }
-    });
 }
 
 function showAddModal() {
@@ -199,7 +169,6 @@ var warnModal = function (id) {
     $("#userId").val(id);
     deleteUser();
 }
-
 
 
 // 【修改】动作
