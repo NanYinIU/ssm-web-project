@@ -115,6 +115,7 @@ public class UserController {
                 return "signin";
             }catch (Exception ex) {
                 model.addAttribute("msg", MessageEnum.SYSTEM_ERROR.toString());
+                logger.info("error message :{}",ex.getMessage());
                 return "signin";
             }
         } else {

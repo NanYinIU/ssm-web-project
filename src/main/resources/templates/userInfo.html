@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>$Title$</title>
+    <title>个人信息页面</title>
 
     <script th:src="@{/webjars/jquery/3.4.1/jquery.js}"></script>
 
@@ -47,7 +47,14 @@
                             </div>
                             <div class="col-sm-12 mt-3">
                                 <div class="media-body">
-                                    <h4 class="m-0" th:text="${result.data.user.person.name}"></h4>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <h4 class="m-0" th:text="${result.data.user.person.name}"></h4>
+                                        </div>
+                                        <div class="col-sm-6 ml-3">
+                                            <b th:text="${result.data.user.sex.name}"></b>
+                                        </div>
+                                    </div>
                                     <p class="text-muted my-1" th:text="'登陆名：'+${result.data.user.name}"></p>
                                     <p class="text-muted my-1" th:text="'Email：'+${result.data.user.email}"></p>
                                     <ul class="list-inline mb-0 mt-2">

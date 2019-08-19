@@ -29,3 +29,6 @@ spring:
 #   开发时禁用cache
     thymeleaf:
         cache: false
+
+server:
+    port: 8088

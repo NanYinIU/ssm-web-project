@@ -105,20 +105,20 @@
                     </div>
                     <div class="form-group">
                         <label th:for="sex"><i class="fas fa-genderless"></i> sex</label>
-                        <select class="form-control " th:id="sex" name="sex"  >
-                            <option th:each="sex:${sex}"  th:text="${sex.name}" ></option>
+                        <select class="form-control" th:id="sex" name="sex"  >
+                            <option th:each="sex:${sex}"  th:text="${sex.name}" th:value="${sex.id}"></option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label th:for="status"><i class="fas fa-parking"></i> 状态</label>
-                        <select class="form-control " th:id="status" th:name="status" >
-                            <option th:each="status:${status}" th:text="${status.name}" ></option>
+                        <select class="form-control" th:id="status" th:name="status" >
+                            <option th:each="status:${status}" th:text="${status.name}" th:value="${status.id}"></option>
                         </select>
                     </div>
                     <div class="form-group" >
                         <label th:for="auth"><i class="fas fa-shield-alt"></i> 权限</label>
                         <select class="form-control " id="auth" th:name="auths" multiple="multiple">
-                            <option th:each="item:${auth}" th:text="${item.name}" ></option>
+                            <option th:each="item:${auth}" th:text="${item.name}" th:value="${item.id}"></option>
                         </select>
                     </div>
                 </form>
@@ -146,21 +146,7 @@
                 <form id="modify">
                     <div class="form-group ">
                         <label for="name"><i class="far fa-user"></i> 用户名</label>
-                        <input type="text" class="form-control" id="modify-name" name="name" placeholder="姓名" >
-                    </div>
-                    <div class="form-group">
-                        <label for="email"><i class="fas fa-envelope-square"></i> email</label>
-                        <input type="email" class="form-control" id="modify-email" name="email" placeholder="email" >
-                    </div>
-                    <div class="form-group">
-                        <label for="age"><i class="fas fa-envelope-square"></i> age</label>
-                        <input type="text" class="form-control" id="modify-age" name="age" placeholder="nianlin" >
-                    </div>
-                    <div class="form-group">
-                        <label th:for="sex"><i class="fas fa-genderless"></i> sex</label>
-                        <select class="form-control " th:id="modify-sex" name="sex"  >
-                            <option th:each="sex:${sex}"  th:text="${sex.name}" ></option>
-                        </select>
+                        <input type="text" class="form-control" id="modify-name" name="name" placeholder="姓名">
                     </div>
                     <div class="form-group">
                         <label th:for="status"><i class="fas fa-parking"></i> 状态</label>
@@ -178,7 +164,6 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
-                // todo 保存
                 <button type="button" class="btn btn-primary" th:onclick="saveUser()">保存</button>
             </div>
         </div>

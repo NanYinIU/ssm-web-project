@@ -15,10 +15,10 @@ import com.nanyin.repository.SexRepository;
 import com.nanyin.repository.StatusRepository;
 import com.nanyin.repository.UserRepository;
 import com.nanyin.services.UserServices;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
+import org.springframework.cache.annotation.*;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -29,7 +29,10 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 @Service
+@CacheConfig(cacheManager = "TtlCacheManager")
 public class UserServicesImpl implements UserServices {
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
     @Autowired
     UserRepository userRepository;
@@ -39,14 +42,15 @@ public class UserServicesImpl implements UserServices {
 
 
     @Override
+    @Cacheable(value = "user",key = "#name")
     public User getUserFromUserName(String name) {
         return userRepository.findUserByName(name);
     }
 
-
-//    @Cacheable(value = "users",key = "#")
+    @Cacheable(value = "users",key = "#offset+'_'+#limit+'_'+#order+'_'+#search")
     @Override
     public List<User> findAllByIsDeleted(Integer offset, Integer limit, String order, String search) throws Exception {
+        logger.info("User limit:{}",limit);
         if(search == null || "".equals(search)){
             return userRepository.findAllByIsDeleted(CommonUtil.pageRequest(offset,limit,order,"id"),(short)0);
         }
@@ -61,17 +65,17 @@ public class UserServicesImpl implements UserServices {
 
 
     @Override
-    @Caching(evict = {
-            @CacheEvict(value="user", key="#id"),
-//            @CacheEvict(value = "users",key = "#")
+    @Caching(put = {
+            @CachePut(value="user", key="#id"),
     })
     public User updateUser(Integer id, UserInfoDto userInfoDto) throws Exception {
         User u = userRepository.findUsersById(id);
-
+        u = transferToUser(u,userInfoDto);
         return userRepository.save(u);
     }
 
     @Override
+    @Cacheable(value = "users",key = "#search")
     public int countAllByIsDeleted(String search) throws Exception {
         if(search == null || "".equals(search)){
             return userRepository.countAllByIsDeleted((short)0);
@@ -80,19 +84,33 @@ public class UserServicesImpl implements UserServices {
     }
 
     @Override
+    @CachePut(value = "user",key = "#user.id")
     public User addUser(UserDto user) throws Exception {
         return transferToUser(new User(),user);
     }
 
     private User transferToUser(User user,UserDto userDto){
-        user.setName(userDto.getName());
-        user.setId(userDto.getId());
-        user.setPassword(userDto.getPassword());
-        user.setEmail(userDto.getEmail());
-        user.setAge(userDto.getAge());
-        user.setSex(sexRepository.getOne(userDto.getSex()));
-//        user.setUnit(u.getUnit());
-        user.setStatus(statusRepository.getOne(userDto.getStatus()));
+        if(userDto.getName()!=null){
+            user.setName(userDto.getName());
+        }
+        if(userDto.getId() != 0){
+            user.setId(userDto.getId());
+        }
+        if(userDto.getPassword()!=null){
+            user.setPassword(userDto.getPassword());
+        }
+        if(userDto.getEmail()!=null){
+            user.setEmail(userDto.getEmail());
+        }
+        if(userDto.getAge() !=0){
+            user.setAge(userDto.getAge());
+        }
+        if(userDto.getSex() != 0){
+            user.setSex(sexRepository.getOne(userDto.getSex()));
+        }
+        if(userDto.getStatus() !=0){
+            user.setStatus(statusRepository.getOne(userDto.getStatus()));
+        }
         if(userDto.getAuths() != null){
             Set<Auth> allByIdContains =  authRepository.findDistinctByIdIn((userDto.getAuths()));
             user.setAuths(allByIdContains);
@@ -101,33 +119,36 @@ public class UserServicesImpl implements UserServices {
     }
 
     private User transferToUser(User user, UserInfoDto userInfoDto){
-        if(userInfoDto.getEmail() !=null){
+        if(userInfoDto.getName()!=null){
+            user.setName(userInfoDto.getName());
+        }
+        if(userInfoDto.getId() != 0){
+            user.setId(userInfoDto.getId());
+        }
+        if(userInfoDto.getPassword()!=null){
+            user.setPassword(userInfoDto.getPassword());
+        }
+        if(userInfoDto.getEmail()!=null){
             user.setEmail(userInfoDto.getEmail());
         }
-        user.setAge(userInfoDto.getAge());
-
+        if(userInfoDto.getAge() !=0){
+            user.setAge(userInfoDto.getAge());
+        }
+        if(userInfoDto.getSex() != 0){
+            user.setSex(sexRepository.getOne(userInfoDto.getSex()));
+        }
+        if(userInfoDto.getPosition()!=null && user.getPerson() !=null){
+            user.getPerson().setPosition(userInfoDto.getPosition());
+        }
         return user;
     }
 
     @Override
+    @CacheEvict(value = "users",key = "#id")
     public void deleteUser(Integer id) throws Exception {
         userRepository.deleteById(id);
     }
 
-    private @Validated User setUserAttributes(User u, String name, String email, int sex, int status, int[] auth){
-        u.setName(name);
-        u.setEmail(email);
-        Sex s = sexRepository.getOne(sex);
-        u.setSex(s);
-        Status sta = statusRepository.getOne(status);
-        u.setStatus(sta);
-        Set<Auth> allByIdContains = new HashSet<>();
-        if(auth !=null){
-            allByIdContains =  authRepository.findDistinctByIdIn(auth);
-            u.setAuths(allByIdContains);
-        }
-        return u;
-    }
     /*
      * 以下-------用户相关信息--------
      *

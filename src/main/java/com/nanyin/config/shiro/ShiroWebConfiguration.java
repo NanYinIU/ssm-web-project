@@ -29,6 +29,7 @@ public class ShiroWebConfiguration {
     public ShiroFilterFactoryBean shiroFilterFactoryBean(DefaultWebSecurityManager securityManager){
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setLoginUrl("/signin");
+        shiroFilterFactoryBean.setSuccessUrl("/");
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap());
         shiroFilterFactoryBean.setUnauthorizedUrl("/error");

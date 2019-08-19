@@ -122,7 +122,7 @@ function standardArrayFormatter(value, row, index) {
 function actionFormatter(value, row, index) {
     var id = value;
     var result = "";
-    result += "<a class='btn btn-primary btn-sm tip-top' id='detail' href='#' role='button' data-toggle='modal' onclick='showCheckModal(" + row.id + ")' title='查看' >" +
+    result += "<a class='btn btn-primary btn-sm tip-top' id='detail' href='#' role='button' data-toggle='modal' onclick='openDetailPage(" + row.id + ")' title='查看' >" +
         "<i class='fas fa-search'></i></a> &nbsp;";
     result += "<a class='btn btn-primary btn-sm tip-top' id='modify' href='#' role='button'  title='修改' data-toggle='modal' onclick='showModifyModal(" + row.id + ")' data-url='/user/user/'+row.id  >" +
         "<i class='fas fa-edit'></i></a> &nbsp;";
@@ -137,31 +137,8 @@ function showAddModal() {
 
 // 打开修改模态框
 var showModifyModal = function (id) {
-    var url = "/user/user/" + id;
-    $.ajax({
-        type: "GET",
-        url: url,
-        dataType: 'json',
-        success: function (res) {
-            res = JSON.parse(res);
-            var data = res.data;
-            // 修改菜单 先赋值
-            $("#modify-sex").select2("val", [data.sex.name]);
-            $("#modify-status").select2("val", [data.status.name]);
-            var authStr = new Array();
-            for (var i = 0; i < data.auths.length; i++) {
-                authStr[i] = data.auths[i].name;
-            }
-            $('#modify-auth').select2("val", authStr);
-            $("#userId").val(data.id);
-            $('#modify-name').val(data.name);
-            $('#modify-email').val(data.email);
-            $("#modifyModal").modal('show');
-        },
-        error: function (request, status, error) {
-            console.log("ajax call went wrong:" + request.responseText);
-        }
-    });
+    //获得选中的行数据
+    $('#modifyModal').modal('show');
 }
 
 // 打开删除模态框
@@ -269,5 +246,9 @@ var deleteUser = function () {
     });
 }
 
+
+var openDetailPage = function (id) {
+    window.location.href="/user/user/"+id;
+}
 
 
