@@ -1,5 +1,6 @@
 package com.nanyin.config.shiro;
 
+import com.nanyin.config.util.MDCUtil;
 import org.apache.catalina.security.SecurityUtil;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.codec.Base64;

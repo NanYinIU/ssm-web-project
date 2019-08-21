@@ -1,5 +1,6 @@
 package com.nanyin.config.resover;
 
+import com.nanyin.config.util.MDCUtil;
 import org.springframework.web.servlet.LocaleResolver;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,40 +10,28 @@ import java.util.Locale;
 
 public class MyLocalResolver implements LocaleResolver {
 
-    private Locale defaultLocale;
-
     @Override
     public Locale resolveLocale(HttpServletRequest request) {
-        Locale defaultLocale = getDefaultLocale();
-        String language = request.getParameter("language");
-        String[] locale = new String[2];
-        if(language != null && !"".equals(language)){
-            locale = getLocale(language);
-        }else{
-            //如果是空则找浏览器中的属性
-            String header = getFirstLangInRequest(request);
-            if(header!=null && !"".equals(header)){
-                locale = getLocale(header);
-            }else{
-                //否则给个默认的local
-                locale = getLocale("zh-CN");
-            }
-        }
-        defaultLocale = new Locale(locale[0],locale[1]);
-        return defaultLocale;
+//        Cookie[] cookies = request.getCookies();
+//        String locale = null;
+//        for (Cookie cookie:cookies
+//             ) {
+//            if("locale".equals(cookie.getName())){
+//                locale = cookie.getValue();
+//            }
+//        }
+//        if(locale == null){
+//            return Locale.SIMPLIFIED_CHINESE;
+//        }else {
+//            CommonUtil.check(locale.split("_").length>1,"check_error","resolveLocale");
+//            // 在MDC中存放副本
+//            Locale locale1 = new Locale(locale.split("_")[0],locale.split("_")[1]);
+//            MDCUtil.setLocale(locale1);
+//            return locale1;
+//        }
+        return MDCUtil.getLocale();
     }
 
-    private String getFirstLangInRequest(HttpServletRequest request) {
-        return request.getHeader("Accept-Language").split(",")[0];
-    }
-
-    private String[] getLocale(String language) {
-        return language.split("-");
-    }
-
-    public Locale getDefaultLocale() {
-        return this.defaultLocale;
-    }
     @Override
     public void setLocale(HttpServletRequest request, HttpServletResponse response, Locale locale) {
 

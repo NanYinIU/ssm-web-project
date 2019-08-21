@@ -44,10 +44,10 @@
             <a class="navbar-brand col-sm1 col-md-1 mr-0" href="#"> [[#{product}]] [[#{version}]]</a>
             <ul class="nav nav-pills">
                 <li class="nav-item ">
-                    <a class="nav-link "  th:href="@{/signin(language='zh-CN')}" th:if="${language}=='en-US'">[[#{simplified_chinese}]]</a>
+                    <button class="nav-link btn btn-primary" th:onclick="translate('zh_CN')"  th:if="${#strings.equals(language,'en_US')}">[[#{simplified_chinese}]]</button>
                 </li>
                 <li class="nav-item ">
-                    <a class="nav-link "  th:href="@{/signin(language='en-US')}" th:if="${language}=='zh-CN'">[[#{english}]]</a>
+                    <button class="nav-link btn btn-primary"  th:onclick="translate('en_US')" th:if="${#strings.equals(language,'zh_CN')}">[[#{english}]]</button>
                 </li>
             </ul>
         </nav>

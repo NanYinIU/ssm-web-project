@@ -1,11 +1,14 @@
 package com.nanyin.services;
 
+import com.nanyin.entity.Resource;
 import com.nanyin.entity.Sex;
 import com.nanyin.entity.Status;
 import com.nanyin.entity.User;
 import com.nanyin.entity.dto.UserDto;
 import com.nanyin.entity.dto.UserInfoDto;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 public interface UserServices {
@@ -32,4 +35,8 @@ public interface UserServices {
     User addUser(UserDto user) throws Exception;
 
     void deleteUser(Integer id) throws Exception;
+
+    String doLogin(String username, String password, Boolean rememberMe, String locale,
+                   HttpServletRequest request, HttpServletResponse response, List<Resource> sidebarInfoWapper);
+
 }
