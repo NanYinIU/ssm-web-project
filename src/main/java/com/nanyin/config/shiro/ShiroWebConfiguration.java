@@ -43,6 +43,7 @@ public class ShiroWebConfiguration {
         map.put("/webjars/**","anon");
         map.put("/signin?language=zh-CN","anon");
         map.put("/login","anon");
+        map.put("/lang","anon");
         map.put("/**","authc");
         return map;
     }

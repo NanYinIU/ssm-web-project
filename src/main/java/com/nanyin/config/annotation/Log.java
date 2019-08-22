@@ -13,9 +13,11 @@ import java.lang.annotation.*;
 public @interface Log {
 
     /** 要执行的操作类型比如：add操作 **/
-      LogType operationType() default LogType.OTHER_MODULT;
+      OperationType operationType() default OperationType.FIND;
 
     /** 要执行的具体操作比如：添加用户 **/
      String operationName() default "";
+
+     OperateModul operateModul();
 
 }

@@ -1,4 +1,4 @@
-package com.nanyin.config.resover;
+package com.nanyin.config.locale;
 
 import com.nanyin.config.util.MDCUtil;
 import org.springframework.web.servlet.LocaleResolver;
@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Locale;
 
 
-public class MyLocalResolver implements LocaleResolver {
+public class MyLocaleResolver implements LocaleResolver {
 
     @Override
     public Locale resolveLocale(HttpServletRequest request) {

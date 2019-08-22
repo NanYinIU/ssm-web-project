@@ -24,7 +24,7 @@ public class test1 {
     @Test
     public void test2(){
         Date date = new Date();
-        String dateString = new SimpleDateFormat("MMddhhmmss").format(date);
+        String dateString = new SimpleDateFormat("MMddhhmmss-SSS").format(date);
         System.out.println(dateString+"-"+ UUID.randomUUID().toString().replace("-", "").substring(0,10));
         System.out.println(MDCUtil.getLocale().toString());
         System.out.println(CommonUtil.isNull(null));

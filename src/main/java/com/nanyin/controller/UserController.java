@@ -2,6 +2,9 @@ package com.nanyin.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
+import com.nanyin.config.annotation.Log;
+import com.nanyin.config.annotation.OperateModul;
+import com.nanyin.config.annotation.OperationType;
 import com.nanyin.config.exceptions.NoUserAccountException;
 import com.nanyin.config.exceptions.UserIsBlockException;
 import com.nanyin.config.redis.RedisService;
@@ -34,7 +37,7 @@ import java.util.Map;
 @Controller
 public class UserController {
 
-    Logger logger = LoggerFactory.getLogger(UserController.class);
+   private Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     ResourceServices resourceServices;
@@ -123,6 +126,7 @@ public class UserController {
     }
 
     @GetMapping("/user/users")
+    @Log(operationType = OperationType.FIND,operateModul = OperateModul.USER,operationName="xxx")
     @ResponseBody
     public String users(Integer offset, Integer limit, String order, String search) {
         Result result = null;
@@ -137,10 +141,12 @@ public class UserController {
         return JSON.toJSONString(result);
     }
 
+    @Log(operationType = OperationType.FIND,operateModul = OperateModul.USER,operationName="...")
     @GetMapping("/user/user/{id}")
     public String getUser(@PathVariable(name = "id") Integer id, Model model) {
         Result result = null;
         try {
+            logger.info("test");
             HashMap<String, Object> data = Maps.newHashMap();
             data.put("sex", userServices.findNotDeletedUserSex());
             data.put("user", userServices.findUserById(id));
@@ -152,7 +158,6 @@ public class UserController {
         model.addAttribute(result);
         return "userInfo";
     }
-
 
     @PutMapping("/user/user/{id}")
     @ResponseBody

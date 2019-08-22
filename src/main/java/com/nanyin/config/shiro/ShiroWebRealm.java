@@ -2,6 +2,7 @@ package com.nanyin.config.shiro;
 
 import com.nanyin.config.exceptions.NoUserAccountException;
 import com.nanyin.config.exceptions.UserIsBlockException;
+import com.nanyin.config.util.CommonUtil;
 import com.nanyin.entity.Auth;
 import com.nanyin.entity.Role;
 import com.nanyin.entity.User;
@@ -65,13 +66,6 @@ public class ShiroWebRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         String username = (String) authenticationToken.getPrincipal();
         User user = getUser(username);
-        if(user == null ){
-            throw new NoUserAccountException();
-        }
-        //非正常状态
-        if(!user.getStatus().getId().equals(SystemStatusEnum.NORMAL.getId())){
-            throw new UserIsBlockException();
-        }
         ByteSource byteSource = ByteSource.Util.bytes(user.getSalt());
         return new SimpleAuthenticationInfo(username,user.getPassword(),byteSource,"");
     }

@@ -5,9 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Signin Template · Bootstrap</title>
 
+  <script th:src="@{/webjars/jquery/3.4.1/jquery.js}"></script>
+
+  <script th:src="@{/webjars/popper.js/1.15.0/umd/popper.js}"></script>
+  <script th:src="@{/webjars/popper.js/1.15.0/umd/popper-utils.js}"></script>
   <!-- 使用webjars -->
-  <link href="/webjars/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
-  <script src="/webjars/bootstrap/4.3.1/js/bootstrap.min.js" ></script>
+  <link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet">
+  <script th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.min.js}" ></script>
 
   <style>
     .bd-placeholder-img {
@@ -22,7 +26,8 @@
     }
   </style>
   <!-- Custom styles for this template -->
-  <link href="assets/css/signin.css" rel="stylesheet">
+  <link th:href="@{assets/css/signin.css}" rel="stylesheet">
+  <script th:src="@{assets/js/signin.js}"></script>
 </head>
 <body class="text-center">
 <div th:insert="~{components/navbar :: navbar-02}"></div>

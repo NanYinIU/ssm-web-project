@@ -1,7 +1,9 @@
-var translate = function (lang) {
+function translates(lang) {
+    console.log("test");
     $.ajax({
-        type: 'POST',
+        type: 'post',
         url: '/lang',
+        dataType: 'json',
         data: {'lang':lang},
         success: function (res) {
             // 成功后刷新页面

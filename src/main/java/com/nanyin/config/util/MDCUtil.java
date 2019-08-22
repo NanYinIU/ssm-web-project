@@ -13,7 +13,12 @@ import java.util.Locale;
  **/
 public class MDCUtil {
 
-    private final static ThreadLocal<String> TL_USER = new ThreadLocal<String>();
+    private final static ThreadLocal<String> TL_USER = new ThreadLocal<String>(){
+        @Override
+        protected String initialValue() {
+            return "000000-000-0000000000";
+        }
+    };
 
     private final static ThreadLocal<Locale> TL_LOCALE = new ThreadLocal<Locale>() {
         @Override
@@ -23,9 +28,13 @@ public class MDCUtil {
         };
     };
 
+    private final static ThreadLocal<String> TL_REQUEST_ID = new ThreadLocal<>();
+
     public static final String KEY_LANG = "lang";
 
     public static final String KEY_USER = "username";
+
+    public static final String KEY_REQUEST_ID = "requestId";
 
     private static final String NULL = "null";
 
@@ -50,10 +59,21 @@ public class MDCUtil {
         return TL_LOCALE.get();
     }
 
+    public static void setRequestId(String requestId) {
+        MDC.put(KEY_REQUEST_ID, requestId);
+        TL_REQUEST_ID.set(requestId);
+    }
+
+    public static String getRequestId() {
+        return TL_REQUEST_ID.get();
+    }
+
     public static void clearAllUserInfo() {
         TL_USER.remove();
         TL_LOCALE.remove();
+        TL_REQUEST_ID.remove();
         MDC.remove(KEY_USER);
+        MDC.remove(KEY_REQUEST_ID);
     }
 
     public static Locale setLocale(HttpServletRequest request, HttpServletResponse response, String language) {

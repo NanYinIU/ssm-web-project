@@ -29,7 +29,7 @@ public class CommonUtil {
      **/
     public static String generateRequestUid(){
         Date date = new Date();
-        String dateString = new SimpleDateFormat("MMddhhmmss").format(date);
+        String dateString = new SimpleDateFormat("hhmmss-SSS").format(date);
         return dateString+"-"+ UUID.randomUUID().toString().replace("-", "").substring(0,10);
     }
 

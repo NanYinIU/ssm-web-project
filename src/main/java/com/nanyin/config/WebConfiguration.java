@@ -2,7 +2,8 @@ package com.nanyin.config;
 
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
-import com.nanyin.config.resover.MyLocalResolver;
+import com.nanyin.config.interceptor.LogbackInterceptor;
+import com.nanyin.config.locale.MyLocaleResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -17,7 +18,7 @@ import java.util.List;
 public class WebConfiguration implements WebMvcConfigurer {
     @Bean
     public LocaleResolver localeResolver(){
-        return new MyLocalResolver();
+        return new MyLocaleResolver();
     }
 
     @Override
@@ -32,6 +33,6 @@ public class WebConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        
+        registry.addInterceptor(new LogbackInterceptor());
     }
 }
