@@ -1,11 +1,16 @@
 package com.nanyin.config.util;
 
+import java.util.Locale;
 import java.util.Optional;
 import com.google.common.base.Strings;
 import com.nanyin.config.exceptions.CheckException;
+import com.nanyin.config.locale.LocaleService;
+import org.apache.tomcat.jni.Local;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -33,6 +38,10 @@ public class CommonUtil {
         return dateString+"-"+ UUID.randomUUID().toString().replace("-", "").substring(0,10);
     }
 
+    public static void setResources(MessageSource resources) {
+        CommonUtil.resources = resources;
+    }
+
     /**
      * 检查条件，如果不符合条件抛出异常
      **/
@@ -40,10 +49,6 @@ public class CommonUtil {
         if (!condition) {
             fail(msgKey, args);
         }
-    }
-
-    public static void setResources(MessageSource resources) {
-        CommonUtil.resources = resources;
     }
 
     private static void fail(String msgKey, Object... args) {

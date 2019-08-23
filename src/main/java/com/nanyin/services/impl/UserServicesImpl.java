@@ -4,6 +4,7 @@ import com.nanyin.config.annotation.Log;
 import com.nanyin.config.annotation.OperateModul;
 import com.nanyin.config.annotation.OperationType;
 import com.nanyin.config.exceptions.UserIsBlockException;
+import com.nanyin.config.locale.LocaleService;
 import com.nanyin.config.util.CommonUtil;
 import com.nanyin.config.util.HttpsUtil;
 import com.nanyin.config.util.MDCUtil;
@@ -25,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.*;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
@@ -45,6 +47,9 @@ public class UserServicesImpl implements UserServices {
 
     @Autowired
     AuthRepository authRepository;
+
+    @Autowired
+    MessageSource messageSource;
 
 
     @Override
@@ -159,7 +164,7 @@ public class UserServicesImpl implements UserServices {
     @Override
     public String doLogin(String username, String password, Boolean rememberMe, String locale,
                           HttpServletRequest request, HttpServletResponse response,
-                          List<Resource> sidebarInfoWapper) {
+                          List<Resource> sidebarInfoWapper) throws Exception{
         SavedRequest savedRequest = WebUtils.getSavedRequest(request);
         Subject subject = SecurityUtils.getSubject();
 
@@ -173,7 +178,8 @@ public class UserServicesImpl implements UserServices {
             UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(username, password, rememberMe);
             // 在登陆前如果想抛出自定义异常，需要在controller里面进行
             User user = getUserFromUserName(username);
-            CommonUtil.check(CommonUtil.isNotNull(user), "username_or_password_wrong", username);
+            CommonUtil.setResources(messageSource);
+            CommonUtil.check(CommonUtil.isNotNull(user), "username_or_password_wrong");
             CommonUtil.check(user.getStatus().getId() != -1, "user_has_been_blocked", "");
             subject.login(usernamePasswordToken);
             // 登陆成功后把 user 放到session中。把locale 信息放到 cookie中

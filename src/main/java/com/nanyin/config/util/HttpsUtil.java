@@ -30,17 +30,6 @@ public class HttpsUtil {
         return session.getAttribute(key);
     }
 
-    public static String getCookie(HttpServletRequest request, String cookieName) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals(cookieName)) {
-                    return cookie.getValue();
-                }
-            }
-        }
-        return null;
-    }
 
     public static void setCookie(HttpServletResponse response, String cookieName, String value) {
         Cookie cookie = new Cookie(cookieName, value);

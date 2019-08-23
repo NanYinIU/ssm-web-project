@@ -1,8 +1,10 @@
 package com.nanyin.config.locale;
 
+import com.nanyin.config.util.CommonUtil;
 import com.nanyin.config.util.MDCUtil;
 import org.springframework.web.servlet.LocaleResolver;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Locale;
@@ -20,7 +22,7 @@ public class MyLocaleResolver implements LocaleResolver {
 //                locale = cookie.getValue();
 //            }
 //        }
-//        if(locale == null){
+//        if(locale == null || "".equals(locale)){
 //            return Locale.SIMPLIFIED_CHINESE;
 //        }else {
 //            CommonUtil.check(locale.split("_").length>1,"check_error","resolveLocale");
@@ -29,7 +31,8 @@ public class MyLocaleResolver implements LocaleResolver {
 //            MDCUtil.setLocale(locale1);
 //            return locale1;
 //        }
-        return MDCUtil.getLocale();
+        Locale locale = MDCUtil.getLocale();
+        return locale;
     }
 
     @Override

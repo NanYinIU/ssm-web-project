@@ -45,10 +45,10 @@
             <a class="navbar-brand col-sm1 col-md-1 mr-0" href="#"> [[#{product}]] [[#{version}]]</a>
             <ul class="nav nav-pills">
                 <li class="nav-item ">
-                    <button class="nav-link btn btn-primary" type="button" onclick="translates('zh_CN')"  th:if="${#strings.equals(language,'en_US')}">[[#{simplified_chinese}]]</button>
+                    <button class="nav-link btn btn-primary" type="button" onclick="translates('zh_CN')"  th:if="${#strings.equals(session.language,'en_US')}">[[#{simplified_chinese}]]</button>
                 </li>
                 <li class="nav-item ">
-                    <button class="nav-link btn btn-primary" type="button"  onclick="translates('en_US')" th:if="${#strings.equals(language,'zh_CN')}">[[#{english}]]</button>
+                    <button class="nav-link btn btn-primary" type="button"  onclick="translates('en_US')" th:if="${#strings.equals(session.language,'zh_CN')}">[[#{english}]]</button>
                 </li>
             </ul>
         </nav>

@@ -76,40 +76,6 @@ public class MDCUtil {
         MDC.remove(KEY_REQUEST_ID);
     }
 
-    public static Locale setLocale(HttpServletRequest request, HttpServletResponse response, String language) {
-        if (CommonUtil.isBlank(language)) {
-            Cookie[] cookies = request.getCookies();
-            String locale = null;
-            for (Cookie cookie : cookies
-            ) {
-                if ("lang".equals(cookie.getName())) {
-                    locale = cookie.getValue();
-                    break;
-                }
-            }
-            // 如果session中没有lang信息，则设置默认的local，否则将session中的lang放到mdc中
-            if (locale != null && !NULL.equals(locale)) {
-               setLocale(getLocale(locale));
-               return getLocale(locale);
-            }else{
-                // 在session中添加默认的locale信息
-                response.addCookie(new Cookie("lang", getLocale().toString()));
-                return getLocale();
-            }
-        }else{
-            return setNewLocaleCookie(new Cookie("lang",language),language,response);
-        }
-    }
-
-    private static Locale setNewLocaleCookie(Cookie cookie, String locale, HttpServletResponse response){
-        response.addCookie(cookie);
-        CommonUtil.check(locale.split("_").length > 1, "check_error", "resolveLocale");
-        Locale locale1 = getLocale(locale);
-        setLocale(locale1);
-        response.addCookie(new Cookie("lang",locale1.toString()));
-        return locale1;
-    }
-
     public static Locale getLocale(String locale){
         CommonUtil.check(locale.split("_").length > 1, "check_error", "resolveLocale");
         // 在MDC中存放副本

@@ -37,6 +37,6 @@ public interface UserServices {
     void deleteUser(Integer id) throws Exception;
 
     String doLogin(String username, String password, Boolean rememberMe, String locale,
-                   HttpServletRequest request, HttpServletResponse response, List<Resource> sidebarInfoWapper);
+                   HttpServletRequest request, HttpServletResponse response, List<Resource> sidebarInfoWapper) throws Exception;
 
 }

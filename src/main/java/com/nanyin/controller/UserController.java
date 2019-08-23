@@ -5,8 +5,11 @@ import com.google.common.collect.Maps;
 import com.nanyin.config.annotation.Log;
 import com.nanyin.config.annotation.OperateModul;
 import com.nanyin.config.annotation.OperationType;
+import com.nanyin.config.exceptions.CheckException;
 import com.nanyin.config.exceptions.NoUserAccountException;
 import com.nanyin.config.exceptions.UserIsBlockException;
+import com.nanyin.config.locale.LocaleService;
+import com.nanyin.config.locale.MyCookieResolver;
 import com.nanyin.config.redis.RedisService;
 import com.nanyin.config.util.*;
 import com.nanyin.entity.*;
@@ -15,17 +18,22 @@ import com.nanyin.entity.dto.UserInfoDto;
 import com.nanyin.enumEntity.MessageEnum;
 import com.nanyin.services.*;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.util.SavedRequest;
 import org.apache.shiro.web.util.WebUtils;
+import org.apache.tomcat.jni.Local;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.i18n.CookieLocaleResolver;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -48,14 +56,21 @@ public class UserController {
     @Autowired
     SocialMediaServices socialMediaServices;
 
+    @Autowired
+    MyCookieResolver myCookieResolver;
+
+    @Autowired
+    LocaleService localeService;
+
 //    登陆注册部分开始 -------------------------------------------------------
 
     @GetMapping("/signin")
     public String signin(String language, Model model, HttpServletRequest request,HttpServletResponse response) {
         // 因为默认的登陆页面，所以从这里开始，看session里有没有 lang信息，如果session中有，则把session中的取出来，放到MDC中
         // 如果设置了language,则将language设置都session中，
-        Locale locale = MDCUtil.setLocale(request, response, language);
-        model.addAttribute("language",locale);
+        Locale locale = RequestContextUtils.getLocale(request);
+        MDCUtil.setLocale(locale);
+        HttpsUtil.getSession().setAttribute("language",locale);
         return "signin";
     }
 
@@ -71,13 +86,17 @@ public class UserController {
         try {
             List<Resource> sidebarInfoWapper = resourceServices.getSidebarInfoWapper(username);
             return userServices.doLogin(username, password, rememberMe, locale, request, response, sidebarInfoWapper);
-        } catch (IncorrectCredentialsException in) {
-            model.addAttribute("msg", MessageEnum.INCORRECT_LOGIN_INFORMATION.toString());
+        } catch (CheckException c){
+            model.addAttribute("msg", c.getMessage());
+            MDCUtil.clearAllUserInfo();
+            return "signin";
+        }catch (AuthenticationException in) {
+            model.addAttribute("msg", localeService.getMessage("no_account"));
             MDCUtil.clearAllUserInfo();
             return "signin";
         } catch (Exception ex) {
-            model.addAttribute("msg", MessageEnum.SYSTEM_ERROR.toString());
-            logger.info("error message :{}", ex.getMessage());
+            ex.printStackTrace();
+            model.addAttribute("msg", localeService.getMessage("system_error"));
             MDCUtil.clearAllUserInfo();
             return "signin";
         }
@@ -86,8 +105,10 @@ public class UserController {
 
     @PostMapping("/lang")
     public @ResponseBody String transferLang(HttpServletRequest request,HttpServletResponse response,String lang){
-        Locale locale = MDCUtil.setLocale(request, response, lang);
-        Result result = Result.resultInstance(locale);
+        myCookieResolver.setLocale(request,response, MDCUtil.getLocale(lang));
+        HttpsUtil.getSession().setAttribute("language",MDCUtil.getLocale(lang));
+        MDCUtil.setLocale(lang);
+        Result result = Result.resultInstance(lang);
         return JSON.toJSONString(result);
     }
 
@@ -101,7 +122,6 @@ public class UserController {
     //    登陆注册部分结束 -------------------------------------------------------
 
     // 用户管理 开始
-
     @Autowired
     UnitService unitService;
     @Autowired
