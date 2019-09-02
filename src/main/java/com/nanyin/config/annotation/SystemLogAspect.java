@@ -4,6 +4,11 @@ import com.nanyin.config.locale.LocaleService;
 import com.nanyin.config.util.CommonUtil;
 import com.nanyin.config.util.HttpsUtil;
 import com.nanyin.config.util.MDCUtil;
+import com.nanyin.entity.Operate;
+import com.nanyin.entity.User;
+import com.nanyin.entity.dto.OperateLogDto;
+import com.nanyin.services.UserServices;
+import com.nanyin.services.impl.OperateServiceImpl;
 import org.apache.shiro.session.Session;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
@@ -33,9 +38,14 @@ public class SystemLogAspect {
     @Autowired
     LocaleService localeService;
 
-    private long start ;
+    @Autowired
+    OperateServiceImpl operateService;
 
-    //Controller层切点
+    @Autowired
+    UserServices userServices;
+
+    private long start;
+
     @Pointcut("@annotation(com.nanyin.config.annotation.Log)")
     public void controllerAspect() {
     }
@@ -47,13 +57,23 @@ public class SystemLogAspect {
      */
     @Before("controllerAspect()")
     public void before(JoinPoint joinPoint) {
-        start = System.currentTimeMillis();
-        logger.info("{}", localeService.getMessage("start_log", "", joinPoint.getTarget().getClass().getName(), joinPoint.getSignature().getName()));
+        try {
+            start = System.currentTimeMillis();
+            OperateLogDto log = getArgs(joinPoint);
+            beforeLog(joinPoint, log);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @AfterThrowing(value = "controllerAspect()", throwing = "throwable")
     public void afterThrowing(JoinPoint joinPoint, Throwable throwable) {
-        logger.info("{}", localeService.getMessage("after_log", "", joinPoint.getTarget().getClass().getName(), joinPoint.getSignature().getName()));
+        try {
+            OperateLogDto log = getArgs(joinPoint);
+            afterLog(joinPoint, log);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -63,52 +83,81 @@ public class SystemLogAspect {
      * @param joinPoint 切点
      */
     @After("controllerAspect()")
-    public void after(JoinPoint joinPoint) {
+    public void after(JoinPoint joinPoint) throws Exception {
         //读取session中的用户;
         HttpServletRequest request = HttpsUtil.getRequest();
         CommonUtil.check(CommonUtil.isNotNull(request), "", "");
-
-        Session session = HttpsUtil.getSession();
-        String name = (String) session.getAttribute("username");
-        String ip = HttpsUtil.getRequestIp(request);
-        String os = HttpsUtil.getRequestOs(request);
-        logger.debug("用户名：{} -- ip:{} -- 操作系统：{}", name, ip, os);
-        try {
-            String targetName = joinPoint.getTarget().getClass().getName();
-            String methodName = joinPoint.getSignature().getName();
-            Object[] arguments = joinPoint.getArgs();
-            Class targetClass = Class.forName(targetName);
-            Method[] methods = targetClass.getMethods();
-            OperationType operationType = OperationType.INIT;
-            OperateModul operateModul = OperateModul.OTHER;
-            String operationName = "";
-            for (Method method : methods) {
-                if (method.getName().equals(methodName)) {
-                    Class[] clazzs = method.getParameterTypes();
-                    if (clazzs.length == arguments.length) {
-                        operationType = method.getAnnotation(getAnnotationClass()).operationType();
-                        operationName = method.getAnnotation(getAnnotationClass()).operationName();
-                        operateModul = method.getAnnotation(getAnnotationClass()).operateModul();
-                        break;
-                    }
-                }
-            }
-            // 进行对数据的存库操作,先打印debug日志
-            debugLog();
-            // 数据库存库
-
-        } catch (Exception e) {
-            System.out.println("这里有错");
-        }
-        long finish = System.currentTimeMillis();
-        logger.info("{}", localeService.getMessage("after_log", "", joinPoint.getTarget().getClass().getName(), joinPoint.getSignature().getName(),finish-start));
+        OperateLogDto log = getArgs(joinPoint);
+        // 进行对数据的存库操作,先打印debug日志
+        debugLog();
+        Operate operate = initOperate(request,log);
+        afterLog(joinPoint, log);
     }
 
     private Class<Log> getAnnotationClass() {
         return com.nanyin.config.annotation.Log.class;
     }
 
-    private void debugLog(){
+    private void debugLog() {
 
     }
+
+    private Operate initOperate(HttpServletRequest request,OperateLogDto log) throws Exception{
+        String name = MDCUtil.getUser();
+        String ip = HttpsUtil.getRequestIp(request);
+        String os = HttpsUtil.getRequestOs(request);
+        User user = userServices.getUserFromUserName(name);
+        Operate operate = new Operate();
+        operate.setName(log.getOperationName());
+        operate.setUser(user);
+        operate.setComment("");
+        operate.setDevice(os);
+        operate.setGmtCreate(new Date());
+        operate.setIp(ip);
+        operate.setOperateType(log.getOperationType());
+        return operateService.save(operate);
+    }
+
+    private OperateLogDto getArgs(JoinPoint joinPoint) throws ClassNotFoundException {
+        String targetName = joinPoint.getTarget().getClass().getName();
+        String methodName = joinPoint.getSignature().getName();
+        Object[] arguments = joinPoint.getArgs();
+        Class targetClass = Class.forName(targetName);
+        Method[] methods = targetClass.getMethods();
+        OperationType operationType = OperationType.INIT;
+        OperateModul operateModul = OperateModul.OTHER;
+        String operationName = "";
+        OperateLogDto logDto = new OperateLogDto();
+        for (Method method : methods) {
+            if (method.getName().equals(methodName)) {
+                Class[] clazzs = method.getParameterTypes();
+                if (clazzs.length == arguments.length) {
+                    operationType = method.getAnnotation(getAnnotationClass()).operationType();
+                    operationName = method.getAnnotation(getAnnotationClass()).operationName();
+                    operateModul = method.getAnnotation(getAnnotationClass()).operateModul();
+                    logDto.setOperationType(operationType);
+                    logDto.setOperationName(operationName);
+                    logDto.setOperateModul(operateModul);
+                    break;
+                }
+            }
+        }
+        return logDto;
+    }
+
+    private void beforeLog(JoinPoint joinPoint, OperateLogDto log) throws ClassNotFoundException {
+        long finish = System.currentTimeMillis();
+        logger.info("{}", localeService.getMessage("start_log", "",
+                joinPoint.getTarget().getClass().getName(), joinPoint.getSignature().getName(),
+                log.getOperateModul(), log.getOperationName(), finish - start));
+    }
+
+    private void afterLog(JoinPoint joinPoint, OperateLogDto log) throws ClassNotFoundException {
+        long finish = System.currentTimeMillis();
+        logger.info("{}", localeService.getMessage("after_log", "",
+                joinPoint.getTarget().getClass().getName(), joinPoint.getSignature().getName(),
+                log.getOperateModul(), log.getOperationName(), finish - start));
+    }
+
+
 }
