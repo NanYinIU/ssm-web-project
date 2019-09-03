@@ -28,7 +28,6 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = -7912979476697449896L;
 
-
     @JSONField(name = "id")
     @Id
     @Column(columnDefinition = "INT(11)")

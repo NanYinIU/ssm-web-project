@@ -146,7 +146,7 @@ public class UserController {
     }
 
     @GetMapping("/user/users")
-    @Log(operationType = OperationType.FIND,operateModul = OperateModul.USER,operationName="xxx")
+    @Log(operationType = OperationType.FIND,operateModul = OperateModul.USER,operationName="search_users")
     @ResponseBody
     public String users(Integer offset, Integer limit, String order, String search) {
         Result result = null;
@@ -161,7 +161,7 @@ public class UserController {
         return JSON.toJSONString(result);
     }
 
-    @Log(operationType = OperationType.FIND,operateModul = OperateModul.USER,operationName="...")
+    @Log(operationType = OperationType.FIND,operateModul = OperateModul.USER,operationName="search_user_info",params = {0})
     @GetMapping("/user/user/{id}")
     public String getUser(@PathVariable(name = "id") Integer id, Model model) {
         Result result = null;

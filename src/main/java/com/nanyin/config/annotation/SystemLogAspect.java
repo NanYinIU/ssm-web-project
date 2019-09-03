@@ -132,8 +132,10 @@ public class SystemLogAspect {
             if (method.getName().equals(methodName)) {
                 Class[] clazzs = method.getParameterTypes();
                 if (clazzs.length == arguments.length) {
+                    int[] param = method.getAnnotation(getAnnotationClass()).params();
                     operationType = method.getAnnotation(getAnnotationClass()).operationType();
-                    operationName = method.getAnnotation(getAnnotationClass()).operationName();
+                    operationName = localeService.getMessage(method.getAnnotation(getAnnotationClass()).operationName(),
+                            getArguments(arguments,param));
                     operateModul = method.getAnnotation(getAnnotationClass()).operateModul();
                     logDto.setOperationType(operationType);
                     logDto.setOperationName(operationName);
@@ -159,5 +161,17 @@ public class SystemLogAspect {
                 log.getOperateModul(), log.getOperationName(), finish - start));
     }
 
+    /**
+     * 获取方法上的参数 arguments指的是所有的方法上的参数， param指的是需要进行国际化参数的参数顺序
+     **/
+    private Object[] getArguments(Object[] arguments,int[] param){
+        Object[] args = new Object[param.length];
+        for (int order:param
+        ) {
+            Object temp = arguments[order];
+            args[order] = temp;
+        }
+        return args;
+    }
 
 }
