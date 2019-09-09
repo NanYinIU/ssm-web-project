@@ -1,10 +1,10 @@
-package com.nanyin.config.annotation;
+package com.nanyin.config.operateLog;
 
 import java.lang.annotation.*;
 
 /**
  * Created by NanYin on 2017-07-16 下午11:09.
- * 包名： com.nanyin.common.annotation
+ * 包名： com.nanyin.common.operateLog
  * 类描述：
  */
 @Target({ElementType.PARAMETER, ElementType.METHOD})

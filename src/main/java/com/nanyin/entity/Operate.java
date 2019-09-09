@@ -1,6 +1,6 @@
 package com.nanyin.entity;
 
-import com.nanyin.config.annotation.OperationType;
+import com.nanyin.config.operateLog.OperationType;
 import lombok.Data;
 
 import javax.persistence.*;

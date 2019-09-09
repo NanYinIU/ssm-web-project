@@ -1,4 +1,4 @@
-package com.nanyin.config.annotation;
+package com.nanyin.config.operateLog;
 
 import com.nanyin.config.locale.LocaleService;
 import com.nanyin.config.util.CommonUtil;
@@ -9,7 +9,6 @@ import com.nanyin.entity.User;
 import com.nanyin.entity.dto.OperateLogDto;
 import com.nanyin.services.UserServices;
 import com.nanyin.services.impl.OperateServiceImpl;
-import org.apache.shiro.session.Session;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
@@ -25,7 +24,7 @@ import java.util.Date;
 /**
  * Created by NanYin on 2017-07-16 下午11:18.
  * 应该除了AfterThrowing 抛出异常时应该打印info日志，其他应该打印debug日志
- * 包名： com.nanyin.common.annotation
+ * 包名： com.nanyin.common.operateLog
  * 类描述：
  */
 
@@ -46,7 +45,7 @@ public class SystemLogAspect {
 
     private long start;
 
-    @Pointcut("@annotation(com.nanyin.config.annotation.Log)")
+    @Pointcut("@annotation(com.nanyin.config.operateLog.Log)")
     public void controllerAspect() {
     }
 
@@ -95,7 +94,7 @@ public class SystemLogAspect {
     }
 
     private Class<Log> getAnnotationClass() {
-        return com.nanyin.config.annotation.Log.class;
+        return com.nanyin.config.operateLog.Log.class;
     }
 
     private void debugLog() {

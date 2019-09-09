@@ -14,5 +14,4 @@ public interface ProjectServices {
 
      Set<ProjectType> getStandardProjectType() throws Exception;
 
-
 }

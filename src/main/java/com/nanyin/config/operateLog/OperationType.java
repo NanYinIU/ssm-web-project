@@ -1,4 +1,4 @@
-package com.nanyin.config.annotation;
+package com.nanyin.config.operateLog;
 
 public enum OperationType {
 

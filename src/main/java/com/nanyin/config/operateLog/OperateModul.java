@@ -1,4 +1,4 @@
-package com.nanyin.config.annotation;
+package com.nanyin.config.operateLog;
 /**
  * 发生的模块
  * @Author nanyin

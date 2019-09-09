@@ -1,7 +1,7 @@
 package com.nanyin.entity.dto;
 
-import com.nanyin.config.annotation.OperateModul;
-import com.nanyin.config.annotation.OperationType;
+import com.nanyin.config.operateLog.OperateModul;
+import com.nanyin.config.operateLog.OperationType;
 import lombok.Data;
 
 @Data
