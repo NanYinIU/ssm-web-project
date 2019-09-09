@@ -187,14 +187,13 @@
     <resources>
         <resource>
                 <directory>src/main/resources</directory>
-        </resource>
-        <resource>
             <excludes>
                 <exclude>
                     classpath:/static/**
                 </exclude>
             </excludes>
         </resource>
+
         <resource>
             <directory>src/main/java</directory>
             <includes>

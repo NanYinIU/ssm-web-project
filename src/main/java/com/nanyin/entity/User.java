@@ -2,6 +2,7 @@ package com.nanyin.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModel;
 import lombok.*;
 import org.hibernate.annotations.*;
 
@@ -24,6 +25,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name="user")
+@ApiModel(value="User",description = "用户实体类")
 public class User implements Serializable {
 
     private static final long serialVersionUID = -7912979476697449896L;

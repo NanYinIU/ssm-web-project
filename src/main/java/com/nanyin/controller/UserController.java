@@ -14,6 +14,10 @@ import com.nanyin.entity.*;
 import com.nanyin.entity.dto.UserDto;
 import com.nanyin.entity.dto.UserInfoDto;
 import com.nanyin.services.*;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.subject.Subject;
@@ -138,7 +142,13 @@ public class UserController {
     @GetMapping("/user/users")
     @Log(operationType = OperationType.FIND,operateModul = OperateModul.USER,operationName="search_users")
     @ResponseBody
-    public String users(Integer offset, Integer limit, String order, String search) {
+    @ApiOperation(value = "find all users",notes = "用来查找所有用户")
+    @ApiResponses({@ApiResponse(code=200,message = "正常")
+            ,@ApiResponse(code=401,message = "无权限")
+            ,@ApiResponse(code=403,message = "禁止访问")
+            ,@ApiResponse(code=404,message = "未知url")
+            ,@ApiResponse(code=500,message = "内部错误")})
+    public String users(@ApiParam(name = "开始") Integer offset, @ApiParam(name = "条目限制") Integer limit, String order, String search) {
         Result result = null;
         try {
             List<User> allUsersButNotDeleted = userServices.
