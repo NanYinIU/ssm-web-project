@@ -52,16 +52,6 @@ public class Person implements Serializable {
      **/
     private String telephone;
 
-    /**
-     * 社交媒体账号
-     **/
-    @ManyToMany(fetch = FetchType.EAGER)
-    @Fetch(value = FetchMode.SELECT)
-    @JoinTable(name = "r_person_social",
-            joinColumns = {@JoinColumn(name = "person_id")},
-            inverseJoinColumns = @JoinColumn(name = "social_id"))
-    private Set<SocialMedia> socialMedia;
-
     @Column(name = "is_deleted",columnDefinition = "TINYINT(4)")
     private Boolean isDeleted;
     @Temporal(value=TemporalType.TIMESTAMP)

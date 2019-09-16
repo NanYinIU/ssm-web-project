@@ -18,7 +18,7 @@ public interface UserRepository extends JpaRepository<User,Integer> {
      **/
     User findUserByName(String name);
 
-//    @Query("select new com.nanyin.entity.dto.UserDto(" +
+//    @Query("select new com.nanyin.entity.DTO.UserDto(" +
 //            "u.id,u.name,u.email,u.age,u.sex,u.unit,u.status,u.gmtCreate,u.gmtModify,u.roles,u.auths," +
 //            "u.projects,u.projectUserDuties" +
 //            ") from User u where u.isDeleted=0 ")

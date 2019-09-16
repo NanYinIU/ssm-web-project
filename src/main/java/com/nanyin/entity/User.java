@@ -105,11 +105,11 @@ public class User implements Serializable {
     private Set<Project> projects;
 
     
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "r_project_user",
-            joinColumns = {@JoinColumn(name = "users_id")},
-            inverseJoinColumns = @JoinColumn(name = "duty_id"))
-    private Set<ProjectUserDuty> projectUserDuties;
+//    @ManyToMany(fetch = FetchType.EAGER)
+//    @JoinTable(name = "r_project_user",
+//            joinColumns = {@JoinColumn(name = "users_id")},
+//            inverseJoinColumns = @JoinColumn(name = "project_id"))
+//    private Set<Project> projects;
 
     @OneToOne
     @JoinColumn(columnDefinition = "INT(11)",name = "person_id")

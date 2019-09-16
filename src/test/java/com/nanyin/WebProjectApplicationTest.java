@@ -28,4 +28,12 @@ public class WebProjectApplicationTest {
         System.out.println(startTime);
     }
 
+    /**
+     * 初始化数据
+     */
+    @Test
+    public void initData(){
+
+    }
+
 }

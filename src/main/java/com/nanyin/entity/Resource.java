@@ -12,25 +12,9 @@ import java.util.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "resource")
-public class Resource implements Serializable {
+public class Resource extends BasicEntity implements Serializable {
 
     private static final long serialVersionUID = 4850603363229927336L;
-    @Id
-    @Column(columnDefinition = "INT(11)")
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Integer id;
-    @Column(length = 64)
-    private String name;
-    @Column(length = 1024)
-    private String comment;
-    @Column(length = 11)
-    private Integer ord;
-    @Column(name = "is_deleted",columnDefinition = "TINYINT(4)")
-    private Boolean isDeleted;
-    @Temporal(value=TemporalType.TIMESTAMP)
-    private Date gmtCreate;
-    @Temporal(value=TemporalType.TIMESTAMP)
-    private Date gmtModify;
 
     @Column(length = 256)
     private String url;

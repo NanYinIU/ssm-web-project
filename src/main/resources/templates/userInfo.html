@@ -37,34 +37,39 @@
 <div class="container-fluid">
     <div class="row">
         <div th:insert="~{components/sidebar :: sidebar}"></div>
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4" th:each="user:${result.data.user}">
             <div class="row">
                 <div class="col-lg-4">
                     <div class="card">
                         <div class="card-body">
                             <div class="col-sm-12" style="text-align: center">
-                                <img alt="" height="260" width="260" class="avatar-square" style="height: 100%;width: 100%" th:src="@{${result.data.user.person.avatar}}">
+                                <img alt="" height="260" width="260" class="avatar-square" style="height: 100%;width: 100%"
+                                     th:if="!${#strings.isEmpty(user.person)}"
+                                     th:src="@{${user.person.avatar}}">
+                                <img alt="" height="260" width="260" class="avatar-square" style="height: 100%;width: 100%"
+                                     th:if="${#strings.isEmpty(user.person)}"
+                                     th:src="@{https://github.com/NanYinIU/PicRoom/blob/master/img/20190531170245.png}">
                             </div>
                             <div class="col-sm-12 mt-3">
                                 <div class="media-body">
                                     <div class="row">
                                         <div class="col-sm-6">
-                                            <h4 class="m-0" th:text="${result.data.user.person.name}"></h4>
+                                            <h4 class="m-0" th:text="${user.person.name}"></h4>
                                         </div>
                                         <div class="col-sm-6 ml-3">
-                                            <b th:text="${result.data.user.sex.name}"></b>
+                                            <b th:text="${user.sex.name}"></b>
                                         </div>
                                     </div>
-                                    <p class="text-muted my-1" th:text="'登陆名：'+${result.data.user.name}"></p>
-                                    <p class="text-muted my-1" th:text="'Email：'+${result.data.user.email}"></p>
+                                    <p class="text-muted my-1" th:text="'登陆名：'+${user.name}"></p>
+                                    <p class="text-muted my-1" th:if="!${#strings.isEmpty(user.email)}" th:text="'Email：'+${user.email}"></p><p class="text-muted my-1" th:if="${#strings.isEmpty(user.email)}" >Email：空</p>
                                     <ul class="list-inline mb-0 mt-2">
-                                        <li class="list-inline-item" th:each="item:${result.data.user.person.socialMedia}">
+                                        <li class="list-inline-item" th:each="item:${user.person.socialMedia}">
                                             <a th:href="@{${item.url}}" title="" data-toggle="tooltip" th:title="${item.name}"> <i th:class="${item.socialType.icon.className}"></i> [[${item.socialType.icon.name}]] </a>
                                         </li>
                                     </ul>
                                 </div>
                             </div>
-                            <div class="col-sm-12 mt-3"><button class="btn btn-outline-primary btn-sm btn-block" th:onclick="'showModifyModal('+${result.data.user.id}+')'">修改基本信息</button></div>
+                            <div class="col-sm-12 mt-3"><button class="btn btn-outline-primary btn-sm btn-block" th:onclick="'showModifyModal('+${user.id}+')'">修改基本信息</button></div>
                         </div>
                     </div>
                 </div>
@@ -146,8 +151,7 @@
                             <input type="email" class="form-control" id="modify-address" name="address" placeholder="address" th:value="${result.data.user.person.address}" >
                         </div>
                     </div>
-                    <!-- 社交媒体账号-->
-                    <div th:insert="~{components/user/social-form :: social-form}"></div>
+
 
                 </form>
             </div>

@@ -1,4 +1,4 @@
-package com.nanyin.entity.dto;
+package com.nanyin.entity.DTO;
 
 import com.nanyin.config.operateLog.OperateModul;
 import com.nanyin.config.operateLog.OperationType;

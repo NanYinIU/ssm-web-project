@@ -3,8 +3,8 @@ package com.nanyin.services.impl;
 import com.nanyin.config.util.CommonUtil;
 import com.nanyin.config.util.HttpsUtil;
 import com.nanyin.entity.*;
-import com.nanyin.entity.dto.UserDto;
-import com.nanyin.entity.dto.UserInfoDto;
+import com.nanyin.entity.DTO.UserDto;
+import com.nanyin.entity.DTO.UserInfoDto;
 import com.nanyin.enumEntity.DeletedStatusEnum;
 import com.nanyin.repository.AuthRepository;
 import com.nanyin.repository.SexRepository;
@@ -23,7 +23,6 @@ import org.springframework.cache.annotation.*;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;

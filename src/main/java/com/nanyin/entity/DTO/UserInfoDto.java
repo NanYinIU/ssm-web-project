@@ -1,4 +1,4 @@
-package com.nanyin.entity.dto;
+package com.nanyin.entity.DTO;
 
 import lombok.Data;
 
@@ -37,5 +37,4 @@ public class UserInfoDto {
 
     private String name;
 
-    private String[] socialMedia;
 }
