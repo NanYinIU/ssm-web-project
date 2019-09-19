@@ -6,28 +6,9 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
 @Entity
 @Table(name = "s_unit_category")
-public class UnitCategory implements Serializable {
+public class UnitCategory extends BasicEntity implements Serializable {
     private static final long serialVersionUID = 4605177010744033641L;
-    @Id
-    @Column(columnDefinition = "INT(11)")
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Integer id;
-    @Column(length = 64)
-    private String name;
-    @Column(length = 1024)
-    private String comment;
-    @Column(length = 11)
-    private Integer ord;
-    @Column(name = "is_deleted",columnDefinition = "TINYINT(4)")
-    private Boolean isDeleted;
-    @Temporal(value=TemporalType.TIMESTAMP)
-    private Date gmtCreate;
-    @Temporal(value=TemporalType.TIMESTAMP)
-    private Date gmtModify;
 }

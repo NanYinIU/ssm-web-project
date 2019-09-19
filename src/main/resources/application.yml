@@ -29,6 +29,13 @@ spring:
 #   开发时禁用cache
     thymeleaf:
         cache: false
-
+    quartz:
+      job-store-type: jdbc
+      #properties:
+      #      org:
+      #        quartz:
+      #          scheduler:
+      #            instanceName: clusteredScheduler
+      #            instanceId: AUTO
 server:
     port: 8088

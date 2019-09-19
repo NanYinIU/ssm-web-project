@@ -48,7 +48,7 @@
                                      th:src="@{${user.person.avatar}}">
                                 <img alt="" height="260" width="260" class="avatar-square" style="height: 100%;width: 100%"
                                      th:if="${#strings.isEmpty(user.person)}"
-                                     th:src="@{https://github.com/NanYinIU/PicRoom/blob/master/img/20190531170245.png}">
+                                     th:src="./ assets/img/brand/bootstrap-social-logo.png">
                             </div>
                             <div class="col-sm-12 mt-3">
                                 <div class="media-body">
@@ -62,11 +62,6 @@
                                     </div>
                                     <p class="text-muted my-1" th:text="'登陆名：'+${user.name}"></p>
                                     <p class="text-muted my-1" th:if="!${#strings.isEmpty(user.email)}" th:text="'Email：'+${user.email}"></p><p class="text-muted my-1" th:if="${#strings.isEmpty(user.email)}" >Email：空</p>
-                                    <ul class="list-inline mb-0 mt-2">
-                                        <li class="list-inline-item" th:each="item:${user.person.socialMedia}">
-                                            <a th:href="@{${item.url}}" title="" data-toggle="tooltip" th:title="${item.name}"> <i th:class="${item.socialType.icon.className}"></i> [[${item.socialType.icon.name}]] </a>
-                                        </li>
-                                    </ul>
                                 </div>
                             </div>
                             <div class="col-sm-12 mt-3"><button class="btn btn-outline-primary btn-sm btn-block" th:onclick="'showModifyModal('+${user.id}+')'">修改基本信息</button></div>
@@ -142,11 +137,11 @@
                     </div>
                     <!--person中的属性-->
                     <div class="form-row">
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-6" th:if="!${#strings.isEmpty(result.data.user.person.position)}">
                             <label for="modify-position"><i class="far fa-user"></i> 职位</label>
                             <input type="text" class="form-control" id="modify-position" name="position" placeholder="职位" th:value="${result.data.user.person.position}">
                         </div>
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-6" th:if="!${#strings.isEmpty(result.data.user.person.address)}">
                             <label for="modify-address"><i class="fas fa-envelope-square"></i> address</label>
                             <input type="email" class="form-control" id="modify-address" name="address" placeholder="address" th:value="${result.data.user.person.address}" >
                         </div>

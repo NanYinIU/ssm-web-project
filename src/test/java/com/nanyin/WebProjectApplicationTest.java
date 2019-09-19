@@ -1,13 +1,16 @@
 package com.nanyin;
 
+import com.nanyin.entity.ProjectLevel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by NanYin on 2019/9/6.
@@ -33,7 +36,20 @@ public class WebProjectApplicationTest {
      */
     @Test
     public void initData(){
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        list.add(5);
+        list.forEach(x -> {
+            System.out.println(x);
+        });
+    }
 
+    @Test
+    public void testStingFormat(){
+        String format = String.format("%s:%s", "x", "y");
+        System.out.println(format);
     }
 
 }

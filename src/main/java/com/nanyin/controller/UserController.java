@@ -35,7 +35,7 @@ public class UserController {
    private Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
-    ResourceServices resourceServices;
+    ResourceService resourceService;
     @Autowired
     UserServices userServices;
     @Autowired
@@ -105,7 +105,6 @@ public class UserController {
     public String getUser(@PathVariable(name = "id") Integer id, Model model) {
         Result result = null;
         try {
-            logger.info("test");
             HashMap<String, Object> data = Maps.newHashMap();
             data.put("sex", userServices.findNotDeletedUserSex());
             data.put("user", userServices.findUserById(id));
@@ -151,6 +150,19 @@ public class UserController {
         try {
             userServices.deleteUser(id);
         } catch (Exception e) {
+            result = Result.resultInstance(e);
+        }
+        return JSON.toJSONString(result);
+    }
+
+    @ApiOperation(value = "change passsword",notes = "修改用户密码")
+    @PostMapping("/user/user/{id}/password")
+    @ResponseBody
+    public String changePassword(@PathVariable(name = "id") Integer id){
+        Result result = Result.resultInstance();
+        try{
+            userServices.changePassword(id);
+        }catch (Exception e){
             result = Result.resultInstance(e);
         }
         return JSON.toJSONString(result);

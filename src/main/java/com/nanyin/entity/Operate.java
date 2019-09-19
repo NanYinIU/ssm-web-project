@@ -12,8 +12,6 @@ import java.io.Serializable;
 public class Operate extends BasicEntity implements Serializable {
 
     private static final long serialVersionUID = -450912372259672214L;
-
-
     @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name="user_id")
     private User user;

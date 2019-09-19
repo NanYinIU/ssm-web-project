@@ -39,4 +39,9 @@ public interface UserServices {
     String doLogin(String username, String password, Boolean rememberMe, String locale,
                    HttpServletRequest request, HttpServletResponse response, List<Resource> sidebarInfoWapper) throws Exception;
 
+    /**
+     * 密码重置为1
+     * @param id
+     */
+    void changePassword(Integer id);
 }

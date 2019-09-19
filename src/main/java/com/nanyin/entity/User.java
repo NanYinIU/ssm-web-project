@@ -2,6 +2,7 @@ package com.nanyin.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.nanyin.entity.DO.RProjectUser;
 import io.swagger.annotations.ApiModel;
 import lombok.*;
 import org.hibernate.annotations.*;
@@ -19,10 +20,7 @@ import java.util.Objects;
 import java.util.Set;
 
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
 @Entity
 @Table(name="user")
 @ApiModel(value="User",description = "用户实体类")
@@ -101,15 +99,8 @@ public class User implements Serializable {
     @JSONField(name = "auths")
     private Set<Auth> auths;
 
-    @ManyToMany(mappedBy = "users",fetch = FetchType.EAGER)
-    private Set<Project> projects;
-
-    
-//    @ManyToMany(fetch = FetchType.EAGER)
-//    @JoinTable(name = "r_project_user",
-//            joinColumns = {@JoinColumn(name = "users_id")},
-//            inverseJoinColumns = @JoinColumn(name = "project_id"))
-//    private Set<Project> projects;
+    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
+    private Set<RProjectUser> projects;
 
     @OneToOne
     @JoinColumn(columnDefinition = "INT(11)",name = "person_id")
@@ -117,6 +108,9 @@ public class User implements Serializable {
 
     public User (int id){
         this.id = id;
+    }
+
+    public User(){
     }
 
 }

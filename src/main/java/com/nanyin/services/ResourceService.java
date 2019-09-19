@@ -4,6 +4,6 @@ import com.nanyin.entity.Resource;
 
 import java.util.List;
 
-public interface ResourceServices  {
+public interface ResourceService {
     List<Resource> getSidebarInfoWapper(String username) throws Exception;
 }

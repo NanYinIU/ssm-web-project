@@ -7,17 +7,17 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
 @Entity
 @Table(name = "role")
 public class Role extends BasicEntity implements Serializable {
     private static final long serialVersionUID = 8538788781327321942L;
 
     @JSONField(serialize = false)
-    @ManyToMany()
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
     @JoinTable(name = "r_user_role",
             joinColumns = {@JoinColumn(name = "role_id")},
             inverseJoinColumns = {@JoinColumn(name = "users_id")})

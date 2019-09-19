@@ -11,8 +11,10 @@ import com.nanyin.repository.SexRepository;
 import com.nanyin.repository.StatusRepository;
 import com.nanyin.repository.UserRepository;
 import com.nanyin.services.UserServices;
+import com.sun.xml.internal.bind.v2.model.core.ID;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.util.SavedRequest;
 import org.apache.shiro.web.util.WebUtils;
@@ -26,6 +28,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Service
@@ -192,6 +195,25 @@ public class UserServicesImpl implements UserServices {
 
     }
 
+    @Override
+    public void changePassword(Integer id) {
+        User user = new User(id);
+        user.setPassword(generatePassword(1));
+        userRepository.saveAndFlush(user);
+    }
+
+    /**
+     * 使用固定的md5 1024次加密获得加密后的密码
+     * @param crdentials
+     * @return
+     */
+    private String generatePassword(Object crdentials){
+        String hashAlgorithmName = "MD5";//加密方式
+        Object salt = "1";//盐值
+        int hashIterations = 1024;//加密1024次
+        Object result = new SimpleHash(hashAlgorithmName,crdentials,salt,hashIterations);
+        return result.toString();
+    }
 
     /*
      * 以下-------用户相关信息--------
@@ -215,6 +237,7 @@ public class UserServicesImpl implements UserServices {
     public List<Status> findNotDeletedUserStatus() throws Exception {
         return statusRepository.findAllByIsDeletedOrderByOrd(DeletedStatusEnum.IS_NOT_DELETED.isJudge());
     }
+
 
 
 }

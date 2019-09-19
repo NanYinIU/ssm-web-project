@@ -2,14 +2,14 @@ package com.nanyin.services.impl;
 
 import com.nanyin.entity.Resource;
 import com.nanyin.repository.ResourceRepository;
-import com.nanyin.services.ResourceServices;
+import com.nanyin.services.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class ResourceServicesImpl implements ResourceServices {
+public class ResourceServiceImpl implements ResourceService {
 
     @Autowired
     ResourceRepository resourceRepository;

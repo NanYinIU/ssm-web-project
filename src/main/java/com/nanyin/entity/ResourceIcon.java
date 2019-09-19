@@ -5,10 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
 @Entity
 @Table(name = "s_resource_icon")
 public class ResourceIcon extends BasicEntity implements Serializable {

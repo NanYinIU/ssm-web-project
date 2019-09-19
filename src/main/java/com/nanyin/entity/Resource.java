@@ -6,10 +6,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
 @Entity
 @Table(name = "resource")
 public class Resource extends BasicEntity implements Serializable {
@@ -27,7 +24,7 @@ public class Resource extends BasicEntity implements Serializable {
     @JoinColumn(columnDefinition = "INT(11)",name = "type_id")
     private ResourceType type;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL,fetch=FetchType.EAGER)
 //    @JSONField(serialize = false)
     @JoinTable(name = "r_resource_auth",
             joinColumns = {@JoinColumn(name = "resources_id")},

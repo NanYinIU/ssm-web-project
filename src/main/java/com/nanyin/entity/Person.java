@@ -60,5 +60,4 @@ public class Person implements Serializable {
     private Date gmtModify;
 
 
-
 }

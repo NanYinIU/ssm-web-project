@@ -86,14 +86,11 @@ $(document).ready(function () {
 // 重置密码
 var refreshPassword = function () {
     var rows = $("#table").bootstrapTable('getSelections');
-    var ids = [];
     rows.forEach(function (currentValue,index,arr) {
         var id = currentValue.id
-        ids.push(id);
+        resetPass(id);
     })
-    console.log(ids);
-    // 对选中用户id传入后台进行密码重置。
-    // todo
+
 }
 
 // boostrap-table自定义数据格式
@@ -148,7 +145,7 @@ var warnModal = function (id) {
 }
 
 
-// 【修改】动作
+// 【添加】动作
 var addUser = function () {
     var flag = $("#add").valid();
     if (!flag) {
@@ -157,10 +154,8 @@ var addUser = function () {
     }
     var type = "POST";
     var url = "/user/user/";
-    var isAddAction = true;
     // 数据
     var t = $('#add').serializeObject();
-
     $.ajax({
         type: type,
         url: url,
@@ -171,27 +166,15 @@ var addUser = function () {
             var data = JSON.parse(res);
             if (data.code === 0) {
                 $("#addModal").modal("hide");
-                if (isAddAction) {
-                    swal({
-                        title: "Success!",
-                        text: "添加成功！Added successfully!",
-                        type: "success",
-                        confirmButtonClass: "btn-primary",
-                        confirmButtonText: "确认",
-                    }, function () {
-                        $("#table").bootstrapTable('refresh');
-                    })
-                } else {
-                    swal({
-                        title: "Success!",
-                        text: "修改成功！Modifyed successfully!",
-                        type: "success",
-                        confirmButtonClass: "btn-primary",
-                        confirmButtonText: "确认",
-                    }, function () {
-                        $("#table").bootstrapTable('refresh');
-                    })
-                }
+                swal({
+                    title: "Success!",
+                    text: "添加成功！Added successfully!",
+                    type: "success",
+                    confirmButtonClass: "btn-primary",
+                    confirmButtonText: "确认",
+                }, function () {
+                    $("#table").bootstrapTable('refresh');
+                })
             } else {
                 swal("保存失败，请重试!", "Save failed, please try again!");
             }
@@ -246,6 +229,74 @@ var deleteUser = function () {
     });
 }
 
+var modifyUser = function () {
+    var flag = $("#modify").valid();
+    if (!flag) {
+        //没有通过验证
+        return;
+    }
+    var type = "put";
+    var url = "/user/user/";
+    // 数据
+    var t = $('#modify').serializeObject();
+    $.ajax({
+        type: type,
+        url: url,
+        dataType: 'json',
+        contentType:'application/json',
+        data: JSON.stringify(t),
+        success: function (res) {
+            var data = JSON.parse(res);
+            if (data.code === 0) {
+                $("#modifyModal").modal("hide");
+                swal({
+                    title: "Success!",
+                    text: "修改成功！Modifyed successfully!",
+                    type: "success",
+                    confirmButtonClass: "btn-primary",
+                    confirmButtonText: "确认",
+                }, function () {
+                    $("#table").bootstrapTable('refresh');
+                })
+            } else {
+                swal("保存失败，请重试!", "Save failed, please try again!");
+            }
+        },
+        error: function (request, status, error) {
+            swal("请求出错，请重试!", "Request error, please try again!");
+        }
+    });
+}
+
+function resetPass(ids) {
+    // 重置密码操作
+    $.ajax({
+        type: 'POST',
+        url: '/user/user/'+ids+"/password",
+        dataType: 'json',
+        contentType:'application/json',
+        data: JSON.stringify(t),
+        success: function (res) {
+            var data = JSON.parse(res);
+            if (data.code === 0) {
+                swal({
+                    title: "Success!",
+                    text: "修改成功！Modifyed successfully!",
+                    type: "success",
+                    confirmButtonClass: "btn-primary",
+                    confirmButtonText: "确认",
+                }, function () {
+                    $("#table").bootstrapTable('refresh');
+                })
+            } else {
+                swal("保存失败，请重试!", "Save failed, please try again!");
+            }
+        },
+        error: function (request, status, error) {
+            swal("请求出错，请重试!", "Request error, please try again!");
+        }
+    });
+}
 
 var openDetailPage = function (id) {
     window.location.href="/user/user/"+id;

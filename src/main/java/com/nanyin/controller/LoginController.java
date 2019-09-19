@@ -8,7 +8,7 @@ import com.nanyin.config.util.HttpsUtil;
 import com.nanyin.config.util.MDCUtil;
 import com.nanyin.config.util.Result;
 import com.nanyin.entity.Resource;
-import com.nanyin.services.ResourceServices;
+import com.nanyin.services.ResourceService;
 import com.nanyin.services.UserServices;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
@@ -40,7 +40,7 @@ public class LoginController {
     @Autowired
     UserServices userServices;
     @Autowired
-    ResourceServices resourceServices;
+    ResourceService resourceService;
     @Autowired
     LocaleService localeService;
 
@@ -68,7 +68,7 @@ public class LoginController {
                         Model model, HttpServletRequest request, HttpServletResponse response, String locale) {
         MDCUtil.setUser(username);
         try {
-            List<Resource> sidebarInfoWapper = resourceServices.getSidebarInfoWapper(username);
+            List<Resource> sidebarInfoWapper = resourceService.getSidebarInfoWapper(username);
             return userServices.doLogin(username, password, rememberMe, locale, request, response, sidebarInfoWapper);
         } catch (CheckException c){
             model.addAttribute("msg", c.getMessage());
