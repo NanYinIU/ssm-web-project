@@ -1,8 +1,10 @@
 package com.nanyin;
 
+import com.nanyin.config.quartz.service.JobService;
 import com.nanyin.entity.ProjectLevel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -50,6 +52,18 @@ public class WebProjectApplicationTest {
     public void testStingFormat(){
         String format = String.format("%s:%s", "x", "y");
         System.out.println(format);
+    }
+
+    @Autowired
+    JobService jobService;
+    @Test
+    public void TestQuartzJobs(){
+        try {
+            jobService.openAssignJob(2);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

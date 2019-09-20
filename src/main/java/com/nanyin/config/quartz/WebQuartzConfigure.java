@@ -21,7 +21,7 @@ import java.util.Properties;
  */
 @Configuration
 public class WebQuartzConfigure {
-    //配置JobFactory
+    //配置JobFactory 
     @Bean
     public JobFactory jobFactory(ApplicationContext applicationContext) {
         AutowiringSpringBeanJobFactory jobFactory = new AutowiringSpringBeanJobFactory();

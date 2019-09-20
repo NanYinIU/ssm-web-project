@@ -1,6 +1,6 @@
 package com.nanyin.config.quartz.controller;
 
-import com.nanyin.config.quartz.Job.JarJob;
+import com.nanyin.config.quartz.Job.DefaultJob;
 import com.nanyin.config.quartz.Job.SimpleJob;
 import com.nanyin.config.quartz.JobEntity;
 import com.nanyin.config.quartz.JobStatus;
@@ -14,11 +14,11 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Created by NanYin on 2019/9/18.
+ * Job rest     get /job/{id} 启动id为{id} 的任务
  */
 @Controller
 public class JobController {
@@ -26,56 +26,52 @@ public class JobController {
     @Autowired
     JobService jobService;
     @Autowired
-    JobEntityRepository timingTaskEntityRepository;
+    JobEntityRepository jobEntityRepository;
 
-    @Autowired
-    private SchedulerFactoryBean schedulerFactoryBean;
     //根据ID重启某个Job
     @GetMapping("/job/{id}")
-    public String refresh(@PathVariable Integer id) throws SchedulerException {
-        String result;
-        JobEntity entity = timingTaskEntityRepository.getById(id);
-        if (entity == null) return "error: id is not exist ";
-        synchronized (logger) {
-            JobKey jobKey = jobService.getJobKey(entity);
-            Scheduler scheduler = schedulerFactoryBean.getScheduler();
-            scheduler.pauseJob(jobKey);
-            scheduler.unscheduleJob(TriggerKey.triggerKey(jobKey.getName(), jobKey.getGroup()));
-            scheduler.deleteJob(jobKey);
-            JobDataMap map = jobService.getJobDataMap(entity);
-            JobDetail jobDetail = jobService.getJobDetail(jobKey, entity.getDescription(), map, JarJob.class);
-            if (entity.getStatus().equals("OPEN")) {
-                scheduler.scheduleJob(jobDetail, jobService.getTrigger(entity));
-                result = "Refresh Job : " + entity.getName() + "\t jarPath: " + entity.getJarPath() + " success !";
-            } else {
-                result = "Refresh Job : " + entity.getName() + "\t jarPath: " + entity.getJarPath() + " failed ! , " +
-                        "Because the Job status is " + entity.getStatus();
-            }
+    public @ResponseBody String StartOrStopJob(@PathVariable Integer id,String type) throws SchedulerException {
+        String result = "";
+        try {
+            if(type.equals("open")){
+                result = jobService.openAssignJob(id);
+            }else if(type.equals("close")){
+                result = jobService.closeAssignJob(id);
+            }else result = "wrong status";
+        } catch (Exception e) {
+
         }
         return result;
     }
 
-    @GetMapping("/jobClass/{id}")
-    public @ResponseBody String refreshWithClass(@PathVariable Integer id) throws SchedulerException {
-        String result;
-        JobEntity entity = timingTaskEntityRepository.getById(id);
-        if (entity == null) return "error: id is not exist ";
-        synchronized (logger) {
-            JobKey jobKey = jobService.getJobKey(entity);
-            Scheduler scheduler = schedulerFactoryBean.getScheduler();
-            scheduler.pauseJob(jobKey);
-            scheduler.unscheduleJob(TriggerKey.triggerKey(jobKey.getName(), jobKey.getGroup()));
-            scheduler.deleteJob(jobKey);
-            JobDataMap map = jobService.getJobDataMap(entity);
-            JobDetail jobDetail = jobService.getJobDetail(jobKey, entity.getDescription(), map, SimpleJob.class);
-            if (entity.getStatus().equals(JobStatus.OPEN)) {
-                scheduler.scheduleJob(jobDetail, jobService.getTrigger(entity));
-                result = "Refresh Job : " + entity.getName() + "\t jarPath: " + entity.getJarPath() + " success !";
-            } else {
-                result = "Refresh Job : " + entity.getName() + "\t jarPath: " + entity.getJarPath() + " failed ! , " +
-                        "Because the Job status is " + entity.getStatus();
-            }
+    @GetMapping("/jobs")
+    public @ResponseBody String StartOrStopJobs(String type) throws SchedulerException {
+        String result = "";
+        try {
+            if(type.equals("open")){
+                jobService.startAllJobs();
+            }else if(type.equals("close")){
+                jobService.stopAllJobs();
+            }else result = "wrong status";
+        } catch (Exception e) {
+
         }
         return result;
     }
+
+    // 修改和删除定时任务内容，并且默认将修改后的状态置为close，并且关闭定时任务。
+
+
+
+    @GetMapping("/stopJob/{id}")
+    public @ResponseBody String stop(@PathVariable Integer id ){
+        String result = "";
+        try {
+            result = jobService.closeAssignJob(id);
+        } catch (Exception e) {
+
+        }
+        return result;
+    }
+
 }

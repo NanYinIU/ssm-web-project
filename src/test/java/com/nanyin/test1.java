@@ -5,6 +5,7 @@ import com.nanyin.config.util.MDCUtil;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.junit.Test;
 
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
@@ -61,6 +62,25 @@ public class test1 {
 
         String endTime = simpleDateFormat.format(c2.getTime());
         System.out.println(endTime);
+    }
+
+    @Test
+    public void test5(){
+        try {
+            Class<?> clazz = Class.forName("com.nanyin.config.quartz.task.SimpleTask");
+            for (Class<?> aClass : clazz.getInterfaces()) {
+                if(aClass.equals(Class.forName("com.nanyin.config.quartz.task.Task"))){
+                    System.out.println(true);
+                    break;
+                }
+            }
+            Method execute = clazz.getDeclaredMethod("execute");
+            System.out.println(execute.getName());
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
     }
 
 
