@@ -5,6 +5,7 @@ import com.nanyin.entity.ProjectUserDuty;
 import com.nanyin.entity.User;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Created by NanYin on 2019/9/16.
@@ -12,7 +13,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "r_project_user")
-public class RProjectUser {
+public class RProjectUser implements Serializable {
     @Id
     @Column(columnDefinition = "INT(11)")
     @GeneratedValue(strategy= GenerationType.IDENTITY)

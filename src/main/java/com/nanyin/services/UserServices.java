@@ -1,5 +1,6 @@
 package com.nanyin.services;
 
+import com.nanyin.config.util.Result;
 import com.nanyin.entity.Resource;
 import com.nanyin.entity.Sex;
 import com.nanyin.entity.Status;
@@ -34,7 +35,7 @@ public interface UserServices {
 
     User addUser(UserDto user) throws Exception;
 
-    void deleteUser(Integer id) throws Exception;
+    Result deleteUser(Integer id) throws Exception;
 
     String doLogin(String username, String password, Boolean rememberMe, String locale,
                    HttpServletRequest request, HttpServletResponse response, List<Resource> sidebarInfoWapper) throws Exception;

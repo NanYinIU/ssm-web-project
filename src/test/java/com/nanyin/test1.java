@@ -2,6 +2,7 @@ package com.nanyin;
 
 import com.nanyin.config.util.CommonUtil;
 import com.nanyin.config.util.MDCUtil;
+import javassist.bytecode.ByteArray;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.junit.Test;
 
@@ -19,8 +20,8 @@ public class test1 {
         Object crdentials = "1";//密码原值
         Object salt = "1";//盐值
         int hashIterations = 1024;//加密1024次
-        Object result = new SimpleHash(hashAlgorithmName,crdentials,salt,hashIterations);
-        System.out.println("web".getBytes());
+        SimpleHash simpleHash = new SimpleHash(hashAlgorithmName, crdentials, salt, hashIterations);
+        System.out.println(simpleHash.getBytes());
     }
 
     @Test
@@ -81,6 +82,16 @@ public class test1 {
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void test6(){
+        // String 转化为 byte数组
+        String hello = "hello world";
+        byte[] bytes = hello.getBytes();
+        // byte数组转化为 String
+        String newHello = new String(bytes);
+        System.out.println(newHello);
     }
 
 

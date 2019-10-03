@@ -210,13 +210,15 @@ var deleteUser = function () {
                     if (data.code === 0) {
                         swal({
                             title: "Success!",
-                            text: "删除成功！Deleted successfully!",
+                            text: data.msg,
                             type: "success",
                             confirmButtonClass: "btn-primary",
                             confirmButtonText: "确认",
                         }, function () {
                             $("#table").bootstrapTable('refresh');
                         })
+                    }else if(data.code === 1){
+                        swal(data.msg, "Deleted failed, please try again!");
                     } else {
                         swal("删除失败，请重试!", "Deleted failed, please try again!");
                     }
@@ -275,7 +277,7 @@ function resetPass(ids) {
         url: '/user/user/'+ids+"/password",
         dataType: 'json',
         contentType:'application/json',
-        data: JSON.stringify(t),
+        // data: JSON.stringify(t),
         success: function (res) {
             var data = JSON.parse(res);
             if (data.code === 0) {

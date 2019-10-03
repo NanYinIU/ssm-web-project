@@ -146,9 +146,9 @@ public class UserController {
     @DeleteMapping("/user/user/{id}")
     @ResponseBody
     public String deleteUser(@PathVariable(name = "id") Integer id) {
-        Result result = Result.resultInstance();
+        Result result;
         try {
-            userServices.deleteUser(id);
+            result = userServices.deleteUser(id);
         } catch (Exception e) {
             result = Result.resultInstance(e);
         }
@@ -163,6 +163,7 @@ public class UserController {
         try{
             userServices.changePassword(id);
         }catch (Exception e){
+            e.printStackTrace();
             result = Result.resultInstance(e);
         }
         return JSON.toJSONString(result);

@@ -147,7 +147,7 @@
                 <form id="modify">
                     <div class="form-group ">
                         <label for="name"><i class="far fa-user"></i> 用户名</label>
-                        <input type="text" class="form-control" id="modify-name" name="name" placeholder="姓名">
+                        <input type="text" class="form-control" id="modify-name" name="name"   placeholder="姓名">
                     </div>
                     <div class="form-group">
                         <label th:for="status"><i class="fas fa-parking"></i> 状态</label>
@@ -165,7 +165,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" th:onclick="modifyUser">保存</button>
+                <button type="button" class="btn btn-primary" th:onclick="modifyUser()">保存</button>
             </div>
         </div>
     </div>

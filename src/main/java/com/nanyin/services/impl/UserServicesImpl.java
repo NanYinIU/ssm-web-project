@@ -1,7 +1,9 @@
 package com.nanyin.services.impl;
 
+import com.nanyin.config.util.BasicHash;
 import com.nanyin.config.util.CommonUtil;
 import com.nanyin.config.util.HttpsUtil;
+import com.nanyin.config.util.Result;
 import com.nanyin.entity.*;
 import com.nanyin.entity.DTO.UserDto;
 import com.nanyin.entity.DTO.UserInfoDto;
@@ -11,7 +13,6 @@ import com.nanyin.repository.SexRepository;
 import com.nanyin.repository.StatusRepository;
 import com.nanyin.repository.UserRepository;
 import com.nanyin.services.UserServices;
-import com.sun.xml.internal.bind.v2.model.core.ID;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.crypto.hash.SimpleHash;
@@ -28,12 +29,14 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 @Service
 @CacheConfig(cacheManager = "TtlCacheManager")
 public class UserServicesImpl implements UserServices {
+
+    private static final String ALGORITHM_NAME = "MD5";
+    private static final int ITERATIONS = 1024;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
@@ -151,8 +154,25 @@ public class UserServicesImpl implements UserServices {
 
     @Override
     @CacheEvict(value = "users", key = "#id")
-    public void deleteUser(Integer id) throws Exception {
-        userRepository.deleteById(id);
+    public Result deleteUser(Integer id) throws Exception {
+        Result result = Result.resultInstance();
+        if (checkIsLastUser()) {
+            result.setCode(1);
+            result.setMsg("删除时最少还剩1个人！");
+        } else {
+            userRepository.deleteById(id);
+            result.setCode(0);
+            result.setMsg("删除成功");
+        }
+        return result;
+    }
+
+    private boolean checkIsLastUser() {
+        if(userRepository.countAllByIsDeleted((short)0) == 0){
+           return true ;
+        }else{
+            return false;
+        }
     }
 
 
@@ -197,22 +217,21 @@ public class UserServicesImpl implements UserServices {
 
     @Override
     public void changePassword(Integer id) {
-        User user = new User(id);
+        User user = userRepository.findUsersById(id);
         user.setPassword(generatePassword(1));
         userRepository.saveAndFlush(user);
     }
 
     /**
      * 使用固定的md5 1024次加密获得加密后的密码
+     * 在使用SimpleHash进行加密Object的时候，需要重写Simplehash中的objectToBytes方法。
      * @param crdentials
      * @return
      */
     private String generatePassword(Object crdentials){
-        String hashAlgorithmName = "MD5";//加密方式
         Object salt = "1";//盐值
-        int hashIterations = 1024;//加密1024次
-        Object result = new SimpleHash(hashAlgorithmName,crdentials,salt,hashIterations);
-        return result.toString();
+        BasicHash simpleHash = new BasicHash(ALGORITHM_NAME, crdentials, salt,ITERATIONS);
+        return new String(simpleHash.getBytes());
     }
 
     /*
