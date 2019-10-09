@@ -9,5 +9,8 @@ import java.io.Serializable;
 @Entity
 @Table(name = "s_user_sex")
 public class Sex extends BasicEntity implements Serializable {
+    public Sex() {
+    }
+
     private static final long serialVersionUID = -450912372259672214L;
 }

@@ -21,7 +21,7 @@ public class test1 {
         Object salt = "1";//盐值
         int hashIterations = 1024;//加密1024次
         SimpleHash simpleHash = new SimpleHash(hashAlgorithmName, crdentials, salt, hashIterations);
-        System.out.println(simpleHash.getBytes());
+        System.out.println(simpleHash.toString());
     }
 
     @Test

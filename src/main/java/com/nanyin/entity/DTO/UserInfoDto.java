@@ -1,7 +1,12 @@
 package com.nanyin.entity.DTO;
 
+import com.nanyin.config.util.Copyable;
+import com.nanyin.entity.Sex;
+import com.nanyin.entity.User;
 import lombok.Data;
+import org.apache.commons.beanutils.PropertyUtils;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 
 
@@ -9,7 +14,7 @@ import java.util.Date;
 public class UserInfoDto {
 
     private int id;
-//    private String name;
+//    private String username;
 
     private String email;
 

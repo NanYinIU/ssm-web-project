@@ -1,9 +1,6 @@
 package com.nanyin.services.impl;
 
-import com.nanyin.config.util.BasicHash;
-import com.nanyin.config.util.CommonUtil;
-import com.nanyin.config.util.HttpsUtil;
-import com.nanyin.config.util.Result;
+import com.nanyin.config.util.*;
 import com.nanyin.entity.*;
 import com.nanyin.entity.DTO.UserDto;
 import com.nanyin.entity.DTO.UserInfoDto;
@@ -13,9 +10,12 @@ import com.nanyin.repository.SexRepository;
 import com.nanyin.repository.StatusRepository;
 import com.nanyin.repository.UserRepository;
 import com.nanyin.services.UserServices;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.util.SavedRequest;
 import org.apache.shiro.web.util.WebUtils;
@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Set;
 
@@ -48,7 +49,6 @@ public class UserServicesImpl implements UserServices {
 
     @Autowired
     MessageSource messageSource;
-
 
     @Override
     @Cacheable(value = "user", key = "#name")
@@ -79,7 +79,9 @@ public class UserServicesImpl implements UserServices {
     })
     public User updateUser(Integer id, UserInfoDto userInfoDto) throws Exception {
         User u = userRepository.findUsersById(id);
-        u = transferToUser(u, userInfoDto);
+        TransferBetweenUserAndUserInfoDto transferBetweenUserAndUserInfoDto = new TransferBetweenUserAndUserInfoDto();
+        transferBetweenUserAndUserInfoDto.setUser(u);
+        u = transferBetweenUserAndUserInfoDto.transferFrom(userInfoDto);
         return userRepository.save(u);
     }
 
@@ -95,62 +97,10 @@ public class UserServicesImpl implements UserServices {
     @Override
     @CachePut(value = "user", key = "#user.id")
     public User addUser(UserDto user) throws Exception {
-        return transferToUser(new User(), user);
+        TransferBetweenUserAndUserDto transferBetweenUserAndUserDto = new TransferBetweenUserAndUserDto();
+        return transferBetweenUserAndUserDto.transferFrom(user);
     }
 
-    private User transferToUser(User user, UserDto userDto) {
-        if (userDto.getName() != null) {
-            user.setName(userDto.getName());
-        }
-        if (userDto.getId() != 0) {
-            user.setId(userDto.getId());
-        }
-        if (userDto.getPassword() != null) {
-            user.setPassword(userDto.getPassword());
-        }
-        if (userDto.getEmail() != null) {
-            user.setEmail(userDto.getEmail());
-        }
-        if (userDto.getAge() != 0) {
-            user.setAge(userDto.getAge());
-        }
-        if (userDto.getSex() != 0) {
-            user.setSex(sexRepository.getOne(userDto.getSex()));
-        }
-        if (userDto.getStatus() != 0) {
-            user.setStatus(statusRepository.getOne(userDto.getStatus()));
-        }
-        if (userDto.getAuths() != null) {
-            Set<Auth> allByIdContains = authRepository.findDistinctByIdIn((userDto.getAuths()));
-            user.setAuths(allByIdContains);
-        }
-        return user;
-    }
-
-    private User transferToUser(User user, UserInfoDto userInfoDto) {
-        if (userInfoDto.getName() != null) {
-            user.setName(userInfoDto.getName());
-        }
-        if (userInfoDto.getId() != 0) {
-            user.setId(userInfoDto.getId());
-        }
-        if (userInfoDto.getPassword() != null) {
-            user.setPassword(userInfoDto.getPassword());
-        }
-        if (userInfoDto.getEmail() != null) {
-            user.setEmail(userInfoDto.getEmail());
-        }
-        if (userInfoDto.getAge() != 0) {
-            user.setAge(userInfoDto.getAge());
-        }
-        if (userInfoDto.getSex() != 0) {
-            user.setSex(sexRepository.getOne(userInfoDto.getSex()));
-        }
-        if (userInfoDto.getPosition() != null && user.getPerson() != null) {
-            user.getPerson().setPosition(userInfoDto.getPosition());
-        }
-        return user;
-    }
 
     @Override
     @CacheEvict(value = "users", key = "#id")
@@ -256,7 +206,69 @@ public class UserServicesImpl implements UserServices {
     public List<Status> findNotDeletedUserStatus() throws Exception {
         return statusRepository.findAllByIsDeletedOrderByOrd(DeletedStatusEnum.IS_NOT_DELETED.isJudge());
     }
+    @Getter
+    @Setter
+    class TransferBetweenUserAndUserInfoDto extends Copyable<User,UserInfoDto> {
 
+        private User user;
+        private UserInfoDto userInfoDto;
 
+       @Override
+        protected User transferFrom(UserInfoDto userInfoDto) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+            // 使用propertyUtil进行属性的拷贝
+            PropertyUtils.copyProperties(user,userInfoDto);
+            //其他特殊属性需要进行手动赋值
+            if (userInfoDto.getPosition() != null && user.getPerson() != null) {
+                user.getPerson().setPosition(userInfoDto.getPosition());
+            }
+            if(userInfoDto.getAddress() !=null && userInfoDto.getAddress() !=null){
+                user.getPerson().setAddress(userInfoDto.getAddress());
+            }
+            if(userInfoDto.getName() !=null && userInfoDto.getName()!= null){
+                user.getPerson().setName(userInfoDto.getName());
+            }
+            if (userInfoDto.getSex() != 0) {
+                user.setSex(sexRepository.getOne(userInfoDto.getSex()));
+            }
+            if (userInfoDto.getPosition() != null && user.getPerson() != null) {
+                user.getPerson().setPosition(userInfoDto.getPosition());
+            }
+            return user;
+        }
+
+        @Override
+        protected UserInfoDto reverseTransfer(User user) {
+            return null;
+        }
+    }
+
+    @Getter
+    @Setter
+    class TransferBetweenUserAndUserDto extends Copyable<User,UserDto>{
+
+        private User user;
+        private UserDto userDto;
+
+        @Override
+        protected User transferFrom(UserDto userDto) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+            PropertyUtils.copyProperties(user,userDto);
+            if (userDto.getSex() != 0) {
+                user.setSex(sexRepository.getOne(userDto.getSex()));
+            }
+            if (userDto.getStatus() != 0) {
+                user.setStatus(statusRepository.getOne(userDto.getStatus()));
+            }
+            if (userDto.getAuths() != null) {
+                Set<Auth> allByIdContains = authRepository.findDistinctByIdIn((userDto.getAuths()));
+                user.setAuths(allByIdContains);
+            }
+            return user;
+        }
+
+        @Override
+        protected UserDto reverseTransfer(User user) {
+            return null;
+        }
+    }
 
 }
