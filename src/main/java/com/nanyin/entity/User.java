@@ -2,7 +2,6 @@ package com.nanyin.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.nanyin.entity.DO.RProjectUser;
 import io.swagger.annotations.ApiModel;
 import lombok.*;
 import org.hibernate.annotations.*;
@@ -98,9 +97,6 @@ public class User implements Serializable {
     @NotFound(action = NotFoundAction.IGNORE)
     @JSONField(name = "auths")
     private Set<Auth> auths;
-
-    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
-    private Set<RProjectUser> projects;
 
     @OneToOne
     @JoinColumn(columnDefinition = "INT(11)",name = "person_id")

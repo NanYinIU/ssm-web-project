@@ -95,11 +95,11 @@ var refreshPassword = function () {
 
 // boostrap-table自定义数据格式
 var responseHandler = function (rec) {
-    rec = JSON.parse(rec);
+    // rec = JSON.parse(rec);
     // console.log(rec);
     return {
-        "total": rec.data.total,//总页数
-        "rows": rec.data.rows   //数据
+        "total": rec.total,//总页数
+        "rows": rec.data   //数据
     };
 }
 // 多选的table中的显示 以逗号隔开

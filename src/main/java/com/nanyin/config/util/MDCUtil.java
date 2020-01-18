@@ -2,9 +2,6 @@ package com.nanyin.config.util;
 
 import org.slf4j.MDC;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Locale;
 /**
  * 使用mdc构建日志，使用ThreadLocal存储国际化信息，防止出现在url上
@@ -77,7 +74,7 @@ public class MDCUtil {
     }
 
     public static Locale getLocale(String locale){
-        CommonUtil.check(locale.split("_").length > 1, "check_error", "resolveLocale");
+        Tools.check(locale.split("_").length > 1, "check_error", "resolveLocale");
         // 在MDC中存放副本
         return new Locale(locale.split("_")[0], locale.split("_")[1]);
     }

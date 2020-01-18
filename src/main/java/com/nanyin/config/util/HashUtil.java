@@ -4,20 +4,20 @@ import org.apache.shiro.codec.CodecException;
 import org.apache.shiro.crypto.UnknownAlgorithmException;
 import org.apache.shiro.crypto.hash.SimpleHash;
 
-public class BasicHash extends SimpleHash {
-    public BasicHash(String algorithmName) {
+public class HashUtil extends SimpleHash {
+    public HashUtil(String algorithmName) {
         super(algorithmName);
     }
 
-    public BasicHash(String algorithmName, Object source) throws CodecException, UnknownAlgorithmException {
+    public HashUtil(String algorithmName, Object source) throws CodecException, UnknownAlgorithmException {
         super(algorithmName, source);
     }
 
-    public BasicHash(String algorithmName, Object source, Object salt) throws CodecException, UnknownAlgorithmException {
+    public HashUtil(String algorithmName, Object source, Object salt) throws CodecException, UnknownAlgorithmException {
         super(algorithmName, source, salt);
     }
 
-    public BasicHash(String algorithmName, Object source, Object salt, int hashIterations) throws CodecException, UnknownAlgorithmException {
+    public HashUtil(String algorithmName, Object source, Object salt, int hashIterations) throws CodecException, UnknownAlgorithmException {
         super(algorithmName, source, salt, hashIterations);
     }
 

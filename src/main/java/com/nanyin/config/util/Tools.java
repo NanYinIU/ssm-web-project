@@ -1,22 +1,20 @@
 package com.nanyin.config.util;
 
-import java.util.Locale;
-import java.util.Optional;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
+
 import com.google.common.base.Strings;
 import com.nanyin.config.exceptions.CheckException;
-import com.nanyin.config.locale.LocaleService;
-import org.apache.tomcat.jni.Local;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Component;
 
+import javax.persistence.Id;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.UUID;
 
-public class CommonUtil {
+public class Tools {
 
     private static MessageSource resources;
 
@@ -25,7 +23,7 @@ public class CommonUtil {
     }
 
     public static PageRequest pageRequest(Integer offset, Integer limit, String order, String... properties){
-        return new PageRequest((offset/limit),limit, CommonUtil.sending(order,properties));
+        return new PageRequest((offset/limit),limit, Tools.sending(order,properties));
     }
 
     /**
@@ -39,7 +37,7 @@ public class CommonUtil {
     }
 
     public static void setResources(MessageSource resources) {
-        CommonUtil.resources = resources;
+        Tools.resources = resources;
     }
 
     /**
@@ -73,5 +71,43 @@ public class CommonUtil {
         return Optional.ofNullable(o).isPresent();
     }
 
+
+    public static int[] obtainSerializeId(Collection<?> collection,Class clazz) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+        int i = 0;
+        int[] result = new int[collection.size()];
+        Field field = doObtainGetSerializeField(clazz);
+        Method method = clazz.getDeclaredMethod(doObtainGetMethodName(field.getName()));
+        Iterator<?> iterator = collection.iterator();
+        while(iterator.hasNext()){
+            Object id = method.invoke(iterator.next());
+            result[i] = (int) id;
+            i++;
+        }
+        return result;
+    }
+
+    private static String doObtainGetMethodName(String fieldName){
+        if(fieldName.length() > 1){
+            fieldName = fieldName.substring(0,1).toUpperCase()+fieldName.substring(1);
+        }else{
+            fieldName = fieldName.toUpperCase();
+        }
+        return "get"+fieldName;
+    }
+
+    private static Field doObtainGetSerializeField(Class clazz){
+        Field field = null;
+        boolean flag = false;
+        for (Field f : clazz.getDeclaredFields()) {
+            for (Id id : f.getAnnotationsByType(Id.class)) {
+                field  = f;
+                flag = true;
+            }
+            if(flag){
+                break;
+            }
+        }
+        return field;
+    }
 
 }

@@ -4,13 +4,14 @@ import com.nanyin.config.util.*;
 import com.nanyin.entity.*;
 import com.nanyin.entity.DTO.UserDto;
 import com.nanyin.entity.DTO.UserInfoDto;
+import com.nanyin.entity.result.Result;
+import com.nanyin.config.enums.ResultCodeEnum;
 import com.nanyin.enumEntity.DeletedStatusEnum;
 import com.nanyin.repository.AuthRepository;
 import com.nanyin.repository.SexRepository;
 import com.nanyin.repository.StatusRepository;
 import com.nanyin.repository.UserRepository;
 import com.nanyin.services.UserServices;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -58,18 +59,26 @@ public class UserServicesImpl implements UserServices {
 
     @Cacheable(value = "users", key = "#offset+'_'+#limit+'_'+#order+'_'+#search")
     @Override
-    public List<User> findAllByIsDeleted(Integer offset, Integer limit, String order, String search) throws Exception {
+    public Result findAllByIsDeleted(Integer offset, Integer limit, String order, String search) throws Exception {
+        Result result = new Result();
+
         logger.info("User limit:{}", limit);
         if (search == null || "".equals(search)) {
-            return userRepository.findAllByIsDeleted(CommonUtil.pageRequest(offset, limit, order, "id"), (short) 0);
+            result.setData(userRepository.findAllByIsDeleted(Tools.pageRequest(offset, limit, order, "id"), (short) 0));
+            result.setTotal(userRepository.countAllByIsDeleted((short) 0));
+            return result;
         }
-        return userRepository.findAllByIsDeletedAndNameLike(CommonUtil.pageRequest(offset, limit, order, "id"), (short) 0, "%" + search + "%");
+        result.setData(userRepository.findAllByIsDeletedAndNameLike(Tools.pageRequest(offset, limit, order, "id"), (short) 0, "%" + search + "%"));
+        result.setTotal(userRepository.countAllByIsDeletedAndNameLike((short)0,search));
+        return result;
     }
 
     @Cacheable(value = "user", key = "#id")
     @Override
-    public User findUserById(Integer id) throws Exception {
-        return userRepository.findUsersById(id);
+    public Result findUserById(Integer id) throws Exception {
+        Result result = new Result();
+        result.setData(userRepository.findUsersById(id));
+        return result;
     }
 
 
@@ -107,12 +116,11 @@ public class UserServicesImpl implements UserServices {
     public Result deleteUser(Integer id) throws Exception {
         Result result = Result.resultInstance();
         if (checkIsLastUser()) {
-            result.setCode(1);
-            result.setMsg("删除时最少还剩1个人！");
+            result.setCode(ResultCodeEnum.FAIL);
+            result.setMessage("删除时最少还剩1个人！");
         } else {
             userRepository.deleteById(id);
-            result.setCode(0);
-            result.setMsg("删除成功");
+            result.setMessage("删除成功");
         }
         return result;
     }
@@ -133,7 +141,7 @@ public class UserServicesImpl implements UserServices {
         SavedRequest savedRequest = WebUtils.getSavedRequest(request);
         Subject subject = SecurityUtils.getSubject();
 
-        if (CommonUtil.isBlank(username)) {
+        if (Tools.isBlank(username)) {
             return "signin";
         }
         if (rememberMe == null) {
@@ -143,9 +151,9 @@ public class UserServicesImpl implements UserServices {
             UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(username, password, rememberMe);
             // 在登陆前如果想抛出自定义异常，需要在controller里面进行
             User user = getUserFromUserName(username);
-            CommonUtil.setResources(messageSource);
-            CommonUtil.check(CommonUtil.isNotNull(user), "username_or_password_wrong");
-            CommonUtil.check(user.getStatus().getId() != -1, "user_has_been_blocked", "");
+            Tools.setResources(messageSource);
+            Tools.check(Tools.isNotNull(user), "username_or_password_wrong");
+            Tools.check(user.getStatus().getId() != -1, "user_has_been_blocked", "");
             subject.login(usernamePasswordToken);
             // 登陆成功后把 user 放到session中。把locale 信息放到 cookie中
             HttpsUtil.setAttribute("username", username);HttpsUtil.setAttribute("sidebar", sidebarInfoWapper);
@@ -180,7 +188,7 @@ public class UserServicesImpl implements UserServices {
      */
     private String generatePassword(Object crdentials){
         Object salt = "1";//盐值
-        BasicHash simpleHash = new BasicHash(ALGORITHM_NAME, crdentials, salt,ITERATIONS);
+        HashUtil simpleHash = new HashUtil(ALGORITHM_NAME, crdentials, salt,ITERATIONS);
         return new String(simpleHash.getBytes());
     }
 
@@ -266,8 +274,22 @@ public class UserServicesImpl implements UserServices {
         }
 
         @Override
-        protected UserDto reverseTransfer(User user) {
-            return null;
+        protected UserDto reverseTransfer(User user){
+            try {
+                PropertyUtils.copyProperties(userDto,user);
+                userDto.setSex(Tools.isNotNull(user.getSex())?user.getSex().getId():0);
+                userDto.setStatus(Tools.isNotNull(user.getStatus())?user.getStatus().getId():0);
+                userDto.setStatus(Tools.isNotNull(user.getUnit())?user.getUnit().getId():0);
+                userDto.setAuths(Tools.obtainSerializeId(user.getRoles(), Role.class));
+                userDto.setRoles(Tools.obtainSerializeId(user.getAuths(), Auth.class));
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+            return userDto;
         }
     }
 

@@ -1,12 +1,12 @@
 package com.nanyin.entity.DTO;
 
-import com.nanyin.config.operateLog.OperateModul;
-import com.nanyin.config.operateLog.OperationType;
+import com.nanyin.config.enums.OperateModuleEnum;
+import com.nanyin.config.enums.OperationTypeEnum;
 import lombok.Data;
 
 @Data
 public class OperateLogDto {
-    private OperationType operationType;
+    private OperationTypeEnum operationTypeEnum;
     private String operationName;
-    private OperateModul operateModul;
+    private OperateModuleEnum operateModuleEnum;
 }

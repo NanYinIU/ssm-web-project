@@ -1,17 +1,14 @@
 package com.nanyin;
 
-import com.nanyin.config.util.CommonUtil;
+import com.nanyin.config.util.Tools;
 import com.nanyin.config.util.MDCUtil;
-import javassist.bytecode.ByteArray;
+import com.nanyin.entity.User;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.junit.Test;
 
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
 
 public class test1 {
 
@@ -30,7 +27,7 @@ public class test1 {
         String dateString = new SimpleDateFormat("MMddhhmmss-SSS").format(date);
         System.out.println(dateString+"-"+ UUID.randomUUID().toString().replace("-", "").substring(0,10));
         System.out.println(MDCUtil.getLocale().toString());
-        System.out.println(CommonUtil.isNull(null));
+        System.out.println(Tools.isNull(null));
     }
 
     @Test
@@ -92,6 +89,27 @@ public class test1 {
         // byte数组转化为 String
         String newHello = new String(bytes);
         System.out.println(newHello);
+    }
+
+    @Test
+    public void test7(){
+        User u = new User(1);
+        User u1 = new User(2);
+        User u2 = new User(3);
+        User u3 = new User(4);
+        List<User> users = new ArrayList<>();
+        users.add(u);
+        users.add(u1);
+        users.add(u2);
+        users.add(u3);
+        try{
+            int[] ints = Tools.obtainSerializeId(users, User.class);
+            for (int anInt : ints) {
+                System.out.println(anInt);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 

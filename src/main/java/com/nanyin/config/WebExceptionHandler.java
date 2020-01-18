@@ -1,19 +1,14 @@
 package com.nanyin.config;
 
 import com.alibaba.fastjson.JSON;
-import com.nanyin.config.exceptions.NoUserAccountException;
-import com.nanyin.config.exceptions.UserIsBlockException;
-import com.nanyin.config.util.Result;
+import com.nanyin.entity.result.Result;
+import com.nanyin.config.enums.ResultCodeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 统一异常处理
@@ -46,7 +41,7 @@ public class WebExceptionHandler {
         }else {
             msg = "系统繁忙，请稍后重试...";
         }
-        Result result = Result.resultInstance(-1,msg,bindResult);
+        Result result = Result.resultInstance(ResultCodeEnum.FAIL,msg,bindResult);
         return JSON.toJSONString(result);
     }
 

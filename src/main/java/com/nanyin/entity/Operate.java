@@ -1,6 +1,6 @@
 package com.nanyin.entity;
 
-import com.nanyin.config.operateLog.OperationType;
+import com.nanyin.config.enums.OperationTypeEnum;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -18,7 +18,7 @@ public class Operate extends BasicEntity implements Serializable {
 
     @Column(length = 255)
     @Enumerated(EnumType.STRING)
-    private OperationType operateType;
+    private OperationTypeEnum operateType;
 
     @Column(length=255)
     private String ip;

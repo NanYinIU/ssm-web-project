@@ -1,12 +1,9 @@
 package com.nanyin.config.shiro;
 
 import com.nanyin.config.exceptions.NoUserAccountException;
-import com.nanyin.config.exceptions.UserIsBlockException;
-import com.nanyin.config.util.CommonUtil;
 import com.nanyin.entity.Auth;
 import com.nanyin.entity.Role;
 import com.nanyin.entity.User;
-import com.nanyin.enumEntity.SystemStatusEnum;
 import com.nanyin.services.UserServices;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;

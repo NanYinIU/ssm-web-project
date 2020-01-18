@@ -11,7 +11,9 @@ import java.util.Date;
  */
 @MappedSuperclass
 @Data
-class BasicEntity {
+public class BasicEntity {
+
+
     @Id
     @Column(columnDefinition = "INT(11)")
     @GeneratedValue(strategy= GenerationType.IDENTITY)

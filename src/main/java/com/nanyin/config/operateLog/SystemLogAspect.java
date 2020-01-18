@@ -1,7 +1,9 @@
 package com.nanyin.config.operateLog;
 
+import com.nanyin.config.enums.OperateModuleEnum;
+import com.nanyin.config.enums.OperationTypeEnum;
 import com.nanyin.config.locale.LocaleService;
-import com.nanyin.config.util.CommonUtil;
+import com.nanyin.config.util.Tools;
 import com.nanyin.config.util.HttpsUtil;
 import com.nanyin.config.util.MDCUtil;
 import com.nanyin.entity.Operate;
@@ -85,7 +87,7 @@ public class SystemLogAspect {
     public void after(JoinPoint joinPoint) throws Exception {
         //读取session中的用户;
         HttpServletRequest request = HttpsUtil.getRequest();
-        CommonUtil.check(CommonUtil.isNotNull(request), "", "");
+        Tools.check(Tools.isNotNull(request), "", "");
         OperateLogDto log = getArgs(joinPoint);
         // 进行对数据的存库操作,先打印debug日志
         debugLog();
@@ -113,7 +115,7 @@ public class SystemLogAspect {
         operate.setDevice(os);
         operate.setGmtCreate(new Date());
         operate.setIp(ip);
-        operate.setOperateType(log.getOperationType());
+        operate.setOperateType(log.getOperationTypeEnum());
         return operateService.save(operate);
     }
 
@@ -123,8 +125,8 @@ public class SystemLogAspect {
         Object[] arguments = joinPoint.getArgs();
         Class targetClass = Class.forName(targetName);
         Method[] methods = targetClass.getMethods();
-        OperationType operationType = OperationType.INIT;
-        OperateModul operateModul = OperateModul.OTHER;
+        OperationTypeEnum operationTypeEnum = OperationTypeEnum.INIT;
+        OperateModuleEnum operateModuleEnum = OperateModuleEnum.OTHER;
         String operationName = "";
         OperateLogDto logDto = new OperateLogDto();
         for (Method method : methods) {
@@ -132,13 +134,13 @@ public class SystemLogAspect {
                 Class[] clazzs = method.getParameterTypes();
                 if (clazzs.length == arguments.length) {
                     int[] param = method.getAnnotation(getAnnotationClass()).params();
-                    operationType = method.getAnnotation(getAnnotationClass()).operationType();
+                    operationTypeEnum = method.getAnnotation(getAnnotationClass()).operationType();
                     operationName = localeService.getMessage(method.getAnnotation(getAnnotationClass()).operationName(),
                             getArguments(arguments,param));
-                    operateModul = method.getAnnotation(getAnnotationClass()).operateModul();
-                    logDto.setOperationType(operationType);
+                    operateModuleEnum = method.getAnnotation(getAnnotationClass()).operateModul();
+                    logDto.setOperationTypeEnum(operationTypeEnum);
                     logDto.setOperationName(operationName);
-                    logDto.setOperateModul(operateModul);
+                    logDto.setOperateModuleEnum(operateModuleEnum);
                     break;
                 }
             }
@@ -150,14 +152,14 @@ public class SystemLogAspect {
         long finish = System.currentTimeMillis();
         logger.info("{}", localeService.getMessage("start_log", "",
                 joinPoint.getTarget().getClass().getName(), joinPoint.getSignature().getName(),
-                log.getOperateModul(), log.getOperationName(), finish - start));
+                log.getOperateModuleEnum(), log.getOperationName(), finish - start));
     }
 
     private void afterLog(JoinPoint joinPoint, OperateLogDto log) throws ClassNotFoundException {
         long finish = System.currentTimeMillis();
         logger.info("{}", localeService.getMessage("after_log", "",
                 joinPoint.getTarget().getClass().getName(), joinPoint.getSignature().getName(),
-                log.getOperateModul(), log.getOperationName(), finish - start));
+                log.getOperateModuleEnum(), log.getOperationName(), finish - start));
     }
 
     /**

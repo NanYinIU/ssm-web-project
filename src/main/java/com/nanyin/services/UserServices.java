@@ -1,6 +1,6 @@
 package com.nanyin.services;
 
-import com.nanyin.config.util.Result;
+import com.nanyin.entity.result.Result;
 import com.nanyin.entity.Resource;
 import com.nanyin.entity.Sex;
 import com.nanyin.entity.Status;
@@ -17,9 +17,9 @@ public interface UserServices {
     User getUserFromUserName(String name) throws Exception;
 
 
-    List<User> findAllByIsDeleted(Integer offset, Integer limit, String order, String search) throws Exception;
+    Result findAllByIsDeleted(Integer offset, Integer limit, String order, String search) throws Exception;
 
-    User findUserById(Integer id) throws Exception;
+    Result findUserById(Integer id) throws Exception;
 
     User updateUser(Integer id, UserInfoDto userInfoDto) throws Exception;
 

@@ -38,4 +38,6 @@ spring:
       #            instanceName: clusteredScheduler
       #            instanceId: AUTO
 server:
-    port: 8088
+    port: 8080
+    servlet:
+        context-path: "/dev-api/api/"

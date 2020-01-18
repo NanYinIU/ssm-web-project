@@ -34,8 +34,5 @@ public class UserDto {
 
     private int[] auths;
 
-    private int[] projects;
-
-    private int[] projectUserDuties;
 
 }

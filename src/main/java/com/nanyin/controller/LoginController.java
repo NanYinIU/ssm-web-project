@@ -6,7 +6,7 @@ import com.nanyin.config.locale.LocaleService;
 import com.nanyin.config.locale.MyCookieResolver;
 import com.nanyin.config.util.HttpsUtil;
 import com.nanyin.config.util.MDCUtil;
-import com.nanyin.config.util.Result;
+import com.nanyin.entity.result.Result;
 import com.nanyin.entity.Resource;
 import com.nanyin.services.ResourceService;
 import com.nanyin.services.UserServices;
@@ -71,16 +71,16 @@ public class LoginController {
             List<Resource> sidebarInfoWapper = resourceService.getSidebarInfoWapper(username);
             return userServices.doLogin(username, password, rememberMe, locale, request, response, sidebarInfoWapper);
         } catch (CheckException c){
-            model.addAttribute("msg", c.getMessage());
+            model.addAttribute("message", c.getMessage());
             MDCUtil.clearAllUserInfo();
             return "signin";
         }catch (AuthenticationException in) {
-            model.addAttribute("msg", localeService.getMessage("no_account"));
+            model.addAttribute("message", localeService.getMessage("no_account"));
             MDCUtil.clearAllUserInfo();
             return "signin";
         } catch (Exception ex) {
             ex.printStackTrace();
-            model.addAttribute("msg", localeService.getMessage("system_error"));
+            model.addAttribute("message", localeService.getMessage("system_error"));
             MDCUtil.clearAllUserInfo();
             return "signin";
         }

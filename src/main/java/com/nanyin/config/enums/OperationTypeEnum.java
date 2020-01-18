@@ -1,6 +1,6 @@
-package com.nanyin.config.operateLog;
+package com.nanyin.config.enums;
 
-public enum OperationType {
+public enum OperationTypeEnum {
 
     /**
      * 增

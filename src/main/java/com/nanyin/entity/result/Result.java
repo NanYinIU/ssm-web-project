@@ -1,5 +1,6 @@
-package com.nanyin.config.util;
+package com.nanyin.entity.result;
 
+import com.nanyin.config.enums.ResultCodeEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -9,19 +10,13 @@ import java.util.Map;
 @Data
 public class Result<T> implements Serializable {
 
-    public static final int NO_LOGIN = -1;
+    private String message = "success";
 
-    public static final int SUCCESS = 0;
-
-    public static final int FAIL = 1;
-
-    public static final int NO_PERMISSION = 2;
-
-    private String msg = "success";
-
-    private int code = SUCCESS;
+    private ResultCodeEnum code = ResultCodeEnum.SUCCESS;
 
     private T data;
+
+    private int total;
 
     public Result() {
         super();
@@ -34,12 +29,12 @@ public class Result<T> implements Serializable {
 
     Result(Throwable e) {
         super();
-        this.msg = e.toString();
-        this.code = FAIL;
+        this.message = e.toString();
+        this.code = ResultCodeEnum.FAIL;
     }
 
-    public Result(String msg, int code, T data) {
-        this.msg = msg;
+    public Result(String msg, ResultCodeEnum code, T data) {
+        this.message = msg;
         this.code = code;
         this.data = data;
     }
@@ -64,7 +59,7 @@ public class Result<T> implements Serializable {
         return new Result<Object>(data);
     }
 
-    public static Result resultInstance(int code,String message,Object data){
+    public static Result resultInstance(ResultCodeEnum code, String message, Object data){
         return  new Result<Object>(message,code,data);
     }
 
