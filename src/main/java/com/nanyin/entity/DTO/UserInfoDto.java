@@ -1,6 +1,5 @@
 package com.nanyin.entity.DTO;
 
-import com.nanyin.config.util.Copyable;
 import com.nanyin.entity.Sex;
 import com.nanyin.entity.User;
 import lombok.Data;

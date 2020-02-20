@@ -1,6 +1,6 @@
 package com.nanyin.services;
 
-import com.nanyin.entity.result.Result;
+import com.nanyin.config.util.Result;
 import com.nanyin.entity.Resource;
 import com.nanyin.entity.Sex;
 import com.nanyin.entity.Status;
@@ -19,30 +19,7 @@ public interface UserServices {
 
     Result findAllByIsDeleted(Integer offset, Integer limit, String order, String search) throws Exception;
 
-    Result findUserById(Integer id) throws Exception;
+    String login(String username, String password, Boolean rememberMe);
 
-    User updateUser(Integer id, UserInfoDto userInfoDto) throws Exception;
-
-    /*
-     * 下面是用户表的标准属性信息
-     **/
-
-    List<Sex> findNotDeletedUserSex() throws Exception;
-
-    List<Status> findNotDeletedUserStatus() throws Exception;
-
-    int countAllByIsDeleted(String search) throws Exception;
-
-    User addUser(UserDto user) throws Exception;
-
-    Result deleteUser(Integer id) throws Exception;
-
-    String doLogin(String username, String password, Boolean rememberMe, String locale,
-                   HttpServletRequest request, HttpServletResponse response, List<Resource> sidebarInfoWapper) throws Exception;
-
-    /**
-     * 密码重置为1
-     * @param id
-     */
-    void changePassword(Integer id);
+    User getCurrentUserInfo(String token) throws Exception;
 }

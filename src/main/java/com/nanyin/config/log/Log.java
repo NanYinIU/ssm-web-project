@@ -1,4 +1,4 @@
-package com.nanyin.config.operateLog;
+package com.nanyin.config.log;
 
 import com.nanyin.config.enums.OperateModuleEnum;
 import com.nanyin.config.enums.OperationTypeEnum;
@@ -7,7 +7,7 @@ import java.lang.annotation.*;
 
 /**
  * Created by NanYin on 2017-07-16 下午11:09.
- * 包名： com.nanyin.common.operateLog
+ * 包名： com.nanyin.common.log
  * 类描述：
  */
 @Target({ElementType.PARAMETER, ElementType.METHOD})

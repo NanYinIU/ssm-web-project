@@ -74,7 +74,7 @@ public class MDCUtil {
     }
 
     public static Locale getLocale(String locale){
-        Tools.check(locale.split("_").length > 1, "check_error", "resolveLocale");
+        CommonUtils.check(locale.split("_").length > 1, "check_error", "resolveLocale");
         // 在MDC中存放副本
         return new Locale(locale.split("_")[0], locale.split("_")[1]);
     }

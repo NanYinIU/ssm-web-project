@@ -30,6 +30,4 @@ public class MyCookieResolver extends CookieLocaleResolver {
         return super.resolveLocale(request);
     }
 
-
-
 }

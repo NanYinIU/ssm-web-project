@@ -1,25 +1,19 @@
 package com.nanyin.services.impl;
 
+import com.nanyin.config.exceptions.TokenExpiredException;
+import com.nanyin.config.redis.RedisService;
 import com.nanyin.config.util.*;
 import com.nanyin.entity.*;
-import com.nanyin.entity.DTO.UserDto;
-import com.nanyin.entity.DTO.UserInfoDto;
-import com.nanyin.entity.result.Result;
+import com.nanyin.config.util.Result;
 import com.nanyin.config.enums.ResultCodeEnum;
-import com.nanyin.enumEntity.DeletedStatusEnum;
 import com.nanyin.repository.AuthRepository;
 import com.nanyin.repository.SexRepository;
-import com.nanyin.repository.StatusRepository;
 import com.nanyin.repository.UserRepository;
 import com.nanyin.services.UserServices;
-import lombok.Getter;
-import lombok.Setter;
-import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
-import org.apache.shiro.web.util.SavedRequest;
-import org.apache.shiro.web.util.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +21,8 @@ import org.springframework.cache.annotation.*;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-import java.util.Set;
+import javax.servlet.http.Cookie;
+import java.util.UUID;
 
 @Service
 @CacheConfig(cacheManager = "TtlCacheManager")
@@ -51,133 +42,59 @@ public class UserServicesImpl implements UserServices {
     @Autowired
     MessageSource messageSource;
 
+    @Autowired
+    RedisService redisService;
+
+
     @Override
-    @Cacheable(value = "user", key = "#name")
+//    @Cacheable(value = "user", key = "#name")
     public User getUserFromUserName(String name) {
         return userRepository.findUserByName(name);
     }
 
-    @Cacheable(value = "users", key = "#offset+'_'+#limit+'_'+#order+'_'+#search")
     @Override
     public Result findAllByIsDeleted(Integer offset, Integer limit, String order, String search) throws Exception {
-        Result result = new Result();
-
-        logger.info("User limit:{}", limit);
-        if (search == null || "".equals(search)) {
-            result.setData(userRepository.findAllByIsDeleted(Tools.pageRequest(offset, limit, order, "id"), (short) 0));
-            result.setTotal(userRepository.countAllByIsDeleted((short) 0));
-            return result;
-        }
-        result.setData(userRepository.findAllByIsDeletedAndNameLike(Tools.pageRequest(offset, limit, order, "id"), (short) 0, "%" + search + "%"));
-        result.setTotal(userRepository.countAllByIsDeletedAndNameLike((short)0,search));
-        return result;
+        return null;
     }
 
-    @Cacheable(value = "user", key = "#id")
+    /**
+     * 登陆方法，使用shiro进行登陆的验证，随机生成token，放到cookie中（可不用），前端每次发送请求都在header中
+     * 添加 X—Token 属性，后端每次拦截请求都要从属性中获取token在redis中是否存在，如果存在，延长redis中的ttl时间
+     * @param username
+     * @param password
+     * @param rememberMe
+     * @return
+     * @throws IncorrectCredentialsException
+     */
     @Override
-    public Result findUserById(Integer id) throws Exception {
-        Result result = new Result();
-        result.setData(userRepository.findUsersById(id));
-        return result;
-    }
-
-
-    @Override
-    @Caching(put = {
-            @CachePut(value = "user", key = "#id"),
-    })
-    public User updateUser(Integer id, UserInfoDto userInfoDto) throws Exception {
-        User u = userRepository.findUsersById(id);
-        TransferBetweenUserAndUserInfoDto transferBetweenUserAndUserInfoDto = new TransferBetweenUserAndUserInfoDto();
-        transferBetweenUserAndUserInfoDto.setUser(u);
-        u = transferBetweenUserAndUserInfoDto.transferFrom(userInfoDto);
-        return userRepository.save(u);
-    }
-
-    @Override
-    @Cacheable(value = "users", key = "#search")
-    public int countAllByIsDeleted(String search) throws Exception {
-        if (search == null || "".equals(search)) {
-            return userRepository.countAllByIsDeleted((short) 0);
-        }
-        return userRepository.countAllByIsDeletedAndNameLike((short) 0, "%" + search + "%");
-    }
-
-    @Override
-    @CachePut(value = "user", key = "#user.id")
-    public User addUser(UserDto user) throws Exception {
-        TransferBetweenUserAndUserDto transferBetweenUserAndUserDto = new TransferBetweenUserAndUserDto();
-        return transferBetweenUserAndUserDto.transferFrom(user);
-    }
-
-
-    @Override
-    @CacheEvict(value = "users", key = "#id")
-    public Result deleteUser(Integer id) throws Exception {
-        Result result = Result.resultInstance();
-        if (checkIsLastUser()) {
-            result.setCode(ResultCodeEnum.FAIL);
-            result.setMessage("删除时最少还剩1个人！");
-        } else {
-            userRepository.deleteById(id);
-            result.setMessage("删除成功");
-        }
-        return result;
-    }
-
-    private boolean checkIsLastUser() {
-        if(userRepository.countAllByIsDeleted((short)0) == 0){
-           return true ;
-        }else{
-            return false;
-        }
-    }
-
-
-    @Override
-    public String doLogin(String username, String password, Boolean rememberMe, String locale,
-                          HttpServletRequest request, HttpServletResponse response,
-                          List<Resource> sidebarInfoWapper) throws Exception{
-        SavedRequest savedRequest = WebUtils.getSavedRequest(request);
+    public String login(String username, String password, Boolean rememberMe)throws IncorrectCredentialsException {
+        MDCUtil.setUser(username);
         Subject subject = SecurityUtils.getSubject();
-
-        if (Tools.isBlank(username)) {
-            return "signin";
-        }
-        if (rememberMe == null) {
-            rememberMe = false;
-        }
         if (!subject.isAuthenticated()) {
-            UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(username, password, rememberMe);
-            // 在登陆前如果想抛出自定义异常，需要在controller里面进行
-            User user = getUserFromUserName(username);
-            Tools.setResources(messageSource);
-            Tools.check(Tools.isNotNull(user), "username_or_password_wrong");
-            Tools.check(user.getStatus().getId() != -1, "user_has_been_blocked", "");
-            subject.login(usernamePasswordToken);
-            // 登陆成功后把 user 放到session中。把locale 信息放到 cookie中
-            HttpsUtil.setAttribute("username", username);HttpsUtil.setAttribute("sidebar", sidebarInfoWapper);
-            HttpsUtil.setCookie(response, "locale", locale);
-            if (null != savedRequest) {
-                return "redirect:" + savedRequest.getRequestUrl();
-            } else {
-                return "redirect:/index";
+            UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(username, password, false);
+            try{
+                subject.login(usernamePasswordToken);
+            }catch (IncorrectCredentialsException ice){
+                return ResultCodeEnum.WRONG_USERNAME_OR_PASSWORD.toString();
             }
-        } else {
-            if (null != savedRequest) {
-                return "redirect:" + savedRequest.getRequestUrl().substring(8);
-            } else {
-                return "redirect:/index";
-            }
+            Cookie localCookie = HttpUtils.buildCookie("locale", "zh-cn");
+            // 登陆成功，将用户信息连同生成的token放到redis中
+            String token = UUID.randomUUID().toString();
+            Cookie tokenCookie = HttpUtils.buildCookie("TokenKey", token);
+            HttpUtils.setCookie(localCookie, tokenCookie);
+            redisService.set(token, username,3600l);
+            return token;
         }
-
+        return "";
     }
 
     @Override
-    public void changePassword(Integer id) {
-        User user = userRepository.findUsersById(id);
-        user.setPassword(generatePassword(1));
-        userRepository.saveAndFlush(user);
+    public User getCurrentUserInfo(String token) throws Exception{
+        String username = (String) redisService.get(token);
+        if(CommonUtils.isNull(username)){
+            throw new TokenExpiredException();
+        }
+        return userRepository.findUserByName(username);
     }
 
     /**
@@ -188,7 +105,7 @@ public class UserServicesImpl implements UserServices {
      */
     private String generatePassword(Object crdentials){
         Object salt = "1";//盐值
-        HashUtil simpleHash = new HashUtil(ALGORITHM_NAME, crdentials, salt,ITERATIONS);
+        HashHelper simpleHash = new HashHelper(ALGORITHM_NAME, crdentials, salt,ITERATIONS);
         return new String(simpleHash.getBytes());
     }
 
@@ -199,98 +116,5 @@ public class UserServicesImpl implements UserServices {
 
     @Autowired
     SexRepository sexRepository;
-
-    @Cacheable(value = "user-sex")
-    @Override
-    public List<Sex> findNotDeletedUserSex() throws Exception {
-        return sexRepository.findAllByIsDeletedOrderByOrd(DeletedStatusEnum.IS_NOT_DELETED.isJudge());
-    }
-
-    @Autowired
-    StatusRepository statusRepository;
-
-    @Cacheable(value = "user-status")
-    @Override
-    public List<Status> findNotDeletedUserStatus() throws Exception {
-        return statusRepository.findAllByIsDeletedOrderByOrd(DeletedStatusEnum.IS_NOT_DELETED.isJudge());
-    }
-    @Getter
-    @Setter
-    class TransferBetweenUserAndUserInfoDto extends Copyable<User,UserInfoDto> {
-
-        private User user;
-        private UserInfoDto userInfoDto;
-
-       @Override
-        protected User transferFrom(UserInfoDto userInfoDto) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-            // 使用propertyUtil进行属性的拷贝
-            PropertyUtils.copyProperties(user,userInfoDto);
-            //其他特殊属性需要进行手动赋值
-            if (userInfoDto.getPosition() != null && user.getPerson() != null) {
-                user.getPerson().setPosition(userInfoDto.getPosition());
-            }
-            if(userInfoDto.getAddress() !=null && userInfoDto.getAddress() !=null){
-                user.getPerson().setAddress(userInfoDto.getAddress());
-            }
-            if(userInfoDto.getName() !=null && userInfoDto.getName()!= null){
-                user.getPerson().setName(userInfoDto.getName());
-            }
-            if (userInfoDto.getSex() != 0) {
-                user.setSex(sexRepository.getOne(userInfoDto.getSex()));
-            }
-            if (userInfoDto.getPosition() != null && user.getPerson() != null) {
-                user.getPerson().setPosition(userInfoDto.getPosition());
-            }
-            return user;
-        }
-
-        @Override
-        protected UserInfoDto reverseTransfer(User user) {
-            return null;
-        }
-    }
-
-    @Getter
-    @Setter
-    class TransferBetweenUserAndUserDto extends Copyable<User,UserDto>{
-
-        private User user;
-        private UserDto userDto;
-
-        @Override
-        protected User transferFrom(UserDto userDto) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-            PropertyUtils.copyProperties(user,userDto);
-            if (userDto.getSex() != 0) {
-                user.setSex(sexRepository.getOne(userDto.getSex()));
-            }
-            if (userDto.getStatus() != 0) {
-                user.setStatus(statusRepository.getOne(userDto.getStatus()));
-            }
-            if (userDto.getAuths() != null) {
-                Set<Auth> allByIdContains = authRepository.findDistinctByIdIn((userDto.getAuths()));
-                user.setAuths(allByIdContains);
-            }
-            return user;
-        }
-
-        @Override
-        protected UserDto reverseTransfer(User user){
-            try {
-                PropertyUtils.copyProperties(userDto,user);
-                userDto.setSex(Tools.isNotNull(user.getSex())?user.getSex().getId():0);
-                userDto.setStatus(Tools.isNotNull(user.getStatus())?user.getStatus().getId():0);
-                userDto.setStatus(Tools.isNotNull(user.getUnit())?user.getUnit().getId():0);
-                userDto.setAuths(Tools.obtainSerializeId(user.getRoles(), Role.class));
-                userDto.setRoles(Tools.obtainSerializeId(user.getAuths(), Auth.class));
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            }
-            return userDto;
-        }
-    }
 
 }

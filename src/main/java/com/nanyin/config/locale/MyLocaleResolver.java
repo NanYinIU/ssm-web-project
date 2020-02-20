@@ -23,7 +23,7 @@ public class MyLocaleResolver implements LocaleResolver {
 //        if(locale == null || "".equals(locale)){
 //            return Locale.SIMPLIFIED_CHINESE;
 //        }else {
-//            Tools.check(locale.split("_").length>1,"check_error","resolveLocale");
+//            CommonUtils.check(locale.split("_").length>1,"check_error","resolveLocale");
 //            // 在MDC中存放副本
 //            Locale locale1 = new Locale(locale.split("_")[0],locale.split("_")[1]);
 //            MDCUtil.setLocale(locale1);

@@ -1,10 +1,10 @@
-package com.nanyin.config.operateLog;
+package com.nanyin.config.log;
 
 import com.nanyin.config.enums.OperateModuleEnum;
 import com.nanyin.config.enums.OperationTypeEnum;
 import com.nanyin.config.locale.LocaleService;
-import com.nanyin.config.util.Tools;
-import com.nanyin.config.util.HttpsUtil;
+import com.nanyin.config.util.CommonUtils;
+import com.nanyin.config.util.HttpUtils;
 import com.nanyin.config.util.MDCUtil;
 import com.nanyin.entity.Operate;
 import com.nanyin.entity.User;
@@ -26,13 +26,13 @@ import java.util.Date;
 /**
  * Created by NanYin on 2017-07-16 下午11:18.
  * 应该除了AfterThrowing 抛出异常时应该打印info日志，其他应该打印debug日志
- * 包名： com.nanyin.common.operateLog
+ * 包名： com.nanyin.common.log
  * 类描述：
  */
 
 @Aspect
 @Component
-public class SystemLogAspect {
+public class  SystemLogAspect {
 
     private static final Logger logger = LoggerFactory.getLogger(SystemLogAspect.class);
 
@@ -47,7 +47,7 @@ public class SystemLogAspect {
 
     private long start;
 
-    @Pointcut("@annotation(com.nanyin.config.operateLog.Log)")
+    @Pointcut("@annotation(com.nanyin.config.log.Log)")
     public void controllerAspect() {
     }
 
@@ -67,17 +67,6 @@ public class SystemLogAspect {
         }
     }
 
-    @AfterThrowing(value = "controllerAspect()", throwing = "throwable")
-    public void afterThrowing(JoinPoint joinPoint, Throwable throwable) {
-        try {
-            OperateLogDto log = getArgs(joinPoint);
-            afterLog(joinPoint, log);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
     /**
      * 后置通知 用于拦截Controller层记录用户的操作
      *
@@ -86,8 +75,8 @@ public class SystemLogAspect {
     @After("controllerAspect()")
     public void after(JoinPoint joinPoint) throws Exception {
         //读取session中的用户;
-        HttpServletRequest request = HttpsUtil.getRequest();
-        Tools.check(Tools.isNotNull(request), "", "");
+        HttpServletRequest request = HttpUtils.getHttpServletRequest();
+        CommonUtils.check(CommonUtils.isNotNull(request), "", "");
         OperateLogDto log = getArgs(joinPoint);
         // 进行对数据的存库操作,先打印debug日志
         debugLog();
@@ -96,7 +85,7 @@ public class SystemLogAspect {
     }
 
     private Class<Log> getAnnotationClass() {
-        return com.nanyin.config.operateLog.Log.class;
+        return com.nanyin.config.log.Log.class;
     }
 
     private void debugLog() {
@@ -105,8 +94,8 @@ public class SystemLogAspect {
 
     private Operate initOperate(HttpServletRequest request,OperateLogDto log) throws Exception{
         String name = MDCUtil.getUser();
-        String ip = HttpsUtil.getRequestIp(request);
-        String os = HttpsUtil.getRequestOs(request);
+        String ip = HttpUtils.getRequestIp(request);
+        String os = HttpUtils.getRequestOs(request);
         User user = userServices.getUserFromUserName(name);
         Operate operate = new Operate();
         operate.setName(log.getOperationName());

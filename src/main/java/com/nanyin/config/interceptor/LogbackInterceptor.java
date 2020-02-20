@@ -1,6 +1,6 @@
 package com.nanyin.config.interceptor;
 
-import com.nanyin.config.util.Tools;
+import com.nanyin.config.util.CommonUtils;
 import com.nanyin.config.util.MDCUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +16,7 @@ public class LogbackInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         MDCUtil.setUser((String) httpServletRequest.getSession().getAttribute("username"));
-        String uuid = Tools.generateRequestUid();
+        String uuid = CommonUtils.generateRequestUid();
         // 从session中获取 username 放到mdc中
         MDCUtil.setRequestId(uuid);
         return true;

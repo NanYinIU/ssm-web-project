@@ -1,6 +1,7 @@
 package com.nanyin;
 
 import com.nanyin.config.quartz.service.JobService;
+import com.nanyin.config.redis.RedisService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +64,15 @@ public class WebProjectApplicationTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    @Autowired
+    RedisService redisService ;
+
+    @Test
+    public void test8(){
+
+        System.out.println(redisService.exists("2b1714e3-65d0-461e-aa41-021d078c00c7"));;
+        System.out.println(redisService.get("2b1714e3-65d0-461e-aa41-021d078c00c7"));
     }
 
 }

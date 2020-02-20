@@ -1,20 +1,17 @@
 package com.nanyin.config.util;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.*;
 
 import com.google.common.base.Strings;
 import com.nanyin.config.exceptions.CheckException;
 import org.springframework.context.MessageSource;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
-import javax.persistence.Id;
 import java.text.SimpleDateFormat;
 
-public class Tools {
+public class CommonUtils {
 
     private static MessageSource resources;
 
@@ -23,7 +20,7 @@ public class Tools {
     }
 
     public static PageRequest pageRequest(Integer offset, Integer limit, String order, String... properties){
-        return new PageRequest((offset/limit),limit, Tools.sending(order,properties));
+        return new PageRequest((offset/limit),limit, CommonUtils.sending(order,properties));
     }
 
     /**
@@ -37,7 +34,7 @@ public class Tools {
     }
 
     public static void setResources(MessageSource resources) {
-        Tools.resources = resources;
+        CommonUtils.resources = resources;
     }
 
     /**
@@ -50,7 +47,20 @@ public class Tools {
     }
 
     private static void fail(String msgKey, Object... args) {
-        throw new CheckException(resources.getMessage(msgKey, args, MDCUtil.getLocale()));
+        Locale locale = MDCUtil.getLocale();
+        if(locale==null){
+            locale = new Locale("zh_CN");
+        }
+        String msg = "";
+        try{
+            msg = resources.getMessage(msgKey, args, locale);
+        }catch (NoSuchMessageException npe){
+            msg = msgKey;
+        }
+        if("".equals(msg)){
+            msg = msgKey;
+        }
+        throw new CheckException(msg);
     }
 
     /**
@@ -69,45 +79,6 @@ public class Tools {
 
     public static boolean isNotNull(Object o){
         return Optional.ofNullable(o).isPresent();
-    }
-
-
-    public static int[] obtainSerializeId(Collection<?> collection,Class clazz) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        int i = 0;
-        int[] result = new int[collection.size()];
-        Field field = doObtainGetSerializeField(clazz);
-        Method method = clazz.getDeclaredMethod(doObtainGetMethodName(field.getName()));
-        Iterator<?> iterator = collection.iterator();
-        while(iterator.hasNext()){
-            Object id = method.invoke(iterator.next());
-            result[i] = (int) id;
-            i++;
-        }
-        return result;
-    }
-
-    private static String doObtainGetMethodName(String fieldName){
-        if(fieldName.length() > 1){
-            fieldName = fieldName.substring(0,1).toUpperCase()+fieldName.substring(1);
-        }else{
-            fieldName = fieldName.toUpperCase();
-        }
-        return "get"+fieldName;
-    }
-
-    private static Field doObtainGetSerializeField(Class clazz){
-        Field field = null;
-        boolean flag = false;
-        for (Field f : clazz.getDeclaredFields()) {
-            for (Id id : f.getAnnotationsByType(Id.class)) {
-                field  = f;
-                flag = true;
-            }
-            if(flag){
-                break;
-            }
-        }
-        return field;
     }
 
 }

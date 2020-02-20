@@ -13,7 +13,7 @@ spring:
         username: root
     jpa:
         database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-        show-sql: true
+#        show-sql: true
         hibernate:
             ddl-auto: update
     #        创建数据库
@@ -40,4 +40,4 @@ spring:
 server:
     port: 8080
     servlet:
-        context-path: "/dev-api/api/"
+        context-path: "/api/"

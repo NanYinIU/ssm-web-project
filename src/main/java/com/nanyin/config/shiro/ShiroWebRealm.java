@@ -1,6 +1,6 @@
 package com.nanyin.config.shiro;
 
-import com.nanyin.config.exceptions.NoUserAccountException;
+import com.nanyin.config.exceptions.TokenExpiredException;
 import com.nanyin.entity.Auth;
 import com.nanyin.entity.Role;
 import com.nanyin.entity.User;
@@ -35,7 +35,7 @@ public class ShiroWebRealm extends AuthorizingRealm {
         String username = (String) principalCollection.getPrimaryPrincipal();
         User user = getUser(username);
         if(user == null){
-            throw new NoUserAccountException();
+            throw new TokenExpiredException();
         }
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
         Set<String> roles = new HashSet<>();
@@ -62,9 +62,13 @@ public class ShiroWebRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         String username = (String) authenticationToken.getPrincipal();
-        User user = getUser(username);
-        ByteSource byteSource = ByteSource.Util.bytes(user.getSalt());
-        return new SimpleAuthenticationInfo(username,user.getPassword(),byteSource,"");
+        if(!"".equals(username) && username!=null){
+            User user = getUser(username);
+            ByteSource byteSource = ByteSource.Util.bytes(user.getSalt());
+            return new SimpleAuthenticationInfo(username,user.getPassword(),byteSource,"");
+        }else {
+            return null;
+        }
     }
 
     public ShiroWebRealm(CredentialsMatcher matcher) {

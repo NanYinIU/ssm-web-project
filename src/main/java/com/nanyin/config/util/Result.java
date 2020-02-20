@@ -1,4 +1,4 @@
-package com.nanyin.entity.result;
+package com.nanyin.config.util;
 
 import com.nanyin.config.enums.ResultCodeEnum;
 import lombok.Data;
@@ -16,8 +16,6 @@ public class Result<T> implements Serializable {
 
     private T data;
 
-    private int total;
-
     public Result() {
         super();
     }
@@ -27,7 +25,7 @@ public class Result<T> implements Serializable {
         this.data = data;
     }
 
-    Result(Throwable e) {
+    public Result(Throwable e) {
         super();
         this.message = e.toString();
         this.code = ResultCodeEnum.FAIL;

@@ -1,8 +1,7 @@
 package com.nanyin;
 
-import com.nanyin.config.util.Tools;
+import com.nanyin.config.util.CommonUtils;
 import com.nanyin.config.util.MDCUtil;
-import com.nanyin.entity.User;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.junit.Test;
 
@@ -14,7 +13,7 @@ public class test1 {
 
     public static void main(String[] args) {
         String hashAlgorithmName = "MD5";//加密方式
-        Object crdentials = "1";//密码原值
+        Object crdentials = "123456";//密码原值
         Object salt = "1";//盐值
         int hashIterations = 1024;//加密1024次
         SimpleHash simpleHash = new SimpleHash(hashAlgorithmName, crdentials, salt, hashIterations);
@@ -27,7 +26,7 @@ public class test1 {
         String dateString = new SimpleDateFormat("MMddhhmmss-SSS").format(date);
         System.out.println(dateString+"-"+ UUID.randomUUID().toString().replace("-", "").substring(0,10));
         System.out.println(MDCUtil.getLocale().toString());
-        System.out.println(Tools.isNull(null));
+        System.out.println(CommonUtils.isNull(null));
     }
 
     @Test
@@ -89,28 +88,10 @@ public class test1 {
         // byte数组转化为 String
         String newHello = new String(bytes);
         System.out.println(newHello);
+        System.out.println(UUID.randomUUID().toString() );
     }
 
-    @Test
-    public void test7(){
-        User u = new User(1);
-        User u1 = new User(2);
-        User u2 = new User(3);
-        User u3 = new User(4);
-        List<User> users = new ArrayList<>();
-        users.add(u);
-        users.add(u1);
-        users.add(u2);
-        users.add(u3);
-        try{
-            int[] ints = Tools.obtainSerializeId(users, User.class);
-            for (int anInt : ints) {
-                System.out.println(anInt);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
+
 
 
 }

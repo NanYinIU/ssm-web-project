@@ -65,6 +65,18 @@
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-starter-quartz</artifactId>
       </dependency>
+      <!-- springboot-json -->
+      <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-json</artifactId>
+      </dependency>
+
+      <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-devtools</artifactId>
+          <optional>true</optional>
+          <scope>true</scope>
+      </dependency>
 
       <!--  starters 结束-->
 
@@ -108,10 +120,25 @@
           <version>1.4.0</version>
       </dependency>
 
+      <!-- https://mvnrepository.com/artifact/org.crazycake/shiro-redis -->
+      <dependency>
+          <groupId>org.crazycake</groupId>
+          <artifactId>shiro-redis</artifactId>
+          <version>3.1.0</version>
+      </dependency>
+
+
       <dependency>
           <groupId>com.alibaba</groupId>
           <artifactId>fastjson</artifactId>
           <version>1.2.56</version>
+      </dependency>
+
+      <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+      <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-lang3</artifactId>
+          <version>3.9</version>
       </dependency>
 
       <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
@@ -119,6 +146,13 @@
           <groupId>com.google.guava</groupId>
           <artifactId>guava</artifactId>
           <version>28.0-jre</version>
+      </dependency>
+
+      <!--jjwt 用于解码和编码Token-->
+      <dependency>
+          <groupId>io.jsonwebtoken</groupId>
+          <artifactId>jjwt</artifactId>
+          <version>0.9.0</version>
       </dependency>
 
 
@@ -187,6 +221,17 @@
 
 
   <build>
+      <plugins>
+          <plugin>
+              <!--热部署配置-->
+              <groupId>org.springframework.boot</groupId>
+              <artifactId>spring-boot-maven-plugin</artifactId>
+              <configuration>
+                  <!--fork:如果没有该项配置,整个devtools不会起作用-->
+                  <fork>true</fork>
+              </configuration>
+              </plugin>
+      </plugins>
     <finalName>com.NanYin</finalName>
     <resources>
         <resource>
