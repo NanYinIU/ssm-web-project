@@ -64,13 +64,6 @@ public class CommonUtils {
     }
 
     /**
-     * 字符串是否为空
-     **/
-    public static boolean isBlank(String str){
-       return Strings.nullToEmpty(str).trim().isEmpty();
-    }
-
-    /**
      * object 是否为空
      **/
     public static boolean isNull(Object o){

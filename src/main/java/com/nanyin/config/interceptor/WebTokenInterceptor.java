@@ -39,7 +39,7 @@ public class WebTokenInterceptor implements HandlerInterceptor {
             token = headers.nextElement();
         }
         if (!Strings.isNullOrEmpty(token)) {
-            logger.info("--- get request x-toke:[" + token + "] ---");
+//            logger.info("--- get request x-toke:[" + token + "] ---");
             if (redisService.exists(token)) {
                 String username = (String) redisService.get(token);
                 // 更新缓存中token的时间

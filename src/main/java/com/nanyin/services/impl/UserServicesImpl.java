@@ -1,13 +1,14 @@
 package com.nanyin.services.impl;
 
+import com.google.common.base.Strings;
 import com.nanyin.config.exceptions.TokenExpiredException;
 import com.nanyin.config.redis.RedisService;
 import com.nanyin.config.util.*;
 import com.nanyin.entity.*;
-import com.nanyin.config.util.Result;
 import com.nanyin.config.enums.ResultCodeEnum;
 import com.nanyin.repository.AuthRepository;
 import com.nanyin.repository.SexRepository;
+import com.nanyin.repository.StatusRepository;
 import com.nanyin.repository.UserRepository;
 import com.nanyin.services.UserServices;
 import org.apache.shiro.SecurityUtils;
@@ -19,9 +20,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.*;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.servlet.http.Cookie;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -45,6 +55,12 @@ public class UserServicesImpl implements UserServices {
     @Autowired
     RedisService redisService;
 
+    @Autowired
+    SexRepository sexRepository;
+
+    @Autowired
+    StatusRepository statusRepository;
+
 
     @Override
 //    @Cacheable(value = "user", key = "#name")
@@ -52,9 +68,58 @@ public class UserServicesImpl implements UserServices {
         return userRepository.findUserByName(name);
     }
 
+    /**
+     * 复杂条件的JPA 查询语句，需要 实现JpaSpecificationExecutor接口
+     * @param offset
+     * @param limit
+     * @param order
+     * @param search
+     * @param status
+     * @param sex
+     * @return
+     * @throws Exception
+     */
     @Override
-    public Result findAllByIsDeleted(Integer offset, Integer limit, String order, String search) throws Exception {
-        return null;
+    public Page<User> findUsers(Integer offset, Integer limit, String order, String search, Integer status, Integer sex) throws Exception {
+        PageRequest pageRequest = new PageRequest(offset-1,limit);
+        Specification<User> specification = new Specification<User>() {
+            @Override
+            public Predicate toPredicate(Root<User> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                // 使用list存储查询条件
+                List<Predicate> predicatesList = new ArrayList<Predicate>();
+                // isdelete = 0
+                Predicate basePredicate = criteriaBuilder.equal(root.get("isDeleted"),0);
+                predicatesList.add(basePredicate);
+
+                if(!Strings.isNullOrEmpty(search)){
+                    Predicate searchPredicate = criteriaBuilder.like(root.get("name"),"%"+search+"%");
+                    predicatesList.add(searchPredicate);
+                }
+                if(sex!=null){
+                    Predicate sexPredicate = criteriaBuilder.equal(root.get("sex").get("id"),sex);
+                    predicatesList.add(sexPredicate);
+                }
+                if(status!=null){
+                    Predicate statusPredicate = criteriaBuilder.equal(root.get("status").get("id"),status);
+                    predicatesList.add(statusPredicate);
+                }
+
+                //最终将查询条件拼好然后return
+                Predicate[] predicates = new Predicate[predicatesList.size()];
+                if(!Strings.isNullOrEmpty(order)){
+                    if(order.length() > 1){
+                        String orderName = order.substring(1);
+                        if(order.startsWith("-")){
+                            criteriaQuery.orderBy(criteriaBuilder.desc(root.get(orderName)));
+                        }else if(order.startsWith("+")){
+                            criteriaQuery.orderBy(criteriaBuilder.asc(root.get(orderName)));
+                        }
+                    }
+                }
+                return criteriaBuilder.and(predicatesList.toArray(predicates));
+            }
+        };
+        return userRepository.findAll(specification,pageRequest);
     }
 
     /**
@@ -90,11 +155,26 @@ public class UserServicesImpl implements UserServices {
 
     @Override
     public User getCurrentUserInfo(String token) throws Exception{
-        String username = (String) redisService.get(token);
-        if(CommonUtils.isNull(username)){
+        String username = "";
+        if(redisService.exists(token)){
+            username = (String) redisService.get(token);
+            if(CommonUtils.isNull(username)){
+                throw new TokenExpiredException();
+            }
+        }else{
             throw new TokenExpiredException();
         }
         return userRepository.findUserByName(username);
+    }
+
+    @Override
+    public List<Sex> getStandardSex() throws Exception {
+       return sexRepository.findAll();
+    }
+
+    @Override
+    public List<Status> getStandardStatus() throws Exception {
+        return statusRepository.findAll();
     }
 
     /**
@@ -108,13 +188,5 @@ public class UserServicesImpl implements UserServices {
         HashHelper simpleHash = new HashHelper(ALGORITHM_NAME, crdentials, salt,ITERATIONS);
         return new String(simpleHash.getBytes());
     }
-
-    /*
-     * 以下-------用户相关信息--------
-     *
-     **/
-
-    @Autowired
-    SexRepository sexRepository;
 
 }

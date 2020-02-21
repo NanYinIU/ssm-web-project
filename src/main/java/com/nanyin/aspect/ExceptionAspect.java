@@ -2,6 +2,7 @@ package com.nanyin.aspect;
 
 import com.nanyin.config.enums.ResultCodeEnum;
 import com.nanyin.config.exceptions.CheckException;
+import com.nanyin.config.exceptions.TokenExpiredException;
 import com.nanyin.config.util.Result;
 import org.aopalliance.intercept.Joinpoint;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -49,12 +50,16 @@ public class ExceptionAspect {
 
     private Result<?> handlerException(ProceedingJoinPoint pjp, Throwable e) {
         Result<?> result = new Result();
+
 // 已知异常
         if (e instanceof CheckException) {
             result.setMessage(e.getLocalizedMessage());
             result.setCode(ResultCodeEnum.FAIL);
         }else if(e instanceof IncorrectCredentialsException){
             result.setMessage("密码错误！");
+            result.setCode(ResultCodeEnum.FAIL);
+        }else if(e instanceof TokenExpiredException){
+            result.setMessage("令牌过期！");
             result.setCode(ResultCodeEnum.FAIL);
         }else {
             logger.error(pjp.getSignature() + " error ", e);
