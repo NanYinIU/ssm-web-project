@@ -7,6 +7,10 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.LinkedList;
+import java.util.List;
 
 public class HttpUtils {
 
@@ -25,19 +29,29 @@ public class HttpUtils {
     }
 
     public static HttpSession getSession() throws Exception{
-        //HttpServletResponse response = attrs.getResponse();
         return getHttpServletRequest().getSession();
     }
 
-    public static HttpSession setAttribute(String key, Object value) throws Exception{
-        HttpSession session = getSession();
-        session.setAttribute(key, value);
-        return session;
+    public static String getHeader(HttpServletRequest request, String headerName) {
+        List<String> headers = getHeaders(request, headerName, 1);
+        if(headers.size() > 0){
+            return headers.get(0);
+        }
+        return "";
     }
 
-    public static Object getAttribute(String key) throws Exception {
-        HttpSession session = getSession();
-        return session.getAttribute(key);
+    public static List<String> getHeaders(HttpServletRequest request, String headerName, int number) {
+        List<String> result = new LinkedList<>();
+        Enumeration<String> headers = request.getHeaders(headerName);
+        if (number == 0) {
+            number = Integer.MAX_VALUE;
+        }
+        int _num = 0;
+        while (headers.hasMoreElements() && _num < number) {
+            result.add(headers.nextElement());
+            _num++;
+        }
+        return result;
     }
 
     public static Cookie buildCookie(String cookieName, String value){

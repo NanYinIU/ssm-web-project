@@ -155,6 +155,13 @@
           <version>0.9.0</version>
       </dependency>
 
+      <!-- https://mvnrepository.com/artifact/com.qiniu/qiniu-java-sdk -->
+      <dependency>
+          <groupId>com.qiniu</groupId>
+          <artifactId>qiniu-java-sdk</artifactId>
+          <version>7.2.25</version>
+      </dependency>
+
 
       <!-- webjars -->
       <dependency>

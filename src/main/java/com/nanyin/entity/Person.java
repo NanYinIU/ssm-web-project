@@ -30,12 +30,6 @@ public class Person implements Serializable {
     private String name;
 
     /**
-     * 职位
-     **/
-    @Column(length = 255)
-    private String position;
-
-    /**
      * 居住地址
      **/
     @Column(length = 512)
@@ -48,12 +42,18 @@ public class Person implements Serializable {
     private String avatar;
 
     /**
+     * 简介
+     **/
+    @Column(length = 512)
+    private String introduction;
+
+    /**
      * 手机号
      **/
     private String telephone;
 
-    @Column(name = "is_deleted",columnDefinition = "TINYINT(4)")
-    private Boolean isDeleted;
+    @Column(name = "is_deleted",columnDefinition = "TINYINT(4) default 0")
+    private Boolean isDeleted ;
     @Temporal(value=TemporalType.TIMESTAMP)
     private Date gmtCreate;
     @Temporal(value=TemporalType.TIMESTAMP)

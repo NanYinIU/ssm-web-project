@@ -2,14 +2,11 @@ package com.nanyin.config;
 
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
-import com.nanyin.config.interceptor.LogbackInterceptor;
 import com.nanyin.config.interceptor.WebTokenInterceptor;
 import com.nanyin.config.locale.MyCookieResolver;
-import com.nanyin.config.locale.MyLocaleResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
@@ -50,7 +47,7 @@ public class WebConfiguration implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LogbackInterceptor());
+//        registry.addInterceptor(logbackInterceptor());
         // 需要实现对token的解析
         registry.addInterceptor(tokenInterceptor()).excludePathPatterns("/user/login");
     }

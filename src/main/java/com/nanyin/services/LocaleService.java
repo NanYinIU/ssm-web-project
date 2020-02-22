@@ -1,4 +1,4 @@
-package com.nanyin.config.locale;
+package com.nanyin.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;

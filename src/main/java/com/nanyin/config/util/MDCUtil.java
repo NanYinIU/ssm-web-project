@@ -33,8 +33,6 @@ public class MDCUtil {
 
     public static final String KEY_REQUEST_ID = "requestId";
 
-    private static final String NULL = "null";
-
     public static void setUser(String userid) {
         TL_USER.set(userid);
         MDC.put(KEY_USER, userid);
@@ -71,12 +69,6 @@ public class MDCUtil {
         TL_REQUEST_ID.remove();
         MDC.remove(KEY_USER);
         MDC.remove(KEY_REQUEST_ID);
-    }
-
-    public static Locale getLocale(String locale){
-        CommonUtils.check(locale.split("_").length > 1, "check_error", "resolveLocale");
-        // 在MDC中存放副本
-        return new Locale(locale.split("_")[0], locale.split("_")[1]);
     }
 
 

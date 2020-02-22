@@ -2,7 +2,7 @@ package com.nanyin.config.log;
 
 import com.nanyin.config.enums.OperateModuleEnum;
 import com.nanyin.config.enums.OperationTypeEnum;
-import com.nanyin.config.locale.LocaleService;
+import com.nanyin.services.LocaleService;
 import com.nanyin.config.util.CommonUtils;
 import com.nanyin.config.util.HttpUtils;
 import com.nanyin.config.util.MDCUtil;

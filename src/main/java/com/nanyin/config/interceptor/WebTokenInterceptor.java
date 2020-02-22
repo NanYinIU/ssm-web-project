@@ -1,11 +1,13 @@
 package com.nanyin.config.interceptor;
 
 import com.google.common.base.Strings;
-import com.nanyin.config.redis.RedisService;
+import com.nanyin.config.util.CommonUtils;
+import com.nanyin.config.util.HttpUtils;
+import com.nanyin.config.util.MDCUtil;
+import com.nanyin.services.RedisService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -33,15 +35,15 @@ public class WebTokenInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         // 检查token 在缓存中是否存在
-        Enumeration<String> headers = request.getHeaders("X-Token");
-        String token = "";
-        if (headers.hasMoreElements()) {
-            token = headers.nextElement();
-        }
+        String token = HttpUtils.getHeader(request, "X-Token");
         if (!Strings.isNullOrEmpty(token)) {
-//            logger.info("--- get request x-toke:[" + token + "] ---");
             if (redisService.exists(token)) {
                 String username = (String) redisService.get(token);
+                // MDC 用作日志显示
+                MDCUtil.setUser(username);
+                String uuid = CommonUtils.generateRequestUid();
+                // 从session中获取 username 放到mdc中
+                MDCUtil.setRequestId(uuid);
                 // 更新缓存中token的时间
                 redisService.set(token, username, 3600L);
                 return true;
@@ -60,6 +62,6 @@ public class WebTokenInterceptor implements HandlerInterceptor {
      */
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-
+        MDCUtil.clearAllUserInfo();
     }
 }

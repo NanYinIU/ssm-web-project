@@ -1,7 +1,7 @@
 package com.nanyin;
 
 import com.nanyin.config.quartz.service.JobService;
-import com.nanyin.config.redis.RedisService;
+import com.nanyin.services.RedisService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

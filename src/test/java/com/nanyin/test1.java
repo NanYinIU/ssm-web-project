@@ -1,13 +1,27 @@
 package com.nanyin;
 
+import com.google.common.io.Files;
+import com.google.gson.Gson;
 import com.nanyin.config.util.CommonUtils;
 import com.nanyin.config.util.MDCUtil;
+import com.qiniu.common.QiniuException;
+import com.qiniu.http.Response;
+import com.qiniu.storage.Configuration;
+import com.qiniu.storage.Region;
+import com.qiniu.storage.UploadManager;
+import com.qiniu.storage.model.DefaultPutRet;
+import com.qiniu.util.Auth;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.junit.Test;
 
+import javax.crypto.Mac;
+import java.io.ByteArrayInputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+
 
 public class test1 {
 
@@ -89,6 +103,46 @@ public class test1 {
         String newHello = new String(bytes);
         System.out.println(newHello);
         System.out.println(UUID.randomUUID().toString() );
+    }
+
+    @Test
+    public void testUploadQiNiu() {
+        //构造一个带指定 Region 对象的配置类
+        Configuration cfg = new Configuration(Region.region0());
+//...其他参数参考类注释
+        UploadManager uploadManager = new UploadManager(cfg);
+//...生成上传凭证，然后准备上传
+        String accessKey = "hZKOhv9GXfOztS-dX8AFwmmR6g-AbfCxuLO9JZ5x";
+        String secretKey = "VcpO6QSNxGInrgyMMr_8_qMI3W8jZZChDw2hCIon";
+        String url = "http://q61syra66.bkt.clouddn.com/";
+        String bucket = "nanyiniu";
+//如果是Windows情况下，格式是 D:\\qiniu\\test.png
+        String localFilePath = "https://raw.githubusercontent.com/NanYinIU/PicRoom/master/img/20200214112801.png";
+        String key = "abcdfefefe";
+        Auth auth = Auth.create(accessKey, secretKey);
+        String upToken = auth.uploadToken(bucket);
+        try {
+            Response response = uploadManager.put(localFilePath, key, upToken);
+            //解析上传成功的结果
+            DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
+            System.out.println(putRet.key);
+            System.out.println(putRet.hash);
+        } catch (QiniuException ex) {
+            Response r = ex.response;
+            System.err.println(r.toString());
+            try {
+                System.err.println(r.bodyString());
+            } catch (QiniuException ex2) {
+                //ignore
+            }
+        }
+    }
+
+    @Test
+    public void testFileName(){
+        String filePath = "/Users/gaoguoxing/Downloads/Jietu20200221-183204.jpg.txt";
+        String suffix = Files.getFileExtension(filePath);
+        System.out.println(suffix);
     }
 
 

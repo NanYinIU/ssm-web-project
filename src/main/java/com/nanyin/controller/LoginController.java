@@ -1,12 +1,12 @@
 package com.nanyin.controller;
 
 import com.nanyin.config.enums.ResultCodeEnum;
-import com.nanyin.config.locale.LocaleService;
+import com.nanyin.config.exceptions.TokenWrongException;
+import com.nanyin.services.LocaleService;
 import com.nanyin.config.locale.MyCookieResolver;
-import com.nanyin.config.redis.RedisService;
+import com.nanyin.services.RedisService;
 import com.nanyin.entity.DTO.NameAndPw;
 import com.nanyin.config.util.Result;
-import com.nanyin.services.ResourceService;
 import com.nanyin.services.UserServices;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +25,7 @@ public class LoginController{
     MyCookieResolver myCookieResolver;
     @Autowired
     UserServices userServices;
-    @Autowired
-    ResourceService resourceService;
+
     @Autowired
     LocaleService localeService;
 
@@ -41,15 +40,17 @@ public class LoginController{
 //        Boolean rememberMe = false;
         String data = userServices.login(nameAndPw.getUsername(),nameAndPw.getPassword(),false);
         if(data.equals(ResultCodeEnum.WRONG_USERNAME_OR_PASSWORD.toString())){
-            return new Result<>("用户名密码错误",ResultCodeEnum.WRONG_USERNAME_OR_PASSWORD,"");
+//            return new Result<>("用户名密码错误",ResultCodeEnum.WRONG_USERNAME_OR_PASSWORD,"");
+            throw new TokenWrongException();
         }
         return new Result<String>(data);
     }
 
     @GetMapping("/logout")
     @ApiOperation(value = "登出",notes = "登出")
-    public String logout() {
-        return "";
+    public Result logout(@RequestParam String token) throws Exception {
+        String data = userServices.logout(token);
+        return new Result<>(data);
     }
     //    登陆注册部分结束 -------------------------------------------------------
 

@@ -41,3 +41,10 @@ server:
     port: 8080
     servlet:
         context-path: "/api/"
+
+upload:
+    qiniu:
+        ak: hZKOhv9GXfOztS-dX8AFwmmR6g-AbfCxuLO9JZ5x
+        sk: VcpO6QSNxGInrgyMMr_8_qMI3W8jZZChDw2hCIon
+        bucket: nanyiniu
+        domain: http://q61syra66.bkt.clouddn.com/

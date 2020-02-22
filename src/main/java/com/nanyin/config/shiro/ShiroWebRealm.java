@@ -1,7 +1,6 @@
 package com.nanyin.config.shiro;
 
 import com.nanyin.config.exceptions.TokenExpiredException;
-import com.nanyin.entity.Auth;
 import com.nanyin.entity.Role;
 import com.nanyin.entity.User;
 import com.nanyin.services.UserServices;
@@ -43,12 +42,7 @@ public class ShiroWebRealm extends AuthorizingRealm {
              ) {
             roles.add(r.getName());
         }
-        Set<String> auths = new HashSet<>();
-        for(Auth a:user.getAuths()){
-            auths.add(a.getName());
-        }
         simpleAuthorizationInfo.addRoles(roles);
-        simpleAuthorizationInfo.addStringPermissions(auths);
         return simpleAuthorizationInfo;
     }
 

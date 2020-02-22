@@ -21,4 +21,8 @@ public interface UserServices {
     List<Sex> getStandardSex() throws Exception;
 
     List<Status> getStandardStatus() throws Exception;
+
+    String logout(String token) throws Exception;
+
+    User saveUser(User user) throws Exception;
 }

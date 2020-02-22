@@ -1,21 +1,26 @@
-package com.nanyin.config;
+package com.nanyin.config.exceptions.handler;
 
-import com.alibaba.fastjson.JSON;
+import com.google.common.base.Strings;
 import com.nanyin.config.util.Result;
 import com.nanyin.config.enums.ResultCodeEnum;
+import com.nanyin.services.LocaleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * 统一异常处理
+ * 统一字段规则的异常处理
  **/
 
 @RestControllerAdvice
-public class WebExceptionHandler {
+public class FieldValidExceptionHandler {
+
+    @Autowired
+    LocaleService localeService;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     /**
@@ -25,7 +30,7 @@ public class WebExceptionHandler {
      **/
     @ResponseBody
     @ExceptionHandler(value = {BindException.class, MethodArgumentNotValidException.class})
-    public String validationExceptionHandler(Exception exception) {
+    public Result<String> validationExceptionHandler(Exception exception) {
         BindingResult bindResult = null;
         if (exception instanceof BindException) {
             bindResult = ((BindException) exception).getBindingResult();
@@ -34,15 +39,20 @@ public class WebExceptionHandler {
         }
         String msg;
         if (bindResult != null && bindResult.hasErrors()) {
-            msg = bindResult.getAllErrors().get(0).getDefaultMessage();
-            if (msg.contains("NumberFormatException")) {
-                msg = "参数类型错误！";
+            String code = bindResult.getAllErrors().get(0).getDefaultMessage();
+            // 把两边的 {} 去掉
+            if(!Strings.isNullOrEmpty(code) && code.length() > 1){
+                code = code.substring(1,code.length()-1);
             }
+            msg =localeService.getMessage(code);
+
         }else {
             msg = "系统繁忙，请稍后重试...";
         }
-        Result result = Result.resultInstance(ResultCodeEnum.FAIL,msg,bindResult);
-        return JSON.toJSONString(result);
+        Result result = new Result<>();
+        result.setMessage(msg);
+        result.setCode(ResultCodeEnum.FAIL);
+        return result;
     }
 
 }

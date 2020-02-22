@@ -2,11 +2,10 @@ package com.nanyin.services.impl;
 
 import com.google.common.base.Strings;
 import com.nanyin.config.exceptions.TokenExpiredException;
-import com.nanyin.config.redis.RedisService;
+import com.nanyin.services.RedisService;
 import com.nanyin.config.util.*;
 import com.nanyin.entity.*;
 import com.nanyin.config.enums.ResultCodeEnum;
-import com.nanyin.repository.AuthRepository;
 import com.nanyin.repository.SexRepository;
 import com.nanyin.repository.StatusRepository;
 import com.nanyin.repository.UserRepository;
@@ -31,6 +30,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.servlet.http.Cookie;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -46,8 +46,6 @@ public class UserServicesImpl implements UserServices {
     @Autowired
     UserRepository userRepository;
 
-    @Autowired
-    AuthRepository authRepository;
 
     @Autowired
     MessageSource messageSource;
@@ -177,6 +175,34 @@ public class UserServicesImpl implements UserServices {
         return statusRepository.findAll();
     }
 
+    @Override
+    public String logout(String token) throws Exception {
+        if(redisService.exists(token)){
+            // 删除缓存中的token
+            redisService.remove(token);
+            return token;
+        }
+        return null;
+    }
+
+    @Override
+    public User saveUser(User user) throws Exception {
+        user = initUser(user);
+        // 创建用户
+        return userRepository.saveAndFlush(user);
+    }
+
+    private User initUser(User user) throws Exception{
+        user.setGmtCreate(new Date());
+        user.setGmtModify(new Date());
+        user.setSalt(user.getName());
+        user.getPerson().setGmtCreate(new Date());
+        user.getPerson().setGmtModify(new Date());
+        Status status = new Status();
+        status.setId(1);
+        user.setStatus(status);
+        return user;
+    }
     /**
      * 使用固定的md5 1024次加密获得加密后的密码
      * 在使用SimpleHash进行加密Object的时候，需要重写Simplehash中的objectToBytes方法。
