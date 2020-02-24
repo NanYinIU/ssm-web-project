@@ -19,12 +19,14 @@ public interface UserRepository extends JpaRepository<User,Integer>, JpaSpecific
      * @param name
      * @return com.nanyin.entity.User
      **/
-    @Query(nativeQuery = true,value = "select u.* from user u where u.name=:name")
+    @Query(nativeQuery = true,value = "select u.* from user u where u.name=:name limit 1")
     User findUserByName(String name);
 
     @Override
     User saveAndFlush(User user);
 
+    @Query(nativeQuery = true,value = "select u.name from user u where u.id:id limit 1")
+    String getUserNameById(Integer id);
 }
 
 //

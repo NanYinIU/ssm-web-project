@@ -25,4 +25,10 @@ public interface UserServices {
     String logout(String token) throws Exception;
 
     User saveUser(User user) throws Exception;
+
+    User updateUser(User user) throws Exception;
+
+    void deleteUser(Integer id) throws Exception;
+
+    User findUserByName(String name) throws Exception;
 }

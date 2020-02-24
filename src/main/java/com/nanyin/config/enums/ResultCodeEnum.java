@@ -6,4 +6,8 @@ public enum ResultCodeEnum {
     ResultCodeEnum(int code) {
         this.code = code;
     }
+
+    public int getCode() {
+        return code;
+    }
 }

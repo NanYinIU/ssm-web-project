@@ -21,8 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class LoginController{
 
-    @Autowired
-    MyCookieResolver myCookieResolver;
+
     @Autowired
     UserServices userServices;
 
@@ -32,7 +31,6 @@ public class LoginController{
     @Autowired
     RedisService redisService;
 
-//    登陆注册部分开始 -------------------------------------------------------
 //    @CrossOrigin(origins = "*",allowCredentials="true",allowedHeaders = "",methods = {})
     @PostMapping(value = "/user/login")
     public @ResponseBody
@@ -40,10 +38,9 @@ public class LoginController{
 //        Boolean rememberMe = false;
         String data = userServices.login(nameAndPw.getUsername(),nameAndPw.getPassword(),false);
         if(data.equals(ResultCodeEnum.WRONG_USERNAME_OR_PASSWORD.toString())){
-//            return new Result<>("用户名密码错误",ResultCodeEnum.WRONG_USERNAME_OR_PASSWORD,"");
             throw new TokenWrongException();
         }
-        return new Result<String>(data);
+        return new Result<>(data);
     }
 
     @GetMapping("/logout")
@@ -52,6 +49,5 @@ public class LoginController{
         String data = userServices.logout(token);
         return new Result<>(data);
     }
-    //    登陆注册部分结束 -------------------------------------------------------
 
 }

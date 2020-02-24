@@ -2,6 +2,7 @@ package com.nanyin.config.exceptions.handler;
 
 import com.google.common.base.Strings;
 import com.nanyin.config.enums.ResultCodeEnum;
+import com.nanyin.config.exceptions.TokenWrongException;
 import com.nanyin.config.util.Result;
 import com.nanyin.services.LocaleService;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -67,11 +68,16 @@ public class ControllerExceptionHandler {
                     code = code.substring(1,code.length()-1);
                 }
                 result.setMessage(code);
+                result.setCode(ResultCodeEnum.FAIL);
             }
+        }else if(e instanceof TokenWrongException){
+            result.setMessage(e.getMessage());
+            result.setCode(ResultCodeEnum.FAIL);
         }else{
             result.setMessage(e.getMessage());
+            result.setCode(ResultCodeEnum.FAIL);
         }
-        result.setCode(ResultCodeEnum.FAIL);
+
         logger.error("Occur Exception:"+e.getClass().getSimpleName()+",Message Show:"+e.getMessage());
         return result;
     }

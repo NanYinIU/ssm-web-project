@@ -35,6 +35,14 @@ public class ShiroWebConfiguration {
     @Value("${spring.redis.port}")
     private int redisPort;
 
+    @Value("${spring.redis.timeout}")
+    private int redisTimeout;
+
+    @Value("${hash.algorithm.md5}")
+    private String algorithm;
+
+    @Value("${hash.algorithm.iterations}")
+    private int iterations;
 
     private Logger logger = LoggerFactory.getLogger(ShiroWebConfiguration.class);
     @Bean
@@ -69,11 +77,9 @@ public class ShiroWebConfiguration {
      */
     @Bean
     public DefaultWebSecurityManager securityManager() {
-        logger.info("开启安全管理器-----------------------");
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        logger.info("加载realm-----------------------");
         securityManager.setRealm(shiroWebRealm());
-        securityManager.setSessionManager(sessionManager());
+//        securityManager.setSessionManager(sessionManager());
         securityManager.setRememberMeManager(rememberMeManager());
         return securityManager;
     }
@@ -89,12 +95,12 @@ public class ShiroWebConfiguration {
     @Bean
     public HashedCredentialsMatcher hashedCredentialsMatcher() {
         HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
-        hashedCredentialsMatcher.setHashAlgorithmName("MD5");
-        hashedCredentialsMatcher.setHashIterations(1024);
+        hashedCredentialsMatcher.setHashAlgorithmName(algorithm);
+        hashedCredentialsMatcher.setHashIterations(iterations);
         return hashedCredentialsMatcher;
     }
 
-    @Bean
+//    @Bean
     public SessionManager sessionManager() {
         MySessionManager mySessionManager = new MySessionManager();
         mySessionManager.setSessionDAO(redisSessionDAO());
@@ -105,11 +111,11 @@ public class ShiroWebConfiguration {
         RedisManager redisManager = new RedisManager();
         redisManager.setHost(redisHost);
         redisManager.setPort(redisPort);
-        redisManager.setTimeout(36000);
+        redisManager.setTimeout(redisTimeout);
         return redisManager;
     }
 
-    @Bean
+//    @Bean
     public RedisSessionDAO redisSessionDAO() {
         RedisSessionDAO redisSessionDAO = new RedisSessionDAO();
         // 自定义session管理 使用redis

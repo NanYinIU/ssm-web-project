@@ -13,7 +13,7 @@ spring:
         username: root
     jpa:
         database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-#        show-sql: true
+        show-sql: true
         hibernate:
             ddl-auto: update
     #        创建数据库
@@ -26,7 +26,8 @@ spring:
         database: 0
         host: localhost
         port: 6379
-#   开发时禁用cache
+        timeout: 3600
+    #   开发时禁用cache
     thymeleaf:
         cache: false
     quartz:
@@ -48,3 +49,9 @@ upload:
         sk: VcpO6QSNxGInrgyMMr_8_qMI3W8jZZChDw2hCIon
         bucket: nanyiniu
         domain: http://q61syra66.bkt.clouddn.com/
+
+hash:
+    algorithm:
+        md5: md5
+        iterations: 1024
+        defalutCrdentials: 123456

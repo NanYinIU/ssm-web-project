@@ -2,6 +2,7 @@ package com.nanyin.services.impl;
 
 import com.google.common.base.Strings;
 import com.nanyin.config.exceptions.TokenExpiredException;
+import com.nanyin.config.exceptions.UserExistedException;
 import com.nanyin.services.RedisService;
 import com.nanyin.config.util.*;
 import com.nanyin.entity.*;
@@ -14,9 +15,11 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ByteSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.*;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
@@ -24,10 +27,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import javax.servlet.http.Cookie;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,8 +38,15 @@ import java.util.UUID;
 @CacheConfig(cacheManager = "TtlCacheManager")
 public class UserServicesImpl implements UserServices {
 
-    private static final String ALGORITHM_NAME = "MD5";
-    private static final int ITERATIONS = 1024;
+    @Value("${hash.algorithm.md5}")
+    private String algorithm;
+
+    @Value("${hash.algorithm.iterations}")
+    private int iterations;
+
+    @Value("${hash.algorithm.defalutCrdentials}")
+    private String defalutCrdentials;
+
 
     private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
@@ -84,37 +91,22 @@ public class UserServicesImpl implements UserServices {
             @Override
             public Predicate toPredicate(Root<User> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 // 使用list存储查询条件
-                List<Predicate> predicatesList = new ArrayList<Predicate>();
-                // isdelete = 0
+                JpaHelper jpaHelper = new JpaHelper(root,criteriaQuery,criteriaBuilder);
                 Predicate basePredicate = criteriaBuilder.equal(root.get("isDeleted"),0);
-                predicatesList.add(basePredicate);
-
+                jpaHelper.add(basePredicate);
                 if(!Strings.isNullOrEmpty(search)){
                     Predicate searchPredicate = criteriaBuilder.like(root.get("name"),"%"+search+"%");
-                    predicatesList.add(searchPredicate);
+                    jpaHelper.add(searchPredicate);
                 }
                 if(sex!=null){
                     Predicate sexPredicate = criteriaBuilder.equal(root.get("sex").get("id"),sex);
-                    predicatesList.add(sexPredicate);
+                    jpaHelper.add(sexPredicate);
                 }
                 if(status!=null){
                     Predicate statusPredicate = criteriaBuilder.equal(root.get("status").get("id"),status);
-                    predicatesList.add(statusPredicate);
+                    jpaHelper.add(statusPredicate);
                 }
-
-                //最终将查询条件拼好然后return
-                Predicate[] predicates = new Predicate[predicatesList.size()];
-                if(!Strings.isNullOrEmpty(order)){
-                    if(order.length() > 1){
-                        String orderName = order.substring(1);
-                        if(order.startsWith("-")){
-                            criteriaQuery.orderBy(criteriaBuilder.desc(root.get(orderName)));
-                        }else if(order.startsWith("+")){
-                            criteriaQuery.orderBy(criteriaBuilder.asc(root.get(orderName)));
-                        }
-                    }
-                }
-                return criteriaBuilder.and(predicatesList.toArray(predicates));
+                return jpaHelper.createOrder(order).query();
             }
         };
         return userRepository.findAll(specification,pageRequest);
@@ -187,15 +179,61 @@ public class UserServicesImpl implements UserServices {
 
     @Override
     public User saveUser(User user) throws Exception {
+        // 先查看用户名在系统中是否存在，如果存在，返回错误
+        if(!Strings.isNullOrEmpty(user.getName())){
+            User userByName = userRepository.findUserByName(user.getName());
+            if(userByName!=null){
+                throw new UserExistedException();
+            }
+        }
         user = initUser(user);
         // 创建用户
         return userRepository.saveAndFlush(user);
     }
 
+    @Override
+    public User updateUser(User user) throws Exception {
+        Integer userId = user.getId();
+        if(userId!=null){
+            if(!Strings.isNullOrEmpty(user.getName())){
+                User userByName = userRepository.findUserByName(user.getName());
+                if(userByName!=null && userByName.getId()!=userId){
+                    throw new UserExistedException();
+                }
+            }
+        }
+        // 设置更新时间
+        user.setGmtModify(new Date());
+        // 单独更新密码
+        user.setPassword(generatePassword(user.getPassword(),user.getSalt()));
+        return userRepository.saveAndFlush(user);
+    }
+
+    @Override
+    public void deleteUser(Integer id) throws Exception {
+        userRepository.deleteById(id);
+    }
+
+    @Override
+    public User findUserByName(String name) throws Exception {
+        // 精确查找名称，存在多个，或不存在返回null
+        return userRepository.findUserByName(name);
+    }
+
+    /**
+     * 创建用户初始化默认属性
+     * @param user
+     * @return
+     * @throws Exception
+     */
     private User initUser(User user) throws Exception{
+        String password = user.getPassword();
+        String salt = user.getName();
         user.setGmtCreate(new Date());
         user.setGmtModify(new Date());
-        user.setSalt(user.getName());
+        user.setSalt(salt);
+        password = generatePassword(password,salt);
+        user.setPassword(password.toString());
         user.getPerson().setGmtCreate(new Date());
         user.getPerson().setGmtModify(new Date());
         Status status = new Status();
@@ -209,10 +247,12 @@ public class UserServicesImpl implements UserServices {
      * @param crdentials
      * @return
      */
-    private String generatePassword(Object crdentials){
-        Object salt = "1";//盐值
-        HashHelper simpleHash = new HashHelper(ALGORITHM_NAME, crdentials, salt,ITERATIONS);
-        return new String(simpleHash.getBytes());
+    private String generatePassword(String crdentials,String salt) throws Exception{
+        if(Strings.isNullOrEmpty(crdentials)){
+            crdentials = defalutCrdentials;
+        }
+        HashHelper simpleHash = new HashHelper(algorithm, crdentials, ByteSource.Util.bytes(salt),iterations);
+        return new String(simpleHash.toHex());
     }
 
 }

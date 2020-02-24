@@ -32,9 +32,9 @@ import java.util.Date;
 
 @Aspect
 @Component
-public class  SystemLogAspect {
+public class LogAdvice {
 
-    private static final Logger logger = LoggerFactory.getLogger(SystemLogAspect.class);
+    private static final Logger logger = LoggerFactory.getLogger(LogAdvice.class);
 
     @Autowired
     LocaleService localeService;
