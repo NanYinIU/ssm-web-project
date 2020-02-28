@@ -1,17 +1,16 @@
 package com.nanyin.repository;
 
+import com.nanyin.entity.Role;
 import com.nanyin.entity.User;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-public interface UserRepository extends JpaRepository<User,Integer>, JpaSpecificationExecutor<User> {
+public interface UserRepository extends JpaRepository<User,Integer>, QuerydslPredicateExecutor<User> {
     /**
      * 根据名称查询用户
      * @Author nanyin

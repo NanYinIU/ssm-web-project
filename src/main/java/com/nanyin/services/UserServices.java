@@ -6,13 +6,14 @@ import com.nanyin.entity.User;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserServices {
 
     User getUserFromUserName(String name) throws Exception;
 
 
-    Page<User> findUsers(Integer offset, Integer limit, String order, String search, Integer status, Integer sex) throws Exception;
+    Page<User> findUsers(Integer offset, Integer limit, String order, String search, Integer status, Integer sex, Integer role) throws Exception;
 
     String login(String username, String password, Boolean rememberMe);
 
@@ -31,4 +32,7 @@ public interface UserServices {
     void deleteUser(Integer id) throws Exception;
 
     User findUserByName(String name) throws Exception;
+
+    Map<String,List<User>> getRolePerson(Integer role) throws Exception;
+
 }

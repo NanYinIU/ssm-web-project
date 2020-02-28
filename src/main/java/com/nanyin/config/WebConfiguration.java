@@ -4,6 +4,7 @@ import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.nanyin.config.interceptor.WebTokenInterceptor;
 import com.nanyin.config.locale.MyCookieResolver;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -11,6 +12,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 
+import javax.persistence.EntityManager;
 import java.nio.charset.Charset;
 import java.util.List;
 
@@ -51,4 +53,16 @@ public class WebConfiguration implements WebMvcConfigurer {
         // 需要实现对token的解析
         registry.addInterceptor(tokenInterceptor()).excludePathPatterns("/user/login");
     }
+
+
+    /**
+     * 注入 jpaQueryFactory
+     * @param entityManager
+     * @return
+     */
+    @Bean
+    public JPAQueryFactory jpaQueryFactory(EntityManager entityManager){
+        return new JPAQueryFactory(entityManager);
+    }
+
 }

@@ -1,7 +1,9 @@
 package com.nanyin.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -25,9 +27,13 @@ public class Role implements Serializable {
     Integer ord;
     @Column(name = "is_deleted",columnDefinition = "TINYINT(4)")
     Boolean isDeleted=false;
+
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @Temporal(value=TemporalType.TIMESTAMP)
     Date gmtCreate;
-    @Temporal(value=TemporalType.TIMESTAMP)
+
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+//    @Temporal(value=TemporalType.TIMESTAMP)
     Date gmtModify;
     @JSONField(serialize = false)
     @ManyToMany(cascade = {

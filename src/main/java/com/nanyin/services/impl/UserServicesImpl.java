@@ -11,6 +11,9 @@ import com.nanyin.repository.SexRepository;
 import com.nanyin.repository.StatusRepository;
 import com.nanyin.repository.UserRepository;
 import com.nanyin.services.UserServices;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -24,15 +27,13 @@ import org.springframework.cache.annotation.*;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.*;
 import javax.servlet.http.Cookie;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @CacheConfig(cacheManager = "TtlCacheManager")
@@ -53,7 +54,6 @@ public class UserServicesImpl implements UserServices {
     @Autowired
     UserRepository userRepository;
 
-
     @Autowired
     MessageSource messageSource;
 
@@ -66,6 +66,8 @@ public class UserServicesImpl implements UserServices {
     @Autowired
     StatusRepository statusRepository;
 
+    @Autowired
+    JPAQueryFactory jpaQueryFactory;
 
     @Override
 //    @Cacheable(value = "user", key = "#name")
@@ -85,32 +87,28 @@ public class UserServicesImpl implements UserServices {
      * @throws Exception
      */
     @Override
-    public Page<User> findUsers(Integer offset, Integer limit, String order, String search, Integer status, Integer sex) throws Exception {
-        PageRequest pageRequest = new PageRequest(offset-1,limit);
-        Specification<User> specification = new Specification<User>() {
-            @Override
-            public Predicate toPredicate(Root<User> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                // 使用list存储查询条件
-                JpaHelper jpaHelper = new JpaHelper(root,criteriaQuery,criteriaBuilder);
-                Predicate basePredicate = criteriaBuilder.equal(root.get("isDeleted"),0);
-                jpaHelper.add(basePredicate);
-                if(!Strings.isNullOrEmpty(search)){
-                    Predicate searchPredicate = criteriaBuilder.like(root.get("name"),"%"+search+"%");
-                    jpaHelper.add(searchPredicate);
-                }
-                if(sex!=null){
-                    Predicate sexPredicate = criteriaBuilder.equal(root.get("sex").get("id"),sex);
-                    jpaHelper.add(sexPredicate);
-                }
-                if(status!=null){
-                    Predicate statusPredicate = criteriaBuilder.equal(root.get("status").get("id"),status);
-                    jpaHelper.add(statusPredicate);
-                }
-                return jpaHelper.createOrder(order).query();
-            }
-        };
-        return userRepository.findAll(specification,pageRequest);
+    public Page<User> findUsers(Integer offset, Integer limit, String order, String search, Integer status, Integer sex, Integer role) throws Exception {
+        Sort sort = null;
+        String propertie = order.substring(1);
+        if (order.startsWith("-")) {
+            sort = Sort.by(propertie).descending();
+        } else if (order.startsWith("+")) {
+            sort = Sort.by(propertie).ascending();
+        }
+        if(offset == null || limit == null){
+            offset = 1;
+            limit = Integer.MAX_VALUE;
+        }
+        PageRequest pageRequest = new PageRequest(offset - 1, limit, sort);
+        QUser user = QUser.user;
+        com.querydsl.core.types.Predicate predicate = user.isNotNull().or(user.isNull());
+        predicate = search == null ? predicate : ExpressionUtils.and(predicate, user.name.like("%" + search + "%"));
+        predicate = sex == null ? predicate : ExpressionUtils.and(predicate, user.sex.id.eq(sex));
+        predicate = status == null ? predicate : ExpressionUtils.and(predicate, user.status.id.eq(status));
+        predicate = role == null ? predicate : ExpressionUtils.and(predicate, user.roles.any().id.eq(role));
+        return userRepository.findAll(predicate, pageRequest);
     }
+
 
     /**
      * 登陆方法，使用shiro进行登陆的验证，随机生成token，放到cookie中（可不用），前端每次发送请求都在header中
@@ -218,6 +216,26 @@ public class UserServicesImpl implements UserServices {
     public User findUserByName(String name) throws Exception {
         // 精确查找名称，存在多个，或不存在返回null
         return userRepository.findUserByName(name);
+    }
+
+    @Override
+    public Map<String,List<User>> getRolePerson(Integer role) throws Exception {
+        Map<String,List<User>> map = new HashMap<>();
+        List<User> users = doGetrolePerson(role, true, null);
+        map.put("cur",users);
+        map.put("otr",userRepository.findAll());
+        return map;
+    }
+
+    private List<User> doGetrolePerson(Integer role,boolean in,List<User> users){
+        QUser user = QUser.user;
+        Predicate predicate = user.isNotNull().or(user.isNull());
+        if(in){
+            predicate = role == null ? predicate : ExpressionUtils.and(predicate, user.roles.any().id.in(role));
+        }else{
+            predicate = role == null ? predicate : ExpressionUtils.and(predicate, user.notIn(users));
+        }
+        return jpaQueryFactory.selectFrom(user).where(predicate).fetch();
     }
 
     /**

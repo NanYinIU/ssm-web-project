@@ -14,9 +14,6 @@ import com.qiniu.util.Auth;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.junit.Test;
 
-import javax.crypto.Mac;
-import java.io.ByteArrayInputStream;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -28,10 +25,10 @@ public class test1 {
     public static void main(String[] args) {
         String hashAlgorithmName = "MD5";//加密方式
         Object crdentials = "123456";//密码原值
-        Object salt = "god";//盐值
+        Object salt = "1";//盐值
         int hashIterations = 1024;//加密1024次
         SimpleHash simpleHash = new SimpleHash(hashAlgorithmName, crdentials, salt, hashIterations);
-        System.out.println(simpleHash.toString());
+        System.out.println(simpleHash.toHex());
     }
 
     @Test
