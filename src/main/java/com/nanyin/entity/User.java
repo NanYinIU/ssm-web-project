@@ -4,6 +4,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import lombok.*;
+import org.checkerframework.checker.units.qual.C;
 import org.hibernate.annotations.*;
 
 import javax.persistence.*;
@@ -73,7 +74,7 @@ public class User implements Serializable {
     private Date gmtModify;
 
     @JSONField(name = "roles")
-    @ManyToMany(mappedBy = "users",fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "users",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private Set<Role> roles;
 
     @OneToOne(cascade = CascadeType.ALL)

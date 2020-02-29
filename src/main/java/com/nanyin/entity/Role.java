@@ -36,13 +36,10 @@ public class Role implements Serializable {
 //    @Temporal(value=TemporalType.TIMESTAMP)
     Date gmtModify;
     @JSONField(serialize = false)
-    @ManyToMany(cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE
-    })
+    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinTable(name = "r_user_role",
             joinColumns = {@JoinColumn(name = "role_id")},
-            inverseJoinColumns = {@JoinColumn(name = "users_id")})
+            inverseJoinColumns = {@JoinColumn(name = "user_id")})
     private List<User> users;
 
 }

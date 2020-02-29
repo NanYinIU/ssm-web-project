@@ -1,15 +1,13 @@
 package com.nanyin.controller;
 
 import com.nanyin.config.util.Result;
+import com.nanyin.entity.DTO.TranferDto;
 import com.nanyin.entity.Role;
 import com.nanyin.services.RoleService;
 import com.nanyin.services.UserServices;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 public class RoleController {
@@ -56,16 +54,19 @@ public class RoleController {
         return new Result<>();
     }
 
+    /**
+     * 为角色添加/删除人员
+     * @param direction 分为 left / right，其中left表示添加，right表示移除
+     * @param keys 人员id数组
+     * @param role 角色id
+     * @return
+     * @throws Exception
+     */
     @PostMapping("/role/users")
-    @ApiOperation(value = "为角色添加人员")
-    public Result addPerson() throws Exception{
-        return new Result<>();
-    }
-
-    @DeleteMapping("/role/users")
-    @ApiOperation(value = "为角色取消人员")
-    public Result cancelPerson() throws Exception{
-        return new Result<>();
+    @ApiOperation(value = "为角色添加/删除人员")
+    public Result movePerson(@RequestBody TranferDto tranferDto) throws Exception{
+        roleService.movePerson(tranferDto);
+        return new Result();
     }
 
     @GetMapping("/role/users")

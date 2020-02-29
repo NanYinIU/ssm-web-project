@@ -16,6 +16,9 @@ spring:
         show-sql: true
         hibernate:
             ddl-auto: update
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MySQL5InnoDBDialect
     #        创建数据库
 #        hibernate:
 #   国际化Resource目录设置
