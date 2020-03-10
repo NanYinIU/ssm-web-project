@@ -9,12 +9,12 @@ ssm-web-project
 #### 后端框架:
 
 技术 | 名称 | 官网
-:---|------|----
+---|------|----
 Spring Framework | 容器  | [http://projects.spring.io/spring-framework/](http://projects.spring.io/spring-framework/)
 SpringMVC | MVC框架  | [http://docs.spring.io/spring/docs/current/spring-framework-reference/htmlsingle/#mvc](http://docs.spring.io/spring/docs/current/spring-framework-reference/htmlsingle/#mvc)
-   Spring Data JPA   | ORM框架                | https://spring.io/projects/spring-data-jpa                   
-    Apache Shiro     | 安全框架               | [http://shiro.apache.org/](http://shiro.apache.org/)         
-        Maven        | 项目构建管理           | [http://maven.apache.org/](http://maven.apache.org/)         
+Spring Data JPA   | ORM框架                | https://spring.io/projects/spring-data-jpa                   
+Apache Shiro     | 安全框架               | [http://shiro.apache.org/](http://shiro.apache.org/)         
+Maven        | 项目构建管理           | [http://maven.apache.org/](http://maven.apache.org/)         
 Druid | 数据库连接池  | [https://github.com/alibaba/druid](https://github.com/alibaba/druid)
 hibernate-validator | 校验框架  | http://hibernate.org/validator 
 Logback | SpringBoot默认日志框架 | http://logback.qos.ch/ 
