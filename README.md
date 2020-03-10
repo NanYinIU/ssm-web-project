@@ -19,8 +19,8 @@ Druid | 数据库连接池  | [https://github.com/alibaba/druid](https://github.
 hibernate-validator | 校验框架  | http://hibernate.org/validator 
 Logback | SpringBoot默认日志框架 | http://logback.qos.ch/ 
 Swagger2 | 文档管理 | https://swagger.io/ 
-       quartz        | 定时任务               | https://qz.com/                                              
-        redis        | 数据缓存               | https://redis.io/ 
+quartz        | 定时任务               | https://qz.com/                                              
+redis        | 数据缓存               | https://redis.io/ 
 
 #### 前端技术:
 技术 | 名称 | 官网
