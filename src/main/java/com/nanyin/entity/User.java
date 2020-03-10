@@ -18,7 +18,8 @@ import java.util.Date;
 import java.util.Set;
 
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name="user")
 @ApiModel(value="User",description = "用户实体类")
@@ -80,12 +81,5 @@ public class User implements Serializable {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(columnDefinition = "INT(11)",name = "person_id")
     private Person person;
-
-    public User (int id){
-        this.id = id;
-    }
-
-    public User(){
-    }
 
 }

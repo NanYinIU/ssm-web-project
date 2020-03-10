@@ -9,6 +9,12 @@ import com.nanyin.config.util.Result;
 import com.nanyin.entity.User;
 import com.nanyin.services.*;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.authz.annotation.RequiresUser;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +32,15 @@ public class UserController {
     RedisService redisService;
 
     @GetMapping("/users")
+    @RequiresUser
     @Log(operationType = OperationTypeEnum.FIND, operateModul = OperateModuleEnum.USER, operationName = "search_users")
     @ResponseBody
     @ApiOperation(value = "查找用户列表")
     public Result userLists(String search, Integer offset, Integer limit, String sort, Integer status, Integer sex, Integer role) throws Exception {
+        //todo 认证授权取不到值
+        Subject subject = SecurityUtils.getSubject();
+        System.out.println(subject.getPrincipal());
+        System.out.println(subject.hasRole("admin"));
         return new Result<>(userServices.findUsers(offset, limit, sort, search, status, sex, role));
     }
 
@@ -60,6 +71,7 @@ public class UserController {
      * @throws Exception
      */
     @PostMapping("/user")
+    @RequiresRoles(value={"admin"},logical= Logical.OR)
     @ApiOperation(value = "添加用户信息")
     public Result saveUser(@Valid @RequestBody User user) throws Exception {
         return new Result<>(userServices.saveUser(user));

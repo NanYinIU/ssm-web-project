@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
  * 用于登录、登出等操作
  * 并非前后端分离项目
  */
-@Controller
+@RestController
 public class LoginController{
 
 
@@ -43,9 +43,9 @@ public class LoginController{
         return new Result<>(data);
     }
 
-    @GetMapping("/logout")
+    @GetMapping("/user/logout")
     @ApiOperation(value = "登出",notes = "登出")
-    public Result logout(@RequestParam String token) throws Exception {
+    public Result logout(String token) throws Exception {
         String data = userServices.logout(token);
         return new Result<>(data);
     }

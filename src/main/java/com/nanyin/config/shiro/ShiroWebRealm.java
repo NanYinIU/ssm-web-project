@@ -1,13 +1,12 @@
 package com.nanyin.config.shiro;
 
 import com.nanyin.config.exceptions.TokenExpiredException;
+import com.nanyin.config.exceptions.UserExistedException;
+import com.nanyin.entity.Permission;
 import com.nanyin.entity.Role;
 import com.nanyin.entity.User;
 import com.nanyin.services.UserServices;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -38,11 +37,16 @@ public class ShiroWebRealm extends AuthorizingRealm {
         }
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
         Set<String> roles = new HashSet<>();
+        Set<String> permissions = new HashSet<>();
         for (Role r:user.getRoles()
              ) {
             roles.add(r.getName());
+            for (Permission permission : r.getPermissions()) {
+                permissions.add(permission.getName());
+            }
         }
         simpleAuthorizationInfo.addRoles(roles);
+        simpleAuthorizationInfo.addStringPermissions(permissions);
         return simpleAuthorizationInfo;
     }
 
@@ -55,11 +59,12 @@ public class ShiroWebRealm extends AuthorizingRealm {
      **/
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
-        String username = (String) authenticationToken.getPrincipal();
+        UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
+        String username = token.getUsername();
         if(!"".equals(username) && username!=null){
             User user = getUser(username);
             ByteSource byteSource = ByteSource.Util.bytes(user.getSalt());
-            return new SimpleAuthenticationInfo(username,user.getPassword(),byteSource,"");
+            return new SimpleAuthenticationInfo(user,user.getPassword(),byteSource,"");
         }else {
             return null;
         }

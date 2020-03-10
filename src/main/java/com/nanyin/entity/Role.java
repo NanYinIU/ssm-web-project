@@ -1,19 +1,19 @@
 package com.nanyin.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
+import lombok.Data;
+import org.apache.shiro.authz.SimpleRole;
 
 import javax.persistence.*;
-import java.io.Serializable;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
-@Data
 @Entity
+@Data
 @Table(name = "role")
-public class Role implements Serializable {
+public class Role {
     private static final long serialVersionUID = 8538788781327321942L;
     @Id
     @Column(columnDefinition = "INT(11)")
@@ -35,6 +35,7 @@ public class Role implements Serializable {
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
 //    @Temporal(value=TemporalType.TIMESTAMP)
     Date gmtModify;
+
     @JSONField(serialize = false)
     @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinTable(name = "r_user_role",
@@ -42,4 +43,15 @@ public class Role implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "user_id")})
     private List<User> users;
 
+
+    @JSONField(serialize = false)
+    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @JoinTable(name = "r_role_permission",
+            joinColumns = {@JoinColumn(name = "role_id")},
+            inverseJoinColumns = {@JoinColumn(name = "permission_id")})
+    private Set<Permission> permissions;
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
 }

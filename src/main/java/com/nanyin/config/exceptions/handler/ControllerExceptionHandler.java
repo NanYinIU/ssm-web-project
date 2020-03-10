@@ -2,6 +2,7 @@ package com.nanyin.config.exceptions.handler;
 
 import com.google.common.base.Strings;
 import com.nanyin.config.enums.ResultCodeEnum;
+import com.nanyin.config.exceptions.TokenExpiredException;
 import com.nanyin.config.exceptions.TokenWrongException;
 import com.nanyin.config.util.Result;
 import com.nanyin.services.LocaleService;
@@ -70,9 +71,12 @@ public class ControllerExceptionHandler {
                 result.setMessage(code);
                 result.setCode(ResultCodeEnum.FAIL);
             }
-        }else if(e instanceof TokenWrongException){
+        }else if(e instanceof TokenExpiredException){
+            result.setCode(ResultCodeEnum.TOKEN_EXPIRED);
             result.setMessage(e.getMessage());
+        }else if(e instanceof TokenWrongException){
             result.setCode(ResultCodeEnum.FAIL);
+            result.setMessage(e.getMessage());
         }else{
             result.setMessage(e.getMessage());
             result.setCode(ResultCodeEnum.FAIL);

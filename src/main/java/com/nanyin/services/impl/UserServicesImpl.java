@@ -120,7 +120,7 @@ public class UserServicesImpl implements UserServices {
      * @throws IncorrectCredentialsException
      */
     @Override
-    public String login(String username, String password, Boolean rememberMe)throws IncorrectCredentialsException {
+    public String login(String username, String password, Boolean rememberMe) throws IncorrectCredentialsException {
         MDCUtil.setUser(username);
         Subject subject = SecurityUtils.getSubject();
         if (!subject.isAuthenticated()) {

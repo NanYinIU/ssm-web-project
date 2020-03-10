@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * 过滤 OPTION 请求
  */
-public class MyPassThruAuthenticationFilter extends PassThruAuthenticationFilter {
+public class  MyPassThruAuthenticationFilter extends PassThruAuthenticationFilter {
 
     @Override
     public boolean onPreHandle(ServletRequest request, ServletResponse response, Object mappedValue)

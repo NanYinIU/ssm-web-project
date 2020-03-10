@@ -1,9 +1,12 @@
 package com.nanyin.config.interceptor;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.base.Strings;
+import com.nanyin.config.enums.ResultCodeEnum;
 import com.nanyin.config.util.CommonUtils;
 import com.nanyin.config.util.HttpUtils;
 import com.nanyin.config.util.MDCUtil;
+import com.nanyin.config.util.Result;
 import com.nanyin.services.RedisService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.PrintWriter;
 import java.util.Enumeration;
 
 public class WebTokenInterceptor implements HandlerInterceptor {
@@ -49,6 +53,11 @@ public class WebTokenInterceptor implements HandlerInterceptor {
                 return true;
             }
         }
+        // 否则返回illegal token ，返回前台
+        PrintWriter writer = response.getWriter();
+        Result result = new Result();
+        result.setCode(ResultCodeEnum.ILLEGAL_TOKEN);
+        writer.append(JSON.toJSONString(result));
         return false;
     }
 

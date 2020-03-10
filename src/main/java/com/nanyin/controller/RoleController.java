@@ -73,4 +73,13 @@ public class RoleController {
     public Result getRolePerson(Integer role) throws Exception{
         return new Result<>(userServices.getRolePerson(role));
     }
+
+    @PostMapping("/role/permissions")
+    public Result movePermission(@RequestBody TranferDto tranferDto) throws Exception{
+        return new Result();
+    }
+    @GetMapping("/role/permissions")
+    public Result getRolePermission() throws Exception{
+        return new Result();
+    }
 }

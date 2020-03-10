@@ -6,6 +6,7 @@ import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.codec.Base64;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.session.mgt.eis.MemorySessionDAO;
+import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.apache.shiro.web.mgt.CookieRememberMeManager;
@@ -17,9 +18,11 @@ import org.crazycake.shiro.RedisManager;
 import org.crazycake.shiro.RedisSessionDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 
 import javax.servlet.Filter;
 import javax.servlet.http.HttpServletRequest;
@@ -49,16 +52,16 @@ public class ShiroWebConfiguration {
     public ShiroFilterFactoryBean shiroFilterFactoryBean(DefaultWebSecurityManager securityManager){
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
 
-        MyPassThruAuthenticationFilter myPassThruAuthenticationFilter = new MyPassThruAuthenticationFilter();
-        Map<String,Filter> filterMap = new HashMap<>();
-        filterMap.put("authc",myPassThruAuthenticationFilter);
-        shiroFilterFactoryBean.setFilters(filterMap);
+//        MyPassThruAuthenticationFilter myPassThruAuthenticationFilter = new MyPassThruAuthenticationFilter();
+//        Map<String,Filter> filterMap = new HashMap<>();
+//        filterMap.put("authc",myPassThruAuthenticationFilter);
+//        shiroFilterFactoryBean.setFilters(filterMap);
 
         shiroFilterFactoryBean.setLoginUrl("/user/login");
 //        shiroFilterFactoryBean.setSuccessUrl("/");
         shiroFilterFactoryBean.setSecurityManager(securityManager);
-        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap());
-        shiroFilterFactoryBean.setUnauthorizedUrl("/error");
+//        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap());
+//        shiroFilterFactoryBean.setUnauthorizedUrl("/error");
         return shiroFilterFactoryBean;
     }
 
@@ -85,6 +88,7 @@ public class ShiroWebConfiguration {
     }
 
     @Bean
+    @DependsOn(value="lifecycleBeanPostProcessor")
     public ShiroWebRealm shiroWebRealm(){
         return new ShiroWebRealm(hashedCredentialsMatcher());
     }
@@ -95,8 +99,8 @@ public class ShiroWebConfiguration {
     @Bean
     public HashedCredentialsMatcher hashedCredentialsMatcher() {
         HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
-        hashedCredentialsMatcher.setHashAlgorithmName(algorithm);
-        hashedCredentialsMatcher.setHashIterations(iterations);
+        hashedCredentialsMatcher.setHashAlgorithmName("md5");
+        hashedCredentialsMatcher.setHashIterations(1024);
         return hashedCredentialsMatcher;
     }
 
@@ -136,6 +140,19 @@ public class ShiroWebConfiguration {
         cookieRememberMeManager.setCipherKey(Base64.encode("web".getBytes()));
         cookieRememberMeManager.setCookie(rememberMeCookie());
         return cookieRememberMeManager;
+    }
+
+    @Bean
+    @DependsOn(value="lifecycleBeanPostProcessor")
+    public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator(){
+        DefaultAdvisorAutoProxyCreator proxyCreator = new DefaultAdvisorAutoProxyCreator();
+        proxyCreator.setProxyTargetClass(true);
+        return proxyCreator;
+    }
+
+    @Bean
+    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
+        return new LifecycleBeanPostProcessor();
     }
 
 }
