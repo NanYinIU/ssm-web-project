@@ -1,4 +1,4 @@
-package com.nanyin.config.exceptions;
+package com.nanyin.config.exceptions.userException;
 
 public class UserExistedException extends RuntimeException{
     public UserExistedException() {

@@ -1,4 +1,4 @@
-package com.nanyin.config.exceptions;
+package com.nanyin.config.exceptions.tokenException;
 
 public class TokenExpiredException extends RuntimeException {
     public TokenExpiredException() {

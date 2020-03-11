@@ -1,13 +1,18 @@
 package com.nanyin.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.Objects;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "permission")
 public class Permission{
@@ -32,7 +37,11 @@ public class Permission{
     @Temporal(value=TemporalType.TIMESTAMP)
     Date gmtModify;
 
-    @ManyToMany(mappedBy = "permissions",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @JSONField(serialize=false)
+    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @JoinTable(name = "r_role_permission",
+            joinColumns = {@JoinColumn(name = "permission_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id")})
     Set<Role> roles;
 
 }

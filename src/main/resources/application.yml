@@ -45,6 +45,9 @@ server:
     port: 8080
     servlet:
         context-path: "/api/"
+        session:
+            store-dir:  ./session
+            persistent: true  #重新启动之间持续会话数据
 
 upload:
     qiniu:

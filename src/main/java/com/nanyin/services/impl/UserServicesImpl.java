@@ -1,12 +1,11 @@
 package com.nanyin.services.impl;
 
 import com.google.common.base.Strings;
-import com.nanyin.config.exceptions.TokenExpiredException;
-import com.nanyin.config.exceptions.UserExistedException;
+import com.nanyin.config.exceptions.userException.UserExistedException;
+import com.nanyin.config.security.CustomAuthenticatioToken;
 import com.nanyin.services.RedisService;
 import com.nanyin.config.util.*;
 import com.nanyin.entity.*;
-import com.nanyin.config.enums.ResultCodeEnum;
 import com.nanyin.repository.SexRepository;
 import com.nanyin.repository.StatusRepository;
 import com.nanyin.repository.UserRepository;
@@ -14,11 +13,6 @@ import com.nanyin.services.UserServices;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.subject.Subject;
-import org.apache.shiro.util.ByteSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,16 +22,20 @@ import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.*;
-import javax.servlet.http.Cookie;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @CacheConfig(cacheManager = "TtlCacheManager")
-public class UserServicesImpl implements UserServices {
+public class UserServicesImpl implements UserServices,UserDetailsService {
 
     @Value("${hash.algorithm.md5}")
     private String algorithm;
@@ -50,6 +48,9 @@ public class UserServicesImpl implements UserServices {
 
 
     private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @Autowired
     UserRepository userRepository;
@@ -68,6 +69,31 @@ public class UserServicesImpl implements UserServices {
 
     @Autowired
     JPAQueryFactory jpaQueryFactory;
+
+    /**
+     * 继承自UserDetailsService，进行权限角色验证和Authorities的添加
+     * @param username
+     * @return
+     * @throws UsernameNotFoundException
+     */
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findUserByName(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("该用户不存在");
+        }
+        Set<Role> roles = user.getRoles();
+        Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
+        // 系统层面只根据权限限制方法是否可执行
+        for (Role role : roles) {
+            grantedAuthorities.addAll(role.getPermissions()
+                    .stream()
+                    .map(permission -> new SimpleGrantedAuthority(permission.getName()))
+                    .collect(Collectors.toList()));
+        }
+        return new org.springframework.security.core.userdetails.User(username,user.getPassword(),grantedAuthorities);
+    }
+
 
     @Override
 //    @Cacheable(value = "user", key = "#name")
@@ -95,11 +121,7 @@ public class UserServicesImpl implements UserServices {
         } else if (order.startsWith("+")) {
             sort = Sort.by(propertie).ascending();
         }
-        if(offset == null || limit == null){
-            offset = 1;
-            limit = Integer.MAX_VALUE;
-        }
-        PageRequest pageRequest = new PageRequest(offset - 1, limit, sort);
+        PageRequest pageRequest = PageHelper.generatePageRequest(offset, limit, sort);
         QUser user = QUser.user;
         com.querydsl.core.types.Predicate predicate = user.isNotNull().or(user.isNull());
         predicate = search == null ? predicate : ExpressionUtils.and(predicate, user.name.like("%" + search + "%"));
@@ -120,39 +142,15 @@ public class UserServicesImpl implements UserServices {
      * @throws IncorrectCredentialsException
      */
     @Override
-    public String login(String username, String password, Boolean rememberMe) throws IncorrectCredentialsException {
+    public String login(String username, String password, Boolean rememberMe)  throws Exception{
         MDCUtil.setUser(username);
-        Subject subject = SecurityUtils.getSubject();
-        if (!subject.isAuthenticated()) {
-            UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(username, password, false);
-            try{
-                subject.login(usernamePasswordToken);
-            }catch (IncorrectCredentialsException ice){
-                return ResultCodeEnum.WRONG_USERNAME_OR_PASSWORD.toString();
-            }
-            Cookie localCookie = HttpUtils.buildCookie("locale", "zh-cn");
-            // 登陆成功，将用户信息连同生成的token放到redis中
-            String token = UUID.randomUUID().toString();
-            Cookie tokenCookie = HttpUtils.buildCookie("TokenKey", token);
-            HttpUtils.setCookie(localCookie, tokenCookie);
-            redisService.set(token, username,3600l);
-            return token;
-        }
-        return "";
+        CustomAuthenticatioToken token = SecurityUtils.login(HttpUtils.getHttpServletRequest(), username, password, authenticationManager);
+        return token.getToken();
     }
 
     @Override
     public User getCurrentUserInfo(String token) throws Exception{
-        String username = "";
-        if(redisService.exists(token)){
-            username = (String) redisService.get(token);
-            if(CommonUtils.isNull(username)){
-                throw new TokenExpiredException();
-            }
-        }else{
-            throw new TokenExpiredException();
-        }
-        return userRepository.findUserByName(username);
+        return userRepository.findUserByName(JwtUtil.getUsernameFromToken(token));
     }
 
     @Override
@@ -213,7 +211,7 @@ public class UserServicesImpl implements UserServices {
     }
 
     @Override
-    public User findUserByName(String name) throws Exception {
+    public User findUserByName(String name) {
         // 精确查找名称，存在多个，或不存在返回null
         return userRepository.findUserByName(name);
     }
@@ -225,6 +223,16 @@ public class UserServicesImpl implements UserServices {
         map.put("cur",users);
         map.put("otr",userRepository.findAll());
         return map;
+    }
+
+    @Override
+    public Page<User> findUnitUsers(Integer unitId, String search, Integer offset, Integer limit, String sort) {
+        QUser user = QUser.user;
+        PageRequest pageRequest = PageHelper.generatePageRequest(offset, limit, sort);
+        Predicate predicate = user.isNotNull().or(user.isNull());
+        predicate = unitId == null ? predicate : ExpressionUtils.and(predicate,user.unit.id.eq(unitId));
+        predicate = "".equals(search) ? predicate : ExpressionUtils.and(predicate,user.name.like("%"+search+"%"));
+        return userRepository.findAll(predicate,pageRequest);
     }
 
     private List<User> doGetrolePerson(Integer role,boolean in,List<User> users){
@@ -269,7 +277,7 @@ public class UserServicesImpl implements UserServices {
         if(Strings.isNullOrEmpty(crdentials)){
             crdentials = defalutCrdentials;
         }
-        HashHelper simpleHash = new HashHelper(algorithm, crdentials, ByteSource.Util.bytes(salt),iterations);
+        HashHelper simpleHash = new HashHelper(algorithm, crdentials, salt,iterations);
         return new String(simpleHash.toHex());
     }
 

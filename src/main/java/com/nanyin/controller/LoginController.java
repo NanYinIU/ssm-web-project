@@ -1,16 +1,14 @@
 package com.nanyin.controller;
 
 import com.nanyin.config.enums.ResultCodeEnum;
-import com.nanyin.config.exceptions.TokenWrongException;
+import com.nanyin.config.exceptions.tokenException.TokenWrongException;
 import com.nanyin.services.LocaleService;
-import com.nanyin.config.locale.MyCookieResolver;
 import com.nanyin.services.RedisService;
 import com.nanyin.entity.DTO.NameAndPw;
 import com.nanyin.config.util.Result;
 import com.nanyin.services.UserServices;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -31,10 +29,10 @@ public class LoginController{
     @Autowired
     RedisService redisService;
 
-//    @CrossOrigin(origins = "*",allowCredentials="true",allowedHeaders = "",methods = {})
+    @CrossOrigin(origins = "*",allowCredentials="true",allowedHeaders = "",methods = {})
     @PostMapping(value = "/user/login")
     public @ResponseBody
-    Result login(@RequestBody NameAndPw nameAndPw) {
+    Result login(@RequestBody NameAndPw nameAndPw) throws Exception {
 //        Boolean rememberMe = false;
         String data = userServices.login(nameAndPw.getUsername(),nameAndPw.getPassword(),false);
         if(data.equals(ResultCodeEnum.WRONG_USERNAME_OR_PASSWORD.toString())){

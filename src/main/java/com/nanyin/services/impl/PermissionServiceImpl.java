@@ -1,5 +1,6 @@
 package com.nanyin.services.impl;
 
+import com.nanyin.config.util.PageHelper;
 import com.nanyin.entity.Permission;
 import com.nanyin.repository.PermissionRepository;
 import com.nanyin.services.PermissionService;
@@ -22,11 +23,7 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public Page<Permission> findPermissions(String search, Integer offset, Integer limit, String sort) throws Exception {
-        if(offset == null || limit == null){
-            offset = 1;
-            limit = Integer.MAX_VALUE;
-        }
-        PageRequest pageRequest = PageRequest.of(offset-1,limit);
+        PageRequest pageRequest = PageHelper.generatePageRequest(offset, limit);
         return permissionRepository.findAll(new Specification<Permission>() {
             @Override
             public Predicate toPredicate(Root<Permission> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {

@@ -13,6 +13,7 @@ import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.junit.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
@@ -144,11 +145,9 @@ public class test1 {
 
     @Test
     public void testString(){
-       String s = "a+id";
-        String[] split = s.split("\\.");
-        for (String s1 : split) {
-            System.out.println(s1);
-        }
+       String s = "123456";
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        System.out.println(bCryptPasswordEncoder.encode(s));;
 
     }
 

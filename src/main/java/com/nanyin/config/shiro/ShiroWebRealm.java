@@ -1,7 +1,6 @@
 package com.nanyin.config.shiro;
 
-import com.nanyin.config.exceptions.TokenExpiredException;
-import com.nanyin.config.exceptions.UserExistedException;
+import com.nanyin.config.exceptions.tokenException.TokenExpiredException;
 import com.nanyin.entity.Permission;
 import com.nanyin.entity.Role;
 import com.nanyin.entity.User;
@@ -19,6 +18,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ShiroWebRealm extends AuthorizingRealm {
+
     @Autowired
     UserServices userServices;
     /**

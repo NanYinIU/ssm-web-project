@@ -1,6 +1,7 @@
 package com.nanyin.services.impl;
 
 import com.nanyin.config.enums.TranferDirection;
+import com.nanyin.config.util.PageHelper;
 import com.nanyin.entity.DTO.TranferDto;
 import com.nanyin.entity.QRole;
 import com.nanyin.entity.Role;
@@ -58,11 +59,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Page<Role> findRoles(String search, Integer offset, Integer limit, String order) throws Exception {
         // 获取分页
-        if(offset == null || limit == null){
-            offset = 1;
-            limit = Integer.MAX_VALUE;
-        }
-        PageRequest pageRequest = PageRequest.of(offset-1,limit);
+        PageRequest pageRequest = PageHelper.generatePageRequest(offset, limit);
         QRole role = QRole.role;
         Predicate predicate = role.isNotNull().or(role.isNull());
         predicate = search == null ? predicate : ExpressionUtils.and(predicate,role.name.like("%"+search+"%"));

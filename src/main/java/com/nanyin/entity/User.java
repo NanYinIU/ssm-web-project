@@ -2,6 +2,7 @@ package com.nanyin.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.Objects;
 import io.swagger.annotations.ApiModel;
 import lombok.*;
 import org.checkerframework.checker.units.qual.C;
@@ -82,4 +83,21 @@ public class User implements Serializable {
     @JoinColumn(columnDefinition = "INT(11)",name = "person_id")
     private Person person;
 
+    @ManyToOne
+    @JoinColumn(name = "unit_id")
+    private Unit unit;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equal(id, user.id) &&
+                Objects.equal(name, user.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id, name, password, email, salt, age, sex, status, isDeleted, gmtCreate, gmtModify, roles, person, unit);
+    }
 }

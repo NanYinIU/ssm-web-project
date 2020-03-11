@@ -2,10 +2,11 @@ package com.nanyin.config.exceptions.handler;
 
 import com.google.common.base.Strings;
 import com.nanyin.config.enums.ResultCodeEnum;
-import com.nanyin.config.exceptions.TokenExpiredException;
-import com.nanyin.config.exceptions.TokenWrongException;
+import com.nanyin.config.exceptions.tokenException.TokenExpiredException;
+import com.nanyin.config.exceptions.tokenException.TokenWrongException;
 import com.nanyin.config.util.Result;
 import com.nanyin.services.LocaleService;
+import org.apache.shiro.authz.UnauthenticatedException;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -14,9 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.BindException;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -75,11 +73,13 @@ public class ControllerExceptionHandler {
             result.setCode(ResultCodeEnum.TOKEN_EXPIRED);
             result.setMessage(e.getMessage());
         }else if(e instanceof TokenWrongException){
-            result.setCode(ResultCodeEnum.FAIL);
-            result.setMessage(e.getMessage());
+            result.setCode(ResultCodeEnum.WRONG_USERNAME_OR_PASSWORD);
+        }else if(e instanceof UnauthenticatedException){
+            result.setCode(ResultCodeEnum.NO_PERMISSION);
         }else{
             result.setMessage(e.getMessage());
             result.setCode(ResultCodeEnum.FAIL);
+            e.printStackTrace();
         }
 
         logger.error("Occur Exception:"+e.getClass().getSimpleName()+",Message Show:"+e.getMessage());

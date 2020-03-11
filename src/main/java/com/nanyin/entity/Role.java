@@ -1,7 +1,10 @@
 package com.nanyin.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.google.common.base.Objects;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.shiro.authz.SimpleRole;
 
 import javax.persistence.*;
@@ -11,7 +14,8 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "role")
 public class Role {
     private static final long serialVersionUID = 8538788781327321942L;
@@ -21,8 +25,7 @@ public class Role {
     private Integer id;
     @Column(length = 64)
     String name;
-    @Column(length = 1024)
-    String comment;
+
     @Column(length = 11)
     Integer ord;
     @Column(name = "is_deleted",columnDefinition = "TINYINT(4)")
@@ -44,14 +47,12 @@ public class Role {
     private List<User> users;
 
 
-    @JSONField(serialize = false)
-    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    @JoinTable(name = "r_role_permission",
-            joinColumns = {@JoinColumn(name = "role_id")},
-            inverseJoinColumns = {@JoinColumn(name = "permission_id")})
+//    @JSONField(serialize = false)
+    @ManyToMany(mappedBy = "roles",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private Set<Permission> permissions;
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
+
 }

@@ -1,19 +1,15 @@
 package com.nanyin.config.shiro;
 
-import com.nanyin.config.util.MDCUtil;
-import org.apache.catalina.security.SecurityUtil;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.codec.Base64;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.session.mgt.eis.MemorySessionDAO;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
+import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
-import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;
-import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
-import org.apache.shiro.web.util.SavedRequest;
 import org.crazycake.shiro.RedisManager;
 import org.crazycake.shiro.RedisSessionDAO;
 import org.slf4j.Logger;
@@ -24,12 +20,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
-import javax.servlet.Filter;
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-@Configuration
+//@Configuration
 public class ShiroWebConfiguration {
 
     @Value("${spring.redis.host}")
@@ -81,9 +75,9 @@ public class ShiroWebConfiguration {
     @Bean
     public DefaultWebSecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        securityManager.setRealm(shiroWebRealm());
 //        securityManager.setSessionManager(sessionManager());
         securityManager.setRememberMeManager(rememberMeManager());
+        securityManager.setRealm(shiroWebRealm());
         return securityManager;
     }
 
@@ -140,6 +134,19 @@ public class ShiroWebConfiguration {
         cookieRememberMeManager.setCipherKey(Base64.encode("web".getBytes()));
         cookieRememberMeManager.setCookie(rememberMeCookie());
         return cookieRememberMeManager;
+    }
+
+    /**
+     *  开启shiro aop注解支持.否则@RequiresRoles等注解无法生效
+     *  使用代理方式;
+     * @param securityManager
+     * @return
+     */
+    @Bean
+    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(org.apache.shiro.mgt.SecurityManager securityManager){
+        AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
+        authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
+        return authorizationAttributeSourceAdvisor;
     }
 
     @Bean

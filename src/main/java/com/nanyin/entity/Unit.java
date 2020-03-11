@@ -1,6 +1,7 @@
 package com.nanyin.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.google.common.base.Objects;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -63,4 +64,21 @@ public class Unit {
     @JoinColumn(name = "parent_id")
     @JSONField(serialize = false)
     Unit parent;
+
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "unit")
+    Set<User> users;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Unit unit = (Unit) o;
+        return Objects.equal(id, unit.id) &&
+                Objects.equal(name, unit.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id, name, code, address, comment, ord, gmtCreate, gmtModify, children, parent, users);
+    }
 }

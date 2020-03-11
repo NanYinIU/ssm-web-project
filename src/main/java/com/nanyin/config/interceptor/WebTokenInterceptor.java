@@ -24,7 +24,8 @@ public class WebTokenInterceptor implements HandlerInterceptor {
     private static final Logger logger = LoggerFactory.getLogger(WebTokenInterceptor.class);
 
     /*
-    使用autowired 需要将  WebTokenInterceptor 注册到容器中，也就是在 WebConfiguration 类中声明为 @Bean
+    使用autowired 需要将
+     注册到容器中，也就是在 WebConfiguration 类中声明为 @Bean
      */
     @Autowired
     RedisService redisService;

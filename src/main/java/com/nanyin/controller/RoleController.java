@@ -6,7 +6,9 @@ import com.nanyin.entity.Role;
 import com.nanyin.services.RoleService;
 import com.nanyin.services.UserServices;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,6 +26,7 @@ public class RoleController {
      * @param sort
      */
     @GetMapping("/roles")
+    @PreAuthorize("hasRole('userssss')")
     @ApiOperation(value = "获取角色信息列表")
     public Result roleLists(String search, Integer offset, Integer limit, String sort) throws Exception{
         return new Result<>(roleService.findRoles(search,offset,limit,sort));
@@ -56,9 +59,6 @@ public class RoleController {
 
     /**
      * 为角色添加/删除人员
-     * @param direction 分为 left / right，其中left表示添加，right表示移除
-     * @param keys 人员id数组
-     * @param role 角色id
      * @return
      * @throws Exception
      */

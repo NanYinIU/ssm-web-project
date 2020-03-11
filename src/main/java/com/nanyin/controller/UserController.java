@@ -23,7 +23,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.validation.Valid;
 
+
 @RestController
+@CrossOrigin(origins = "*",allowCredentials="true",allowedHeaders = "",methods = {})
 public class UserController {
 
     @Autowired
@@ -33,22 +35,22 @@ public class UserController {
 
     @GetMapping("/users")
     @RequiresUser
+    @RequiresRoles("admin")
     @Log(operationType = OperationTypeEnum.FIND, operateModul = OperateModuleEnum.USER, operationName = "search_users")
     @ResponseBody
     @ApiOperation(value = "查找用户列表")
     public Result userLists(String search, Integer offset, Integer limit, String sort, Integer status, Integer sex, Integer role) throws Exception {
         //todo 认证授权取不到值
-        Subject subject = SecurityUtils.getSubject();
-        System.out.println(subject.getPrincipal());
-        System.out.println(subject.hasRole("admin"));
         return new Result<>(userServices.findUsers(offset, limit, sort, search, status, sex, role));
     }
 
+
     @GetMapping("/user/info")
     @ApiOperation(value = "获取当前用户详细信息")
-    public Result userInfo() throws Exception {
+    public Result userInfo(String token) throws Exception {
+        System.out.println("获得token："+token);
         Cookie tokenKey = HttpUtils.getCookie("TokenKey");
-        return new Result<>(userServices.getCurrentUserInfo(tokenKey.getValue()));
+        return new Result<>(userServices.getCurrentUserInfo(token));
     }
 
     @GetMapping("/user/sex")
