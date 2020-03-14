@@ -1,4 +1,4 @@
-package com.nanyin.config.security;
+package com.nanyin.config.security.filter;
 
 import com.alibaba.fastjson.JSON;
 import com.nanyin.config.enums.ResultCodeEnum;
@@ -6,13 +6,20 @@ import com.nanyin.config.exceptions.tokenException.TokenEmptyException;
 import com.nanyin.config.exceptions.tokenException.TokenExpiredException;
 import com.nanyin.config.exceptions.tokenException.TokenParseException;
 import com.nanyin.config.exceptions.tokenException.TokenWrongException;
+import com.nanyin.config.util.HttpUtils;
+import com.nanyin.config.util.JwtUtil;
 import com.nanyin.config.util.Result;
 import com.nanyin.config.util.SecurityUtils;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -35,19 +42,32 @@ public class CustomAuthenticationFilter extends BasicAuthenticationFilter {
         this.request = request;
         this.response = response;
         this.chain = chain;
-        // 获取token, 并检查登录状态
-        PrintWriter writer = response.getWriter();
-        Result result = new Result();
-        try {
+        String validateToken = null;
+        try{
+            validateToken  = JwtUtil.getValidateToken(request);
+            if (validateToken!=null){
+                // 新token
+                HttpUtils.setCookie(HttpUtils.buildCookie("TokenKey",validateToken));
+            }
             SecurityUtils.checkAuthentication(request);
-        } catch (TokenEmptyException | TokenExpiredException | TokenWrongException | TokenParseException e) {
-            // 拦截 checkAuthentication 时发生的异常，尽量所有的异常都向外抛出，而不是catch
-            result.setCode(ResultCodeEnum.ILLEGAL_TOKEN);
-            result.setMessage(e.getMessage());
+        } catch (ExpiredJwtException e) {
+            Result result = new Result();
+            PrintWriter writer = response.getWriter();
+            result.setCode(ResultCodeEnum.TOKEN_EXPIRED);
             writer.append(JSON.toJSONString(result));
             return;
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (MalformedJwtException|UnsupportedJwtException|IllegalArgumentException e) {
+            Result result = new Result();
+            PrintWriter writer = response.getWriter();
+            result.setCode(ResultCodeEnum.ILLEGAL_TOKEN);
+            writer.append(JSON.toJSONString(result));
+            return;
+        } catch (Exception e){
+            Result result = new Result();
+            PrintWriter writer = response.getWriter();
+            result.setCode(ResultCodeEnum.FAIL);
+            writer.append(JSON.toJSONString(result));
+            return;
         }
         chain.doFilter(request, response);
     }

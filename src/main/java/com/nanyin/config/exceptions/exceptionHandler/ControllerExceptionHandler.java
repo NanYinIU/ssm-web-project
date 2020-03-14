@@ -1,4 +1,4 @@
-package com.nanyin.config.exceptions.handler;
+package com.nanyin.config.exceptions.exceptionHandler;
 
 import com.google.common.base.Strings;
 import com.nanyin.config.enums.ResultCodeEnum;

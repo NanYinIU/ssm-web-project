@@ -1,16 +1,25 @@
 package com.nanyin.config.util;
 
+import com.alibaba.fastjson.JSON;
+import com.nanyin.config.enums.ResultCodeEnum;
 import com.nanyin.config.security.CustomAuthenticatioToken;
+import com.nanyin.config.util.HttpUtils;
+import com.nanyin.config.util.JwtUtil;
+import com.nanyin.config.util.Result;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 public class SecurityUtils {
+
     /**
      * 系统登录认证
      * @param request

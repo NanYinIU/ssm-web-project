@@ -1,13 +1,11 @@
 package com.nanyin.config.util;
 
 import com.google.common.base.Strings;
-import com.nanyin.config.exceptions.tokenException.TokenEmptyException;
-import com.nanyin.config.exceptions.tokenException.TokenExpiredException;
-import com.nanyin.config.exceptions.tokenException.TokenParseException;
 import com.nanyin.config.security.CustomAuthenticatioToken;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.sun.org.apache.xpath.internal.operations.Bool;
+import io.jsonwebtoken.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,12 +14,13 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
- * JWT 解密加密工具类
+ * JWT 工具类
  */
 public class JwtUtil {
 
-    private static final String SECRET_KEY = "54f22da7-1399-4624-bfe6-ce4bc1c6e4c1";
+    private final static Logger log = LoggerFactory.getLogger(JwtUtil.class);
 
+    private static final String SECRET_KEY = "54f22da7-1399-4624-bfe6-ce4bc1c6e4c1";
     /**
      * 用户名称
      */
@@ -35,11 +34,17 @@ public class JwtUtil {
      */
     private static final String AUTHORITIES = "authorities";
 
-    /**
-     * 有效期12小时
-     */
-    private static final long EXPIRE_TIME = 12 * 60 * 60 * 1000;
+    private static final String REFRESH = "refresh";
 
+    /**
+     * 有效期2小时
+     */
+    private static final long EXPIRE_TIME = 2 * 60 * 60 * 1000;
+
+    /**
+     * 刷新时间
+     */
+    private static final long REFRESH_TIME = 60 * 60 * 1000;
 
     /**
      * 生成令牌
@@ -47,7 +52,9 @@ public class JwtUtil {
      * @return 令牌
      */
     public static String generateToken(Authentication authentication) {
-        Map<String, Object> claims = new HashMap<>(3);
+        Map<String, Object> claims = new HashMap<>(4);
+        Date refreshDate = new Date(System.currentTimeMillis() + REFRESH_TIME);
+        claims.put(REFRESH,refreshDate);
         claims.put(USERNAME, SecurityUtils.getUsername(authentication));
         claims.put(CREATED, new Date());
         claims.put(AUTHORITIES, authentication.getAuthorities());
@@ -76,19 +83,18 @@ public class JwtUtil {
      * @param token 令牌
      * @return 用户名
      */
-    public static String getUsernameFromToken(String token) {
+    public static String getUsernameFromToken(String token) throws Exception{
         String username;
         if (Strings.isNullOrEmpty(token)) {
-            throw new TokenEmptyException();
+            return null;
         }
-
         Claims claims = getClaimsFromToken(token);
         if (claims == null) {
-            throw new TokenParseException();
+            return null;
         }
         username = claims.getSubject();
         if (username == null) {
-            throw new TokenParseException();
+            return null;
         }
         return username;
     }
@@ -98,27 +104,27 @@ public class JwtUtil {
      *
      * @return 用户名
      */
-    public static Authentication getAuthenticationeFromToken(HttpServletRequest request) {
+    public static Authentication getAuthenticationeFromToken(HttpServletRequest request) throws Exception {
         Authentication authentication = null;
         // 获取请求携带的令牌
         String token = JwtUtil.getToken(request);
 
         if (Strings.isNullOrEmpty(token)) {
-            throw new TokenEmptyException();
+            return null;
         }
         // 请求令牌不能为空
         if (SecurityUtils.getAuthentication() == null) {
             // 上下文中Authentication为空
             Claims claims = getClaimsFromToken(token);
             if (claims == null) {
-                throw new TokenParseException();
+                return null;
             }
             String username = claims.getSubject();
             if (username == null) {
-                throw new TokenParseException();
+                return null;
             }
             if (isTokenExpired(token)) {
-                throw new TokenExpiredException();
+                return null;
             }
             Object authors = claims.get(AUTHORITIES);
             List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
@@ -144,11 +150,9 @@ public class JwtUtil {
      * @param token 令牌
      * @return 数据声明
      */
-    private static Claims getClaimsFromToken(String token) {
-        Claims claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
-        if (claims == null) {
-            throw new TokenParseException();
-        }
+    private static Claims getClaimsFromToken(String token) throws Exception {
+        Claims claims = null;
+        claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
         return claims;
     }
 
@@ -159,9 +163,25 @@ public class JwtUtil {
      * @param username
      * @return
      */
-    public static Boolean validateToken(String token, String username) {
+    public static Boolean validateToken(String token, String username) throws Exception {
         String userName = getUsernameFromToken(token);
         return (userName.equals(username) && !isTokenExpired(token));
+    }
+
+    public static String getValidateToken(HttpServletRequest request) throws Exception {
+        String token = JwtUtil.getToken(request);
+        if(token == null){
+            return null;
+        }
+        isTokenExpired(token);
+        // 先获取是否token已经过期
+        Boolean tokenRefreshExpired = isTokenRefreshExpired(token);
+        if(tokenRefreshExpired){
+            // 过了刷新时间 重新给token
+            return refreshToken(token);
+        }else{
+            return null;
+        }
     }
 
     /**
@@ -170,7 +190,7 @@ public class JwtUtil {
      * @param token
      * @return
      */
-    public static String refreshToken(String token) {
+    public static String refreshToken(String token) throws Exception {
         Claims claims = getClaimsFromToken(token);
         claims.put(CREATED, new Date());
         return generateToken(claims);
@@ -182,10 +202,16 @@ public class JwtUtil {
      * @param token 令牌
      * @return 是否过期
      */
-    public static Boolean isTokenExpired(String token) {
+    public static Boolean isTokenExpired(String token) throws Exception {
         Claims claims = getClaimsFromToken(token);
         Date expiration = claims.getExpiration();
         return expiration.before(new Date());
+    }
+
+    public static Boolean isTokenRefreshExpired(String token) throws Exception {
+        Claims claims = getClaimsFromToken(token);
+        Long expiration = (Long) claims.get(REFRESH);
+        return new Date(expiration).before(new Date());
     }
 
 

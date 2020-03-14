@@ -30,7 +30,7 @@ public class LoginController{
     RedisService redisService;
 
     @CrossOrigin(origins = "*",allowCredentials="true",allowedHeaders = "",methods = {})
-    @PostMapping(value = "/user/login")
+    @PostMapping(value = "/login")
     public @ResponseBody
     Result login(@RequestBody NameAndPw nameAndPw) throws Exception {
 //        Boolean rememberMe = false;
@@ -41,7 +41,7 @@ public class LoginController{
         return new Result<>(data);
     }
 
-    @GetMapping("/user/logout")
+    @GetMapping("/logout")
     @ApiOperation(value = "登出",notes = "登出")
     public Result logout(String token) throws Exception {
         String data = userServices.logout(token);
