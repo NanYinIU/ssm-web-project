@@ -68,17 +68,12 @@ public class Unit {
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "unit")
     Set<User> users;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Unit unit = (Unit) o;
-        return Objects.equal(id, unit.id) &&
-                Objects.equal(name, unit.name);
+    public Unit() {
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id, name, code, address, comment, ord, gmtCreate, gmtModify, children, parent, users);
+    public Unit(Integer id, String name, Unit parent) {
+        this.id = id;
+        this.name = name;
+        this.parent = parent;
     }
 }

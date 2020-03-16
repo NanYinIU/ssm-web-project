@@ -1,6 +1,7 @@
 package com.nanyin.controller;
 
 import com.nanyin.config.util.Result;
+import com.nanyin.entity.DTO.PageQueryParams;
 import com.nanyin.entity.Unit;
 import com.nanyin.services.UnitService;
 import com.nanyin.services.UserServices;
@@ -28,9 +29,15 @@ public class UnitController {
      * @return
      */
     @GetMapping("/units")
-    public Result findUnits() throws Exception{
-        return new Result<>(unitService.findUnits());
+    public Result findUnitTree() throws Exception{
+        return new Result<>(unitService.findUnitTree());
     }
+
+    @GetMapping("/unit/list")
+    public Result findUnits(PageQueryParams pageQueryParams) throws Exception{
+        return new Result<>(unitService.findUnits(pageQueryParams));
+    }
+
 
     /**
      * 获得单位下人员列表

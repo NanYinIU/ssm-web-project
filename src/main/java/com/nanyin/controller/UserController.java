@@ -34,8 +34,6 @@ public class UserController {
     RedisService redisService;
 
     @GetMapping("/users")
-    @RequiresUser
-    @RequiresRoles("admin")
     @Log(operationType = OperationTypeEnum.FIND, operateModul = OperateModuleEnum.USER, operationName = "search_users")
     @ResponseBody
     @ApiOperation(value = "查找用户列表")
@@ -73,7 +71,6 @@ public class UserController {
      * @throws Exception
      */
     @PostMapping("/user")
-    @RequiresRoles(value={"admin"},logical= Logical.OR)
     @ApiOperation(value = "添加用户信息")
     public Result saveUser(@Valid @RequestBody User user) throws Exception {
         return new Result<>(userServices.saveUser(user));

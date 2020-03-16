@@ -15,5 +15,17 @@ public interface RoleService {
 
     Page<Role> findRoles(String search, Integer offset, Integer limit, String sort) throws Exception;
 
-    void movePerson(TranferDto tranferDto)throws Exception;
+    /**
+     * 为角色增加/删除人员
+     * @param tranferDto
+     * @throws Exception
+     */
+    void movePersons(TranferDto tranferDto)throws Exception;
+
+    /**
+     * 为角色增加/删除权限
+     * @param tranferDto
+     * @throws Exception
+     */
+    void movePermission(TranferDto tranferDto) throws Exception;
 }

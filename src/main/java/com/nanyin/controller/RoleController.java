@@ -3,12 +3,11 @@ package com.nanyin.controller;
 import com.nanyin.config.util.Result;
 import com.nanyin.entity.DTO.TranferDto;
 import com.nanyin.entity.Role;
+import com.nanyin.services.PermissionService;
 import com.nanyin.services.RoleService;
 import com.nanyin.services.UserServices;
 import io.swagger.annotations.ApiOperation;
-import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,6 +17,9 @@ public class RoleController {
 
     @Autowired
     UserServices userServices;
+
+    @Autowired
+    PermissionService permissionService;
     /**
      * 查询角色列表
      * @param search
@@ -26,7 +28,6 @@ public class RoleController {
      * @param sort
      */
     @GetMapping("/roles")
-    @PreAuthorize("hasRole('userssss')")
     @ApiOperation(value = "获取角色信息列表")
     public Result roleLists(String search, Integer offset, Integer limit, String sort) throws Exception{
         return new Result<>(roleService.findRoles(search,offset,limit,sort));
@@ -65,7 +66,7 @@ public class RoleController {
     @PostMapping("/role/users")
     @ApiOperation(value = "为角色添加/删除人员")
     public Result movePerson(@RequestBody TranferDto tranferDto) throws Exception{
-        roleService.movePerson(tranferDto);
+        roleService.movePersons(tranferDto);
         return new Result();
     }
 
@@ -76,10 +77,11 @@ public class RoleController {
 
     @PostMapping("/role/permissions")
     public Result movePermission(@RequestBody TranferDto tranferDto) throws Exception{
+        roleService.movePermission(tranferDto);
         return new Result();
     }
     @GetMapping("/role/permissions")
-    public Result getRolePermission() throws Exception{
-        return new Result();
+    public Result getRolePermission(Integer role) throws Exception{
+        return new Result<>(permissionService.getRolePermission(role));
     }
 }

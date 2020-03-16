@@ -3,9 +3,11 @@ package com.nanyin.services.impl;
 import com.nanyin.config.enums.TranferDirection;
 import com.nanyin.config.util.PageHelper;
 import com.nanyin.entity.DTO.TranferDto;
+import com.nanyin.entity.Permission;
 import com.nanyin.entity.QRole;
 import com.nanyin.entity.Role;
 import com.nanyin.entity.User;
+import com.nanyin.repository.PermissionRepository;
 import com.nanyin.repository.RoleRepository;
 import com.nanyin.repository.UserRepository;
 import com.nanyin.services.RoleService;
@@ -31,6 +33,9 @@ public class RoleServiceImpl implements RoleService {
 
     @Autowired
     JPAQueryFactory jpaQueryFactory;
+
+    @Autowired
+    PermissionRepository permissionRepository;
 
     @Override
     public Role saveRole(Role role)  throws Exception{
@@ -66,38 +71,87 @@ public class RoleServiceImpl implements RoleService {
         return roleRepository.findAll(predicate,pageRequest);
     }
 
-
     @Override
-    public void movePerson(TranferDto tranferDto) throws Exception{
+    public void movePersons(TranferDto tranferDto) throws Exception{
         Integer roleId = Integer.parseInt(tranferDto.getStandardKey());
-        Role role = roleRepository.getOne(roleId);
         String direction = tranferDto.getDirection();
         Integer[] keys = tranferDto.getMovedKeys();
-        List<User> users = new ArrayList<>();
-        if(TranferDirection.RIGHT.equals(direction)){
-            for (Integer key : keys) {
-                Optional<User> one = userRepository.findById(key);
-                if(one.isPresent()){
-                    User temp = one.get();
-                    // 多对多关系需要双向关联保存才起作用
-                    temp.getRoles().add(role);
-                    role.getUsers().add(temp);
-                    users.add(temp);
-                }
-            }
-
-        }else if(TranferDirection.LEFT.equals(direction)){
-            for (Integer key : keys) {
-                Optional<User> one = userRepository.findById(key);
-                if(one.isPresent()){
-                    User temp = one.get();
-                    temp.getRoles().remove(role);
-                    role.getUsers().remove(temp);
-                    users.add(temp);
-                }
-            }
-        }
+        List<User> users = doMovePersons(direction,keys,roleId);
         userRepository.saveAll(users);
     }
+
+    private List<User> doMovePersons(String direction,Integer[] keys,Integer standardKey){
+        List<User> users = new ArrayList<>();
+        Role role = roleRepository.getOne(standardKey);
+        if(TranferDirection.RIGHT.equals(direction)){
+            for (Integer key : keys) {
+                users.add(decideMovePersonDirection(key,role,true));
+            }
+        }else if(TranferDirection.LEFT.equals(direction)){
+            for (Integer key : keys) {
+                users.add(decideMovePersonDirection(key,role,false));
+            }
+        }
+        return users;
+    }
+
+    private User decideMovePersonDirection(Integer key,Role role,boolean right){
+        Optional<User> one = userRepository.findById(key);
+        if(one.isPresent()){
+            User temp = one.get();
+            if(right){
+                temp.getRoles().add(role);
+                role.getUsers().add(temp);
+            }else{
+                temp.getRoles().remove(role);
+                role.getUsers().remove(temp);
+            }
+            return temp;
+        }
+        return null;
+    }
+
+
+    @Override
+    public void movePermission(TranferDto tranferDto) throws Exception {
+        Integer roleId = Integer.parseInt(tranferDto.getStandardKey());
+        String direction = tranferDto.getDirection();
+        Integer[] keys = tranferDto.getMovedKeys();
+        List<Permission> permissions = doMovePermission(direction,keys,roleId);
+        permissionRepository.saveAll(permissions);
+
+    }
+
+    private List<Permission> doMovePermission(String direction, Integer[] keys, Integer roleId) {
+        List<Permission> permissions = new ArrayList<>();
+        Role role = roleRepository.getOne(roleId);
+        if(TranferDirection.RIGHT.equals(direction)){
+            for (Integer key : keys) {
+                permissions.add(decideMovePermissionDirection(key,role,true));
+            }
+        }else if(TranferDirection.LEFT.equals(direction)){
+            for (Integer key : keys) {
+                permissions.add(decideMovePermissionDirection(key,role,false));
+            }
+        }
+        return permissions;
+    }
+
+    private Permission decideMovePermissionDirection(Integer key, Role role, boolean right) {
+        Optional<Permission> one = permissionRepository.findById(key);
+        if(one.isPresent()){
+            Permission temp = one.get();
+            if(right){
+                temp.getRoles().add(role);
+                role.getPermissions().add(temp);
+            }else{
+                temp.getRoles().remove(role);
+                role.getPermissions().remove(temp);
+            }
+            return temp;
+        }
+        return null;
+    }
+
 
 }
